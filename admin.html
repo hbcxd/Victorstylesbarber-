@@ -26,7 +26,7 @@
         body {
             background-color: var(--fondo-oscuro);
             color: var(--gris-texto);
-            padding-top: 90px; /* Espacio para que la barra fija no tape el contenido */
+            padding-top: 90px; 
         }
 
         h2 {
@@ -42,6 +42,91 @@
             text-align: center;
             color: var(--gris-secundario);
             margin-bottom: 30px;
+        }
+
+        /* ==========================================================================
+           PANTALLA DE INICIO DE SESIÓN (LOGIN SEGURIDAD)
+           ========================================================================== */
+        .login-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--fondo-oscuro);
+            z-index: 2000; /* Por encima de todo */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-box {
+            background-color: var(--fondo-tarjeta);
+            border: 1px solid #252525;
+            padding: 40px 30px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .login-box h3 {
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .login-box p {
+            color: var(--gris-secundario);
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 14px;
+            background-color: #121212;
+            border: 1px solid #333;
+            color: #ffffff;
+            border-radius: 4px;
+            outline: none;
+            text-align: center;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+
+        .login-box input:focus {
+            border-color: var(--rojo-acento);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--rojo-acento);
+            color: #ffffff;
+            border: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background 0.3s;
+        }
+
+        .btn-login:active {
+            background-color: var(--rojo-hover);
+        }
+
+        .error-login {
+            color: var(--rojo-acento);
+            font-size: 0.85rem;
+            margin-top: 10px;
+            display: none;
         }
 
         /* ==========================================================================
@@ -173,7 +258,7 @@
         }
 
         /* ==========================================================================
-           CONTENIDO DEL PANEL DE ADMINISTRACIÓN
+           ESTRUCTURA ORIGINAL DE LA TABLA ADMINISTRATIVA
            ========================================================================== */
         .admin-section {
             padding: 20px 5%;
@@ -183,7 +268,7 @@
 
         .contenedor-tabla {
             width: 100%;
-            overflow-x: auto; /* Permite deslizar la tabla de lado en pantallas pequeñas */
+            overflow-x: auto; 
             background-color: var(--fondo-tarjeta);
             border: 1px solid #252525;
             border-radius: 8px;
@@ -194,7 +279,7 @@
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            min-width: 600px; /* Asegura que mantenga forma en móviles */
+            min-width: 600px; 
         }
 
         th, td {
@@ -241,6 +326,17 @@
 </head>
 <body>
 
+<!-- PANTALLA DE ACCESO SEGURO (BLOQUEO POR DEFECTO) -->
+<div class="login-container" id="pantallaLogin">
+    <div class="login-box">
+        <h3>Acceso Restringido</h3>
+        <p>Introduce tu clave de administrador para gestionar las citas.</p>
+        <input type="password" id="campoClave" placeholder="••••••••" autocomplete="current-password">
+        <button class="btn-login" id="btnIngresar">Ingresar</button>
+        <div class="error-login" id="mensajeError">Contraseña incorrecta. Inténtalo de nuevo.</div>
+    </div>
+</div>
+
 <!-- Capa oscura trasera del menú -->
 <div class="menu-overlay" id="menuOverlay"></div>
 
@@ -257,7 +353,7 @@
     </div>
 </header>
 
-<!-- Menú Desplegable Lateral (Redirecciona a index.html) -->
+<!-- Menú Desplegable Lateral (Redirecciona a index.html para regresar con los usuarios) -->
 <nav class="menu-desplegable" id="menuLateral">
     <a href="index.html#inicio" class="menu-link">Inicio</a>
     <a href="index.html#galeria" class="menu-link">Cortes</a>
@@ -266,7 +362,7 @@
     <a href="admin.html" class="link-admin-menu">Panel Administrador</a>
 </nav>
 
-<!-- Panel de Control Principal -->
+<!-- Panel de Control Principal (Estructura Original) -->
 <section class="admin-section">
     <h2>Citas Reservadas</h2>
     <p class="subtitulo">Gestión, control y seguimiento de los turnos en tiempo real.</p>
@@ -291,7 +387,38 @@
 </section>
 
 <script>
-    // Lógica idéntica para abrir y cerrar el menú desplegable lateral
+    // ==========================================
+    // SISTEMA DE CONTROL DE ACCESO (CONTRASEÑA)
+    // ==========================================
+    // Aquí puedes cambiar tu contraseña (actualmente es '1234')
+    const CLAVE_ADMINISTRADOR = '1234'; 
+
+    const pantallaLogin = document.getElementById('pantallaLogin');
+    const campoClave = document.getElementById('campoClave');
+    const btnIngresar = document.getElementById('btnIngresar');
+    const mensajeError = document.getElementById('mensajeError');
+
+    function verificarAcceso() {
+        if (campoClave.value === CLAVE_ADMINISTRADOR) {
+            pantallaLogin.style.display = 'none'; // Desbloquea y oculta la pantalla de login
+            cargarCitas(); // Llama a la carga estructurada de Firebase
+        } else {
+            mensajeError.style.display = 'block'; // Muestra error si falla
+            campoClave.value = '';
+        }
+    }
+
+    // Eventos para validar al hacer clic o al pulsar 'Enter'
+    btnIngresar.addEventListener('click', verificarAcceso);
+    campoClave.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            verificarAcceso();
+        }
+    });
+
+    // ==========================================
+    // LÓGICA DEL MENÚ DESPLEGABLE LATERAL
+    // ==========================================
     const btnHamburguesa = document.getElementById('btnHamburguesa');
     const menuLateral = document.getElementById('menuLateral');
     const menuOverlay = document.getElementById('menuOverlay');
@@ -310,13 +437,12 @@
         link.addEventListener('click', toggleMenu);
     });
 
-    // ==========================================================================
-    // INTEGRACIÓN Y CONTROLADOR DE DATOS DE LA BASE DE DATOS (FIREBASE REALTIME)
-    // ==========================================================================
+    // ==========================================
+    // INTEGRACIÓN CON LA BASE DE DATOS (ESTRUCTURA ORIGINAL)
+    // ==========================================
     const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
     const tablaCuerpo = document.getElementById('tabla-citas-cuerpo');
 
-    // Función principal para leer y renderizar las citas desde la nube
     function cargarCitas() {
         tablaCuerpo.innerHTML = '<tr><td colspan="6" style="text-align: center;">Cargando lista de turnos...</td></tr>';
 
@@ -330,7 +456,7 @@
                     return;
                 }
 
-                // Transformamos el objeto de Firebase en una lista y lo ordenamos por fecha
+                // Conserva el ordenamiento original basado en fechas
                 const listaCitas = Object.keys(data).map(id => ({
                     id: id,
                     ...data[id]
@@ -339,7 +465,6 @@
                 listaCitas.forEach(cita => {
                     const fila = document.createElement('tr');
 
-                    // Formateo visual sutil de la fecha (AAAA-MM-DD a DD/MM/AAAA)
                     let fechaFormateada = cita.cita_fecha;
                     if(cita.cita_fecha) {
                         const partes = cita.cita_fecha.split('-');
@@ -363,7 +488,6 @@
             });
     }
 
-    // Función global encargada de borrar el nodo de una cita mediante su ID de Firebase
     window.eliminarCita = function(idCita) {
         if (confirm("¿Estás seguro de que deseas eliminar y liberar este turno permanentemente?")) {
             fetch(`${FIREBASE_URL}citas/${idCita}.json`, {
@@ -371,7 +495,7 @@
             })
             .then(() => {
                 alert("La cita ha sido removida con éxito.");
-                cargarCitas(); // Refresca la tabla automáticamente
+                cargarCitas(); 
             })
             .catch(error => {
                 console.error("Error al borrar el registro:", error);
@@ -379,9 +503,6 @@
             });
         }
     }
-
-    // Carga inicial automatizada al abrir el archivo administrador
-    document.addEventListener('DOMContentLoaded', cargarCitas);
 </script>
 </body>
 </html>
