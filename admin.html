@@ -13,6 +13,7 @@
             --gris-secundario: #a0a0a0;
             --rojo-acento: #cc0000;
             --rojo-hover: #b30000;
+            --verde-exito: #10b981;
         }
 
         /* Configuración General */
@@ -54,7 +55,7 @@
             width: 100vw;
             height: 100vh;
             background-color: var(--fondo-oscuro);
-            z-index: 2000; /* Por encima de todo */
+            z-index: 2000; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -118,10 +119,6 @@
             transition: background 0.3s;
         }
 
-        .btn-login:active {
-            background-color: var(--rojo-hover);
-        }
-
         .error-login {
             color: var(--rojo-acento);
             font-size: 0.85rem;
@@ -130,7 +127,7 @@
         }
 
         /* ==========================================================================
-           BARRA DE NAVEGACIÓN Y MENÚ DESPLEGABLE (IGUAL A INDEX)
+           BARRA DE NAVEGACIÓN Y MENÚ DESPLEGABLE
            ========================================================================== */
         header {
             display: flex;
@@ -148,7 +145,6 @@
             height: 70px;
         }
 
-        /* Botón de Hamburguesa */
         .menu-hamburguesa {
             display: flex;
             flex-direction: column;
@@ -169,18 +165,10 @@
             transition: all 0.3s ease;
         }
 
-        /* Animación de la hamburguesa */
-        .menu-hamburguesa.open span:nth-child(1) {
-            transform: translateY(7.5px) rotate(45deg);
-        }
-        .menu-hamburguesa.open span:nth-child(2) {
-            opacity: 0;
-        }
-        .menu-hamburguesa.open span:nth-child(3) {
-            transform: translateY(-7.5px) rotate(-45deg);
-        }
+        .menu-hamburguesa.open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+        .menu-hamburguesa.open span:nth-child(2) { opacity: 0; }
+        .menu-hamburguesa.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
 
-        /* Panel Lateral Desplegable */
         .menu-desplegable {
             position: fixed;
             top: 0;
@@ -196,9 +184,7 @@
             transition: left 0.3s ease-in-out;
         }
 
-        .menu-desplegable.open {
-            left: 0; 
-        }
+        .menu-desplegable.open { left: 0; }
 
         .menu-desplegable a {
             color: #ffffff;
@@ -212,11 +198,8 @@
             transition: color 0.3s ease;
         }
 
-        .menu-desplegable a:active, .menu-desplegable a:hover {
-            color: var(--rojo-acento);
-        }
+        .menu-desplegable a:active, .menu-desplegable a:hover { color: var(--rojo-acento); }
 
-        /* Enlace de administración resaltado activo */
         .menu-desplegable .link-admin-menu {
             margin-top: auto;
             color: var(--rojo-acento);
@@ -228,58 +211,127 @@
             background-color: #1a0c0c;
         }
 
-        /* Contenedor del Logo */
-        .logo {
-            display: flex;
-            align-items: center;
-            flex-shrink: 0;            
-        }
-
-        .logo img {
-            height: 55px;      
-            width: auto;        
-            display: block;
-        }
-
-        /* Capa de fondo oscura */
-        .menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1040;
-            display: none;
-        }
-
-        .menu-overlay.show {
-            display: block;
-        }
+        .logo { display: flex; align-items: center; flex-shrink: 0; }
+        .logo img { height: 55px; width: auto; display: block; }
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.5); z-index: 1040; display: none; }
+        .menu-overlay.show { display: block; }
 
         /* ==========================================================================
-           ESTRUCTURA ORIGINAL DE LA TABLA ADMINISTRATIVA
+           NUEVO: PANEL DE TARJETAS CONTABLES (ESTILO DASHBOARD)
            ========================================================================== */
         .admin-section {
             padding: 20px 5%;
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
+        .grid-contable {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tarjeta-contable {
+            background-color: var(--fondo-tarjeta);
+            border: 1px solid #252525;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .tarjeta-contable h4 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--gris-secundario);
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .tarjeta-contable .dato-principal {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        .tarjeta-contable .monto-ingreso {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--verde-exito);
+        }
+
+        /* ==========================================================================
+           NUEVO: FILTRADO POR FECHAS Y BUSCADOR
+           ========================================================================== */
+        .barra-herramientas {
+            background-color: var(--fondo-tarjeta);
+            border: 1px solid #252525;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .filtro-grupo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filtro-grupo label {
+            font-size: 0.9rem;
+            color: var(--gris-secundario);
+        }
+
+        .filtro-grupo input[type="date"] {
+            background-color: #121212;
+            border: 1px solid #333;
+            color: #ffffff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .filtro-grupo input[type="date"]:focus {
+            border-color: var(--rojo-acento);
+        }
+
+        .btn-reiniciar {
+            background-color: #222;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .btn-reiniciar:active { background-color: #333; }
+
+        /* ==========================================================================
+           ESTRUCTURA DE LA TABLA ADMINISTRATIVA
+           ========================================================================== */
         .contenedor-tabla {
             width: 100%;
             overflow-x: auto; 
             background-color: var(--fondo-tarjeta);
             border: 1px solid #252525;
             border-radius: 8px;
-            margin-top: 20px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            min-width: 600px; 
+            min-width: 700px; 
         }
 
         th, td {
@@ -296,9 +348,7 @@
             letter-spacing: 1px;
         }
 
-        tr:hover {
-            background-color: #222222;
-        }
+        tr:hover { background-color: #222222; }
 
         .btn-eliminar {
             background-color: var(--rojo-acento);
@@ -312,21 +362,13 @@
             text-transform: uppercase;
         }
 
-        .btn-eliminar:active {
-            background-color: var(--rojo-hover);
-        }
-
-        .sin-citas {
-            text-align: center;
-            padding: 30px;
-            color: var(--gris-secundario);
-            font-style: italic;
-        }
+        .btn-eliminar:active { background-color: var(--rojo-hover); }
+        .sin-citas { text-align: center; padding: 30px; color: var(--gris-secundario); font-style: italic; }
     </style>
 </head>
 <body>
 
-<!-- PANTALLA DE ACCESO SEGURO (BLOQUEO POR DEFECTO) -->
+<!-- PANTALLA DE ACCESO SEGURO -->
 <div class="login-container" id="pantallaLogin">
     <div class="login-box">
         <h3>Acceso Restringido</h3>
@@ -337,23 +379,19 @@
     </div>
 </div>
 
-<!-- Capa oscura trasera del menú -->
 <div class="menu-overlay" id="menuOverlay"></div>
 
-<!-- Encabezado con Botón de Hamburguesa Izquierda y Logo Derecha -->
 <header>
     <button class="menu-hamburguesa" id="btnHamburguesa">
         <span></span>
         <span></span>
         <span></span>
     </button>
-    
     <div class="logo"> 
         <img src="LOGO.png" alt="Logo Víctor Styles">
     </div>
 </header>
 
-<!-- Menú Desplegable Lateral (Redirecciona a index.html para regresar con los usuarios) -->
 <nav class="menu-desplegable" id="menuLateral">
     <a href="index.html#inicio" class="menu-link">Inicio</a>
     <a href="index.html#galeria" class="menu-link">Cortes</a>
@@ -362,11 +400,46 @@
     <a href="admin.html" class="link-admin-menu">Panel Administrador</a>
 </nav>
 
-<!-- Panel de Control Principal (Estructura Original) -->
 <section class="admin-section">
-    <h2>Citas Reservadas</h2>
-    <p class="subtitulo">Gestión, control y seguimiento de los turnos en tiempo real.</p>
+    <h2>Panel de Control Contable</h2>
+    <p class="subtitulo">Métricas de rendimiento, ingresos y balances de la barbería.</p>
 
+    <!-- MATRIZ DE RENDIMIENTO CONTABLE -->
+    <div class="grid-contable">
+        <div class="tarjeta-contable">
+            <h4>Hoy</h4>
+            <div class="dato-principal" id="cortesHoy">0</div>
+            <div class="monto-ingreso" id="ingresosHoy">0,00€</div>
+        </div>
+        <div class="tarjeta-contable">
+            <h4>Este Mes</h4>
+            <div class="dato-principal" id="cortesMes">0</div>
+            <div class="monto-ingreso" id="ingresosMes">0,00€</div>
+        </div>
+        <div class="tarjeta-contable">
+            <h4>Este Año</h4>
+            <div class="dato-principal" id="cortesAnio">0</div>
+            <div class="monto-ingreso" id="ingresosAnio">0,00€</div>
+        </div>
+        <div class="tarjeta-contable">
+            <h4>Promedio Diario</h4>
+            <div class="dato-principal" id="promedioDiario">0.0</div>
+            <div class="monto-ingreso" style="color: var(--gris-secundario); font-size: 0.8rem;">Cortes / día activo</div>
+        </div>
+    </div>
+
+    <!-- FILTRADO Y HERRAMIENTAS -->
+    <div class="barra-herramientas">
+        <div class="filtro-grupo">
+            <label for="filtroFecha">Buscar por fecha:</label>
+            <input type="date" id="filtroFecha">
+        </div>
+        <div>
+            <button class="btn-reiniciar" id="btnVerTodo">Ver Todo</button>
+        </div>
+    </div>
+
+    <!-- TABLA DE CONTROL -->
     <div class="contenedor-tabla">
         <table>
             <thead>
@@ -380,7 +453,7 @@
                 </tr>
             </thead>
             <tbody id="tabla-citas-cuerpo">
-                <!-- Los datos de Firebase se cargarán dinámicamente aquí -->
+                <!-- Se carga dinámicamente -->
             </tbody>
         </table>
     </div>
@@ -390,7 +463,6 @@
     // ==========================================
     // SISTEMA DE CONTROL DE ACCESO (CONTRASEÑA)
     // ==========================================
-    // Aquí puedes cambiar tu contraseña (actualmente es 'Ve-030699')
     const CLAVE_ADMINISTRADOR = 'Ve-030699'; 
 
     const pantallaLogin = document.getElementById('pantallaLogin');
@@ -400,21 +472,16 @@
 
     function verificarAcceso() {
         if (campoClave.value === CLAVE_ADMINISTRADOR) {
-            pantallaLogin.style.display = 'none'; // Desbloquea y oculta la pantalla de login
-            cargarCitas(); // Llama a la carga estructurada de Firebase
+            pantallaLogin.style.display = 'none'; 
+            inicializarSistema(); 
         } else {
-            mensajeError.style.display = 'block'; // Muestra error si falla
+            mensajeError.style.display = 'block'; 
             campoClave.value = '';
         }
     }
 
-    // Eventos para validar al hacer clic o al pulsar 'Enter'
     btnIngresar.addEventListener('click', verificarAcceso);
-    campoClave.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            verificarAcceso();
-        }
-    });
+    campoClave.addEventListener('keypress', function(e) { if (e.key === 'Enter') verificarAcceso(); });
 
     // ==========================================
     // LÓGICA DEL MENÚ DESPLEGABLE LATERAL
@@ -432,70 +499,174 @@
 
     btnHamburguesa.addEventListener('click', toggleMenu);
     menuOverlay.addEventListener('click', toggleMenu);
-
-    linksMenu.forEach(link => {
-        link.addEventListener('click', toggleMenu);
-    });
+    linksMenu.forEach(link => link.addEventListener('click', toggleMenu));
 
     // ==========================================
-    // INTEGRACIÓN CON LA BASE DE DATOS (ESTRUCTURA ORIGINAL)
+    // CORE CONTABLE Y MANEJO DE BASE DE DATOS
     // ==========================================
     const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
     const tablaCuerpo = document.getElementById('tabla-citas-cuerpo');
+    const filtroFecha = document.getElementById('filtroFecha');
+    const btnVerTodo = document.getElementById('btnVerTodo');
 
-    function cargarCitas() {
-        tablaCuerpo.innerHTML = '<tr><td colspan="6" style="text-align: center;">Cargando lista de turnos...</td></tr>';
+    let todasLasCitas = []; // Memoria temporal de datos cargados de la nube
+
+    function inicializarSistema() {
+        obtenerCitasServidor();
+        
+        // Listener para el buscador por fecha de la tabla
+        filtroFecha.addEventListener('change', function() {
+            renderizarTabla(this.value);
+        });
+
+        // Botón para limpiar filtro
+        btnVerTodo.addEventListener('click', function() {
+            filtroFecha.value = '';
+            renderizarTabla('');
+        });
+    }
+
+    function obtenerCitasServidor() {
+        tablaCuerpo.innerHTML = '<tr><td colspan="6" style="text-align: center;">Cargando base de datos contable...</td></tr>';
 
         fetch(`${FIREBASE_URL}citas.json`)
             .then(response => response.json())
             .then(data => {
-                tablaCuerpo.innerHTML = '';
-
                 if (!data) {
-                    tablaCuerpo.innerHTML = '<tr><td colspan="6" class="sin-citas">No hay citas registradas en el sistema.</td></tr>';
+                    todasLasCitas = [];
+                    procesarContabilidad();
+                    renderizarTabla('');
                     return;
                 }
 
-                // Conserva el ordenamiento original basado en fechas
-                const listaCitas = Object.keys(data).map(id => ({
+                // Convertir el objeto loco de Firebase en un Array limpio
+                todasLasCitas = Object.keys(data).map(id => ({
                     id: id,
                     ...data[id]
                 })).sort((a, b) => new Date(a.cita_fecha) - new Date(b.cita_fecha));
 
-                listaCitas.forEach(cita => {
-                    const fila = document.createElement('tr');
-
-                    let fechaFormateada = cita.cita_fecha;
-                    if(cita.cita_fecha) {
-                        const partes = cita.cita_fecha.split('-');
-                        if(partes.length === 3) fechaFormateada = `${partes[2]}/${partes[1]}/${partes[0]}`;
-                    }
-
-                    fila.innerHTML = `
-                        <td><strong>${cita.cliente_nombre || 'Sin nombre'}</strong></td>
-                        <td>${cita.cliente_telefono || 'Sin teléfono'}</td>
-                        <td>${cita.servicio || 'No especificado'}</td>
-                        <td>${fechaFormateada}</td>
-                        <td><span style="color: #ffffff; font-weight: bold;">${cita.cita_hora || '---'}</span></td>
-                        <td><button class="btn-eliminar" onclick="eliminarCita('${cita.id}')">Eliminar</button></td>
-                    `;
-                    tablaCuerpo.appendChild(fila);
-                });
+                procesarContabilidad();
+                renderizarTabla(''); // Carga inicial mostrando todos los registros
             })
             .catch(error => {
-                console.error("Error al obtener datos de Firebase:", error);
-                tablaCuerpo.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Error de comunicación con la base de datos.</td></tr>';
+                console.error("Error contable:", error);
+                tablaCuerpo.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Error al procesar la contabilidad de la nube.</td></tr>';
             });
     }
 
+    // EXTRAE EL PRECIO ENTRE PARÉNTESIS USANDO EXPRESIONES REGULARES
+    function extraerPrecio(servicioTexto) {
+        if (!servicioTexto) return 0;
+        // Busca cualquier número que esté acompañado por el símbolo € dentro de un paréntesis
+        const coincidencia = servicioTexto.match(/\((\d+)€\)/);
+        return coincidencia ? parseInt(coincidencia[1], 10) : 0;
+    }
+
+    function procesarContabilidad() {
+        // Obtener fechas clave basadas en el huso horario local actual (Año 2026)
+        const ahora = new Date();
+        const hoyStr = ahora.toISOString().split('T')[0];
+        
+        const mesActual = ahora.getMonth(); // 0 = Enero, 11 = Diciembre
+        const anioActual = ahora.getFullYear();
+
+        let cHoy = 0, iHoy = 0;
+        let cMes = 0, iMes = 0;
+        let cAnio = 0, iAnio = 0;
+
+        // Diccionario para registrar cuántos cortes se hicieron por cada fecha única (para el promedio diario)
+        const mapaFechasActivas = {};
+
+        todasLasCitas.forEach(cita => {
+            if (!cita.cita_fecha) return;
+
+            const precio = extraerPrecio(cita.servicio);
+            const fechaCitaObj = new Date(cita.cita_fecha + 'T00:00:00');
+            
+            const citaAnio = fechaCitaObj.getFullYear();
+            const citaMes = fechaCitaObj.getMonth();
+
+            // Guardar en el mapa de días trabajados
+            mapaFechasActivas[cita.cita_fecha] = (mapaFechasActivas[cita.cita_fecha] || 0) + 1;
+
+            // 1. Cálculo del Año
+            if (citaAnio === anioActual) {
+                cAnio++;
+                iAnio += precio;
+
+                // 2. Cálculo del Mes
+                if (citaMes === mesActual) {
+                    cMes++;
+                    iMes += precio;
+                }
+            }
+
+            // 3. Cálculo del Día de Hoy
+            if (cita.cita_fecha === hoyStr) {
+                cHoy++;
+                iHoy += precio;
+            }
+        });
+
+        // Cálculo del promedio de cortes diarios (basado únicamente en los días en los que hubo actividad)
+        const totalDiasActivos = Object.keys(mapaFechasActivas).length;
+        const promedio = totalDiasActivos > 0 ? (todasLasCitas.length / totalDiasActivos).toFixed(1) : '0.0';
+
+        // Pintar los resultados en las tarjetas superiores
+        document.getElementById('cortesHoy').textContent = cHoy;
+        document.getElementById('ingresosHoy').textContent = `${iHoy},00€`;
+
+        document.getElementById('cortesMes').textContent = cMes;
+        document.getElementById('ingresosMes').textContent = `${iMes},00€`;
+
+        document.getElementById('cortesAnio').textContent = cAnio;
+        document.getElementById('ingresosAnio').textContent = `${iAnio},00€`;
+
+        document.getElementById('promedioDiario').textContent = promedio;
+    }
+
+    function renderizarTabla(fechaFiltroStr) {
+        tablaCuerpo.innerHTML = '';
+
+        // Filtrar si el usuario seleccionó una fecha específica
+        const citasFiltradas = fechaFiltroStr 
+            ? todasLasCitas.filter(c => c.cita_fecha === fechaFiltroStr)
+            : todasLasCitas;
+
+        if (citasFiltradas.length === 0) {
+            tablaCuerpo.innerHTML = '<tr><td colspan="6" class="sin-citas">No se encontraron citas para el criterio seleccionado.</td></tr>';
+            return;
+        }
+
+        citasFiltradas.forEach(cita => {
+            const fila = document.createElement('tr');
+
+            let fechaFormateada = cita.cita_fecha;
+            if(cita.cita_fecha) {
+                const partes = cita.cita_fecha.split('-');
+                if(partes.length === 3) fechaFormateada = `${partes[2]}/${partes[1]}/${partes[0]}`;
+            }
+
+            fila.innerHTML = `
+                <td><strong>${cita.cliente_nombre || 'Sin nombre'}</strong></td>
+                <td>${cita.cliente_telefono || 'Sin teléfono'}</td>
+                <td>${cita.servicio || 'No especificado'}</td>
+                <td>${fechaFormateada}</td>
+                <td><span style="color: #ffffff; font-weight: bold;">${cita.cita_hora || '---'}</span></td>
+                <td><button class="btn-eliminar" onclick="eliminarCita('${cita.id}')">Eliminar</button></td>
+            `;
+            tablaCuerpo.appendChild(fila);
+        });
+    }
+
     window.eliminarCita = function(idCita) {
-        if (confirm("¿Estás seguro de que deseas eliminar y liberar este turno permanentemente?")) {
+        if (confirm("¿Estás seguro de que deseas eliminar y liberar este turno permanentemente? El balance contable se actualizará.")) {
             fetch(`${FIREBASE_URL}citas/${idCita}.json`, {
                 method: 'DELETE'
             })
             .then(() => {
                 alert("La cita ha sido removida con éxito.");
-                cargarCitas(); 
+                obtenerCitasServidor(); // Recarga y recalcula todo desde internet
             })
             .catch(error => {
                 console.error("Error al borrar el registro:", error);
