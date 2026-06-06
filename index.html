@@ -49,131 +49,228 @@
         }
 
         /* ==========================================================================
-           ESTILOS DEL MENÚ DE NAVEGACIÓN EN DOS FILAS
+           BARRA DE NAVEGACIÓN Y MENÚ DESPLEGABLE
            ========================================================================== */
-
-        /* Contenedor principal del menú */
-        .menu-navegacion {
+        header {
             display: flex;
-            flex-direction: column; /* Alinea los elementos en forma de columna (filas verticales) */
-            align-items: center;    /* Centra todo horizontalmente */
-            justify-content: center;
-            gap: 12px;              /* Espacio de separación entre la fila de arriba y la de abajo */
-            padding: 15px 0;
+            flex-direction: row; 
+            justify-content: space-between;
+            align-items: center;        
+            padding: 10px 4%;          
+            background-color: #121212;  
+            position: fixed;            
             width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #222;
+            height: 70px;
         }
 
-        /* Primera fila: Inicio y Cortes */
-        .menu-fila-superior {
+        /* Botón de Hamburguesa (Esquina Superior Izquierda) */
+        .menu-hamburguesa {
             display: flex;
-            gap: 30px;              /* Separación horizontal generosa entre INICIO y CORTES */
+            flex-direction: column;
+            justify-content: space-between;
+            width: 26px;
+            height: 18px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 1100;
         }
 
-        /* Enlaces normales (Inicio y Cortes) */
-        .menu-link {
+        .menu-hamburguesa span {
+            width: 100%;
+            height: 3px;
+            background-color: #ffffff;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        /* Animación de la hamburguesa cuando se abre */
+        .menu-hamburguesa.open span:nth-child(1) {
+            transform: translateY(7.5px) rotate(45deg);
+        }
+        .menu-hamburguesa.open span:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-hamburguesa.open span:nth-child(3) {
+            transform: translateY(-7.5px) rotate(-45deg);
+        }
+
+        /* Panel Lateral Desplegable */
+        .menu-desplegable {
+            position: fixed;
+            top: 0;
+            left: -280px; /* Escondido por defecto a la izquierda */
+            width: 280px;
+            height: 100vh;
+            background-color: #161616;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.7);
+            z-index: 1050;
+            display: flex;
+            flex-direction: column;
+            padding: 90px 30px 40px 30px;
+            transition: left 0.3s ease-in-out;
+        }
+
+        .menu-desplegable.open {
+            left: 0; /* Se muestra al activarse */
+        }
+
+        .menu-desplegable a {
             color: #ffffff;
             text-decoration: none;
-            font-size: 0.95rem;
+            font-size: 1.1rem;
             font-weight: 600;
             letter-spacing: 1.5px;
             text-transform: uppercase;
+            padding: 15px 0;
+            border-bottom: 1px solid #222;
             transition: color 0.3s ease;
         }
 
-        .menu-link:active {
-            color: #cc0000;         /* Cambia a rojo cuando el cliente lo pulsa */
-        }
-
-        /* Segunda fila: Enlace destacado de Agendar Cita */
-        .menu-fila-inferior {
-            width: 80%;
-            display: flex;
-            justify-content: center;
-        }
-
-        /* Estilo profesional para el texto de AGENDAR CITA en el menú */
-        .menu-link-destacado {
-            color: #cc0000;         /* Color rojo barbería para que llame la atención */
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 800;       /* Letra más gruesa y firme */
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            padding: 4px 12px;
-            border-bottom: 2px solid transparent;
-            transition: transform 0.2s ease, border-color 0.3s ease;
-        }
-
-        /* Efecto visual al presionarlo en el celular */
-        .menu-link-destacado:active {
-            transform: scale(0.95);
-            border-color: #cc0000;  /* Muestra una línea roja abajo al tocarlo */
-        }
-
-        header .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            letter-spacing: 2px;
-            color: #ffffff;
-        }
-
-        header nav a {
-            color: #e0e0e0;
-            text-decoration: none;
-            font-size:0.65rem;
-            font-weight:500;
-            text-transform:uppercase;
-            transition: color 0.3s;
-        }
-
-        header nav a:hover {
+        .menu-desplegable a:active, .menu-desplegable a:hover {
             color: var(--rojo-acento);
         }
 
-        /* Sección Inicio (Hero) - Corregida para mejorar la visibilidad */
-        .hero-section {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            /* Cambiado a un fondo oscuro sólido para que el texto blanco y el botón rojo resalten */
-            background-color: var(--fondo-oscuro); 
-            padding: 0 20px;
-            margin-top: 80px; /* Evita que la barra de navegación tape el título */
-        }
-
-        .hero-content h1 {
-            font-size: 3.5rem;
-            letter-spacing: 5px;
-            margin-bottom: 10px;
-            color: #ffffff;
-        }
-
-        .hero-content p {
-            font-size: 1.2rem;
+        /* Enlace de administración destacado en el menú desplegable */
+        .menu-desplegable .link-admin-menu {
+            margin-top: auto; /* Empuja el botón al fondo del menú */
             color: var(--gris-secundario);
-            margin-bottom: 30px;
-        }
-
-        .btn-principal {
-            background-color: var(--rojo-acento);
-            color: #ffffff;
-            padding: 12px 30px;
-            text-decoration: none;
-            font-weight: bold;
-            text-transform: uppercase;
+            font-size: 0.9rem;
+            border: 1px dashed #444444;
             border-radius: 4px;
-            transition: background 0.3s;
+            text-align: center;
+            padding: 10px;
         }
 
-        .btn-principal:hover {
-            background-color: var(--rojo-hover);
+        .menu-desplegable .link-admin-menu:active {
+            border-color: var(--rojo-acento);
+            background-color: #111111;
+        }
+
+        /* Contenedor del Logo (Centrado / Derecha) */
+        .logo {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;            
+        }
+
+        .logo img {
+            height: 55px;      
+            width: auto;        
+            display: block;
+        }
+
+        /* Capa de fondo oscura cuando el menú está abierto */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1040;
+            display: none;
+        }
+
+        .menu-overlay.show {
+            display: block;
+        }
+
+        /* ==========================================================================
+           SECCIÓN DE BIENVENIDA (HERO PANEL)
+           ========================================================================== */
+        .hero-container {
+            position: relative;
+            width: 100%;
+            height: 85vh; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: #000000; 
+            margin-top: 70px;
+        }
+
+        .hero-media {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hero-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            object-position: center; 
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.8) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2; 
+            text-align: center;
+            padding: 0 24px;
+            max-width: 600px;
+        }
+
+        .hero-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 4px; 
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            margin-bottom: 35px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-btn {
+            display: inline-block;
+            padding: 16px 32px;
+            background-color: #cc0000; 
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 2px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            box-shadow: 0 6px 20px rgba(204, 0, 0, 0.4);
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        .hero-btn:active {
+            transform: scale(0.96); 
+            background-color: #990000;
+            box-shadow: 0 4px 10px rgba(204, 0, 0, 0.2);
         }
 
         /* Sección Galería */
         .galeria-section {
-            padding: 100px 5% 60px 5%;
+            padding: 60px 5%;
         }
 
         .grid-galeria {
@@ -211,7 +308,7 @@
 
         /* Sección Agenda */
         .agenda-section {
-            padding: 80px 5%;
+            padding: 60px 5%;
             background-color: #161616;
         }
 
@@ -276,158 +373,12 @@
             border-top: 1px solid #222;
         }
 
-        /* Barra de Navegación Horizontal - Optimizada para Móviles */
-        header {
-            display: flex;
-            flex-direction: row; 
-            gap: 6px; /* Fuerza a que el logo y el menú estén en la misma línea */
-            justify-content: space-evenly; /* Empuja el logo a la izquierda y el menú a la derecha */
-            align-items: center;        /* Alinea perfectamente de forma vertical el logo y los textos */
-            padding: 10px 4%;          /* Reduce los espacios para que todo quepa en la pantalla */
-            background-color: #121212;  /* Fondo oscuro sólido */
-            position: fixed;            /* Se mantiene arriba fijo */
-            width: 100%;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-            border-bottom: 1px solid #222;
-        }
-
-        /* Contenedor del Logo */
-        .logo {
-            display: flex;
-            align-items: center;
-            flex-shrink: 0;            /* Evita que el logo se aplaste en pantallas chicas */
-        }
-
-        header nav {
-            display: flex;
-            flex-direction: row;       /* Coloca los enlaces uno al lado del otro */
-            gap: 12px;                 /* Separa sutilmente las palabras "Inicio", "Cortes", etc. */
-        }
-
-        header nav a {
-            color: #e0e0e0;
-            text-decoration: none;
-            font-size: 0.85rem;        /* Reduce un poco el tamaño de la letra para que quepa a la derecha */
-            font-weight: 600;
-            text-transform: uppercase;  /* Mantiene el estilo en mayúsculas elegante */
-            transition: color 0.3s;
-        }
-
-        header nav a:hover {
-            color: #cc0000;            /* Color rojo acento cuando pasas el dedo */
-        }
-
-        .logo img {
-            height: 60px;      /* Controla el tamaño en miniatura (ajusta el número si lo quieres más grande o pequeño) */
-            width: auto;        /* Mantiene la proporción perfecta para que no se deforme */
-            display: block;
-        }
-
-        /* ==========================================================================
-           SECCIÓN DE BIENVENIDA (HERO PANEL)
-           ========================================================================== */
-
-        /* Contenedor principal de la bienvenida */
-        .hero-container {
-            position: relative;
-            width: 100%;
-            height: 85vh; /* Ocupa el 85% de la altura de la pantalla del celular */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            background-color: #000000; /* Fondo de respaldo negro */
-        }
-
-        /* Manejo de la capa multimedia y posicionamiento de la imagen */
-        .hero-media {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-
-        .hero-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Evita que la imagen se estire o se deforme */
-            object-position: center; /* Mantiene el centro de la foto siempre visible */
-        }
-
-        /* Capa oscura degradada para que las letras blancas resalten con elegancia */
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.8) 100%);
-        }
-
-        /* Contenedor del texto superpuesto */
-        .hero-content {
-            position: relative;
-            z-index: 2; /* Se posiciona por encima de la imagen y el overlay */
-            text-align: center;
-            padding: 0 24px;
-            max-width: 600px;
-        }
-
-        /* Tipografía premium para el título principal */
-        .hero-title {
-            font-size: 2.8rem;
-            font-weight: 800;
-            color: #ffffff;
-            letter-spacing: 4px; /* Separación de caracteres moderna */
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Estilo para el subtítulo o eslogan */
-        .hero-subtitle {
-            font-size: 1.1rem;
-            color: #e0e0e0;
-            margin-bottom: 35px;
-            font-weight: 300;
-            letter-spacing: 1px;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Botón de agendado rápido con efectos visuales activos */
-        .hero-btn {
-            display: inline-block;
-            padding: 16px 32px;
-            background-color: #cc0000; /* Rojo vibrante y llamativo */
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 0.95rem;
-            letter-spacing: 2px;
-            border-radius: 6px;
-            text-transform: uppercase;
-            box-shadow: 0 6px 20px rgba(204, 0, 0, 0.4);
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-        }
-
-        /* Respuesta visual inmediata cuando el cliente pulsa el botón en su pantalla */
-        .hero-btn:active {
-            transform: scale(0.96); /* Efecto de hundimiento rápido */
-            background-color: #990000;
-            box-shadow: 0 4px 10px rgba(204, 0, 0, 0.2);
-        }
-
         /* ==========================================================================
            SECCIÓN DE PRECIOS PREMIUM
            ========================================================================== */
-
         .precios-section {
             padding: 60px 20px;
-            background-color: #0a0a0a; /* Negro profundo de fondo */
+            background-color: #0a0a0a; 
             color: #ffffff;
         }
 
@@ -444,30 +395,27 @@
             margin-bottom: 5px;
         }
 
-        /* Rejilla inteligente: Una columna en celulares */
         .precios-grid {
             display: flex;
             flex-direction: column;
             gap: 16px;
             max-width: 500px;
-            margin: 0 auto; /* Centra el bloque entero en la pantalla */
+            margin: 0 auto; 
         }
 
-        /* Tarjeta de precio individual */
         .precio-tarjeta {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px;
-            background-color: #141414; /* Gris oscuro para hacer contraste */
-            border-left: 4px solid #333333; /* Detalle de borde sutil */
+            background-color: #141414; 
+            border-left: 4px solid #333333; 
             border-radius: 6px;
             transition: transform 0.2s ease;
         }
 
-        /* Estilo especial para los servicios "Premium" para que resalten */
         .precio-tarjeta.destacado {
-            border-left-color: #cc0000; /* Borde rojo llamativo */
+            border-left-color: #cc0000; 
             background: linear-gradient(90deg, #141414 0%, #1a0c0c 100%);
         }
 
@@ -480,12 +428,11 @@
 
         .servicio-info p {
             font-size: 0.85rem;
-            color: #aaaaaa; /* Texto de descripción más suave */
+            color: #aaaaaa; 
             padding-right: 10px;
             line-height: 1.3;
         }
 
-        /* Contenedor del precio en euros */
         .servicio-costo {
             font-size: 1.4rem;
             font-weight: 800;
@@ -497,46 +444,38 @@
             text-align: center;
         }
 
-        /* El precio de los servicios premium resalta en fondo rojo */
         .precio-tarjeta.destacado .servicio-costo {
             background-color: #cc0000;
             box-shadow: 0 2px 8px rgba(204, 0, 0, 0.3);
         }
 
-        /* Estilo para el nuevo selector de servicios */
         .select-servicio {
             width: 100%;
             padding: 12px;
-            background-color: #141414; /* Fondo gris oscuro a tono */
+            background-color: #141414; 
             border: 1px solid #333333;
             border-radius: 4px;
             color: #ffffff;
             font-size: 1rem;
             font-family: inherit;
             outline: none;
-            appearance: none; /* Quita el diseño por defecto del teléfono */
+            appearance: none; 
             background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='white'><path d='M7 10l5 5 5-5z'/></svg>");
             background-repeat: no-repeat;
             background-position: right 10px center;
         }
 
         .select-servicio:focus {
-            border-color: #cc0000; /* Borde rojo barbería al seleccionarlo */
+            border-color: #cc0000; 
         }
 
-        /* ==========================================================================
-           ESTILOS PARA EL BOTÓN DE ADMINISTRACIÓN DEBAJO DEL FORMULARIO
-           ========================================================================== */
-
-        /* Contenedor para centrar el botón con respecto al formulario */
         .contenedor-admin-abajo {
             display: flex;
             justify-content: center;
-            margin-top: 30px; /* Espacio de separación con el formulario */
+            margin-top: 30px; 
             margin-bottom: 10px;
         }
 
-        /* Estilo del enlace de administración */
         .btn-admin-inferior {
             color: #888888;
             text-decoration: none;
@@ -545,12 +484,11 @@
             letter-spacing: 1px;
             text-transform: uppercase;
             padding: 8px 16px;
-            border: 1px dashed #444444; /* Borde sutil para que no resalte demasiado */
+            border: 1px dashed #444444; 
             border-radius: 4px;
             transition: all 0.3s ease;
         }
 
-        /* Efecto visual al pasar el cursor o presionar en pantallas táctiles */
         .btn-admin-inferior:hover, .btn-admin-inferior:active {
             color: #ffffff;
             border-color: #ffffff;
@@ -560,27 +498,35 @@
 </head>
 <body>
 
-<!-- Encabezado corregido (Se remueve el acceso de administración de aquí) -->
+<!-- Capa oscura trasera del menú -->
+<div class="menu-overlay" id="menuOverlay"></div>
+
+<!-- Encabezado con Botón de Hamburguesa Izquierda y Logo Derecha -->
 <header>
+    <button class="menu-hamburguesa" id="btnHamburguesa">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    
     <div class="logo"> 
-        <img src="IMAGENES/LOGO.png" alt="Logo Víctor Styles">
+        <img src="LOGO.png" alt="Logo Víctor Styles">
     </div>
-   <nav class="menu-navegacion">
-        <div class="menu-fila-superior">
-            <a href="#inicio" class="menu-link">INICIO</a>
-            <a href="#galeria" class="menu-link">CORTES</a>
-        </div>
-        
-        <div class="menu-fila-inferior">
-            <a href="#agenda" class="menu-link-destacado">Agendar Cita</a>
-        </div>
-    </nav>
 </header>
+
+<!-- Menú Desplegable Lateral -->
+<nav class="menu-desplegable" id="menuLateral">
+    <a href="#inicio" class="menu-link">Inicio</a>
+    <a href="#galeria" class="menu-link">Cortes</a>
+    <a href="#precios" class="menu-link">Servicios</a>
+    <a href="#agenda" class="menu-link">Agendar Cita</a>
+    <a href="admin.html" class="link-admin-menu">Acceso Administrador</a>
+</nav>
 
     <!-- Sección de Bienvenida Principal -->
     <section id="inicio" class="hero-container">
         <div class="hero-media">
-            <img src="IMAGENES/Hero.jpg" alt="Fondo Víctor Styles" class="hero-img">
+            <img src="Hero.jpg" alt="Fondo Víctor Styles" class="hero-img">
             <div class="hero-overlay"></div>
         </div>
         
@@ -596,9 +542,9 @@
         <h2>Mi Trabajo</h2>
         <p class="subtitulo">Una muestra de los cortes y estilos recientes.</p>
         <div class="grid-galeria">
-            <div class="tarjeta-galeria"><img src="IMAGENES/corte1.png" alt="Corte de cabello 1"><p>Hair Fade</p></div>
-            <div class="tarjeta-galeria"><img src="IMAGENES/corte2.jpg" alt="Corte de cabello 2"><p>Fade con linea</p></div>
-            <div class="tarjeta-galeria"><img src="IMAGENES/corte3.jpg" alt="Corte de cabello 3"><p>Mid Fade</p></div>
+            <div class="tarjeta-galeria"><img src="corte1.png" alt="Corte de cabello 1"><p>Hair Fade</p></div>
+            <div class="tarjeta-galeria"><img src="corte2.jpg" alt="Corte de cabello 2"><p>Fade con linea</p></div>
+            <div class="tarjeta-galeria"><img src="corte3.jpg" alt="Corte de cabello 3"><p>Mid Fade</p></div>
         </div>
     </section>
 
@@ -703,9 +649,9 @@
             
             <button type="submit" class="btn-submit">Confirmar Reserva</button>
         </form>
-        <!-- NUEVO CAMBIO: Contenedor y enlace de administración debajo del formulario -->
+
         <div class="contenedor-admin-abajo">
-            <a href="admin.html" class="btn-admin-inferior">Acceso Administrator</a>
+            <a href="admin.html" class="btn-admin-inferior">Acceso Administrador</a>
         </div>
     </section>
 
@@ -714,6 +660,26 @@
     </footer>
 
 <script>
+    // Lógica para abrir y cerrar el menú desplegable en el teléfono
+    const btnHamburguesa = document.getElementById('btnHamburguesa');
+    const menuLateral = document.getElementById('menuLateral');
+    const menuOverlay = document.getElementById('menuOverlay');
+    const linksMenu = document.querySelectorAll('.menu-desplegable a');
+
+    function toggleMenu() {
+        btnHamburguesa.classList.toggle('open');
+        menuLateral.classList.toggle('open');
+        menuOverlay.classList.toggle('show');
+    }
+
+    btnHamburguesa.addEventListener('click', toggleMenu);
+    menuOverlay.addEventListener('click', toggleMenu);
+
+    // Cierra el menú automáticamente cuando se hace clic en cualquier opción
+    linksMenu.forEach(link => {
+        link.addEventListener('click', toggleMenu);
+    });
+
     // ==========================================
     // CONFIGURACIÓN DE TUS PLATAFORMAS (BACKEND)
     // ==========================================
@@ -736,14 +702,10 @@
     const inputFecha = document.getElementById('fecha');
     const selectHora = document.getElementById('hora');
 
-    // Validación para que no puedan seleccionar días pasados en el calendario nativo
     const hoy = new Date();
     const hoyStr = hoy.toISOString().split('T')[0];
     inputFecha.min = hoyStr;
 
-    // ==========================================
-    // CONTROLADOR: CARGAR Y FILTRAR HORAS DISPONIBLES
-    // ==========================================
     inputFecha.addEventListener('change', function() {
         const fechaSeleccionadaStr = this.value; 
         const fechaSeleccionada = new Date(fechaSeleccionadaStr + 'T00:00:00');
@@ -768,7 +730,6 @@
                     let tiempoActual = hInicio * 60 + mInicio;
                     const tiempoFin = hFin * 60 + mFin;
 
-                    // AJUSTE 4: Obtener hora y minutos actuales si eligen el día de hoy
                     const ahora = new Date();
                     const esHoy = (fechaSeleccionadaStr === ahora.toISOString().split('T')[0]);
                     const minutosTranscurridosHoy = ahora.getHours() * 60 + ahora.getMinutes();
@@ -783,18 +744,15 @@
                         let minutosStr = minutos.toString().padStart(2, '0');
                         let horaFormato24 = `${horasStr}:${minutosStr}`;
                         
-                        // AJUSTE 4: Si es hoy y el bloque de hora ya pasó, lo saltamos automáticamente
                         if (esHoy && tiempoActual <= minutosTranscurridosHoy) {
                             tiempoActual += 30;
                             continue;
                         }
 
-                        // Formateo visual de comparación de 12 horas AM/PM tal como se guarda en la base de datos
                         let ampmComp = horas >= 12 ? 'PM' : 'AM';
                         let horas12Comp = horas % 12 || 12;
                         let textoHoraDeComparacion = `${horas12Comp}:${minutosStr} ${ampmComp}`;
 
-                        // Cálculo de la hora previa (30 minutos antes) en formato 12 horas AM/PM
                         let tiempoHace30 = tiempoActual - 30;
                         let horasHace30 = Math.floor(tiempoHace30 / 60);
                         let minutosHace30 = tiempoHace30 % 60;
@@ -803,7 +761,6 @@
                         let minutosHace30Str = minutosHace30.toString().padStart(2, '0');
                         let textoHoraHace30DeComparacion = `${horas12Hace30}:${minutosHace30Str} ${ampmHace30}`;
 
-                        // AJUSTE 1: Validación contra 'cita_fecha' y 'cita_hora' (datos reales de la nube)
                         const estaOcupadaAhora = citasOcupadas.some(cita => 
                             cita.cita_fecha === fechaSeleccionadaStr && cita.cita_hora === textoHoraDeComparacion
                         );
@@ -821,7 +778,6 @@
                         let textoHora = `${horas12}:${minutosStr} ${ampm}`;
 
                         let nuevaOpcion = document.createElement('option');
-                        // El valor almacena la hora en formato 24h para procesar internamente y mantener consistencia
                         nuevaOpcion.value = horaFormato24;
                         nuevaOpcion.textContent = textoHora;
                         selectHora.appendChild(nuevaOpcion);
@@ -853,7 +809,6 @@
         const fechaValue = inputFecha.value;
         const horaTexto = selectHora.options[selectHora.selectedIndex].text;
         
-        // AJUSTE 2: Objeto estructurado unificado para Firebase y EmailJS
         const datosCita = {
             cliente_nombre: document.getElementById('nombre').value.trim(),
             cliente_telefono: document.getElementById('telefono').value.trim(),
@@ -862,7 +817,6 @@
             cita_hora: horaTexto
         };
 
-        // AJUSTE 2: Envío del bloque completo con metadatos del cliente a Firebase
         fetch(`${FIREBASE_URL}citas.json`, {
             method: 'POST',
             body: JSON.stringify(datosCita)
