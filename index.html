@@ -103,7 +103,7 @@
         .menu-desplegable {
             position: fixed;
             top: 0;
-            left: -280px; /* Escondido por defecto a la izquierda */
+            left: -280px; 
             width: 280px;
             height: 100vh;
             background-color: #161616;
@@ -116,7 +116,7 @@
         }
 
         .menu-desplegable.open {
-            left: 0; /* Se muestra al activarse */
+            left: 0; 
         }
 
         .menu-desplegable a {
@@ -135,9 +135,8 @@
             color: var(--rojo-acento);
         }
 
-        /* Enlace de administración destacado en el menú desplegable */
         .menu-desplegable .link-admin-menu {
-            margin-top: auto; /* Empuja el botón al fondo del menú */
+            margin-top: auto; 
             color: var(--gris-secundario);
             font-size: 0.9rem;
             border: 1px dashed #444444;
@@ -151,7 +150,6 @@
             background-color: #111111;
         }
 
-        /* Contenedor del Logo (Centrado / Derecha) */
         .logo {
             display: flex;
             align-items: center;
@@ -164,7 +162,6 @@
             display: block;
         }
 
-        /* Capa de fondo oscura cuando el menú está abierto */
         .menu-overlay {
             position: fixed;
             top: 0;
@@ -520,7 +517,7 @@
     <a href="#galeria" class="menu-link">Cortes</a>
     <a href="#precios" class="menu-link">Servicios</a>
     <a href="#agenda" class="menu-link">Agendar Cita</a>
-    <a href="admin.html" class="link-admin-menu">Acceso Administrador</a>
+    <a href="admin.html" class="link-admin-menu">Acceso Administrator</a>
 </nav>
 
     <!-- Sección de Bienvenida Principal -->
@@ -675,7 +672,6 @@
     btnHamburguesa.addEventListener('click', toggleMenu);
     menuOverlay.addEventListener('click', toggleMenu);
 
-    // Cierra el menú automáticamente cuando se hace clic en cualquier opción
     linksMenu.forEach(link => {
         link.addEventListener('click', toggleMenu);
     });
@@ -702,9 +698,35 @@
     const inputFecha = document.getElementById('fecha');
     const selectHora = document.getElementById('hora');
 
-    const hoy = new Date();
-    const hoyStr = hoy.toISOString().split('T')[0];
-    inputFecha.min = hoyStr;
+    // ==========================================
+    // NUEVO: FUNCIONES DE ZONA HORARIA VENEZUELA
+    // ==========================================
+    function obtenerFechaVenezuelaObj() {
+        const cadenaCaracas = new Date().toLocaleString("en-US", { timeZone: "America/Caracas" });
+        return new Date(cadenaCaracas);
+    }
+
+    function obtenerFechaVenezuelaStr(objetoFecha) {
+        const d = objetoFecha || obtenerFechaVenezuelaObj();
+        const año = d.getFullYear();
+        const mes = String(d.getMonth() + 1).padStart(2, '0');
+        const dia = String(d.getDate()).padStart(2, '0');
+        return `${año}-${mes}-${dia}`;
+    }
+
+    // Al cargar la página, configuramos el mínimo del calendario y recordamos al cliente
+    document.addEventListener('DOMContentLoaded', function() {
+        const hoyVzlaStr = obtenerFechaVenezuelaStr();
+        inputFecha.min = hoyVzlaStr;
+
+        // LOCALSTORAGE: Recordar datos del cliente
+        const nombreGuardado = localStorage.getItem('barberia_nombre');
+        const telefonoGuardado = localStorage.getItem('barberia_telefono');
+        if (nombreGuardado && telefonoGuardado) {
+            document.getElementById('nombre').value = nombreGuardado;
+            document.getElementById('telefono').value = telefonoGuardado;
+        }
+    });
 
     inputFecha.addEventListener('change', function() {
         const fechaSeleccionadaStr = this.value; 
@@ -730,9 +752,11 @@
                     let tiempoActual = hInicio * 60 + mInicio;
                     const tiempoFin = hFin * 60 + mFin;
 
-                    const ahora = new Date();
-                    const esHoy = (fechaSeleccionadaStr === ahora.toISOString().split('T')[0]);
-                    const minutosTranscurridosHoy = ahora.getHours() * 60 + ahora.getMinutes();
+                    // Ajuste de zona horaria de Venezuela para la validación del mismo día
+                    const ahoraVzla = obtenerFechaVenezuelaObj();
+                    const hoyVzlaStr = obtenerFechaVenezuelaStr(ahoraVzla);
+                    const esHoy = (fechaSeleccionadaStr === hoyVzlaStr);
+                    const minutosTranscurridosHoy = ahoraVzla.getHours() * 60 + ahoraVzla.getMinutes();
 
                     let banderaOpcionesDisponibles = false;
 
@@ -744,6 +768,7 @@
                         let minutosStr = minutos.toString().padStart(2, '0');
                         let horaFormato24 = `${horasStr}:${minutosStr}`;
                         
+                        // Si la cita que está revisando es para hoy, bloquea los bloques que ya pasaron en Venezuela
                         if (esHoy && tiempoActual <= minutosTranscurridosHoy) {
                             tiempoActual += 30;
                             continue;
@@ -808,14 +833,20 @@
 
         const fechaValue = inputFecha.value;
         const horaTexto = selectHora.options[selectHora.selectedIndex].text;
+        const nombreInput = document.getElementById('nombre').value.trim();
+        const telefonoInput = document.getElementById('telefono').value.trim();
         
         const datosCita = {
-            cliente_nombre: document.getElementById('nombre').value.trim(),
-            cliente_telefono: document.getElementById('telefono').value.trim(),
+            cliente_nombre: nombreInput,
+            cliente_telefono: telefonoInput,
             servicio: document.getElementById('servicio').value,
             cita_fecha: fechaValue,
             cita_hora: horaTexto
         };
+
+        // GUARDAR EN LOCALSTORAGE para que el cliente no tenga que reescribir la próxima vez
+        localStorage.setItem('barberia_nombre', nombreInput);
+        localStorage.setItem('barberia_telefono', telefonoInput);
 
         fetch(`${FIREBASE_URL}citas.json`, {
             method: 'POST',
@@ -835,6 +866,10 @@
         this.reset();
         selectHora.disabled = true;
         selectHora.innerHTML = '<option value="" disabled selected>Primero selecciona un día</option>';
+        
+        // Mantenemos los campos llenos con la información guardada para comodidad visual
+        document.getElementById('nombre').value = nombreInput;
+        document.getElementById('telefono').value = telefonoInput;
     });
 </script>
 <script>
