@@ -367,7 +367,6 @@
 </head>
 <body>
 
-<!-- PANTALLA DE ACCESO SEGURO -->
 <div class="login-container" id="pantallaLogin">
     <div class="login-box">
         <h3>Acceso Restringido</h3>
@@ -392,14 +391,13 @@
     <a href="index.html#galeria">Cortes</a>
     <a href="index.html#precios">Servicios</a>
     <a href="index.html#agenda">Agendar Cita</a>
-    <a href="admin.html" class="link-admin-menu">Panel Administrador</a>
+    <a href="admin.html" class="link-admin-menu">Panel Administrator</a>
 </nav>
 
 <section class="admin-section">
     <h2>Panel de Control Contable</h2>
     <p class="subtitulo">Métricas de rendimiento, ingresos y balances de la barbería.</p>
 
-    <!-- MATRIZ CONTABLE -->
     <div class="grid-contable">
         <div class="tarjeta-contable">
             <h4>Hoy</h4>
@@ -423,7 +421,6 @@
         </div>
     </div>
 
-    <!-- SECCIÓN DE BARBERÍA: DIVISION DE INGRESOS (40% / 60%) -->
     <div class="seccion-bloque">
         <h3>Cierre de Caja del Día (División de Ganancias)</h3>
         <p style="color: var(--gris-secundario); font-size: 0.9rem; margin-bottom: 15px;">Cálculo automatizado basado en las tarifas de los servicios registrados hoy.</p>
@@ -444,7 +441,6 @@
         </div>
     </div>
 
-    <!-- CALCULADORA INDEPENDIENTE -->
     <div class="seccion-bloque">
         <h3>Calculadora Auxiliar Contable</h3>
         <div class="calc-grid">
@@ -460,7 +456,6 @@
         </div>
     </div>
 
-    <!-- REGISTRO DE CLIENTE MANUAL -->
     <div class="seccion-bloque">
         <h3>Registrar Cliente en Puerta (Sin Agenda)</h3>
         <form class="form-manual" id="formManual" onsubmit="guardarClienteManual(event)">
@@ -475,12 +470,12 @@
             <div class="form-grupo">
                 <label for="mServicio">Servicio Realizado</label>
                 <select id="mServicio" required>
-                    <option value="Corte Sencillo (10€)">Corte Sencillo (10€)</option>
-                    <option value="Corte Premium (13€)">Corte Premium (13€)</option>
-                    <option value="Corte con Barba Sencillo (16€)">Corte con Barba Sencillo (16€)</option>
-                    <option value="Corte con Barba Premium (19€)">Corte con Barba Premium (19€)</option>
-                    <option value="Barba Sola (6€)">Barba Sola (6€)</option>
-                    <option value="Cero con Barba Premium (13€)">Cero con Barba Premium (13€)</option>
+                    <option value="Corte de Pelo (10€)">Corte de Pelo (10€)</option>
+                    <option value="Corte + Barba (13€)">Corte + Barba (13€)</option>
+                    <option value="Corte + Barba + Cejas (15€)">Corte + Barba + Cejas (15€)</option>
+                    <option value="Corte + Cejas (11€)">Corte + Cejas (11€)</option>
+                    <option value="Barba Tradicional (5€)">Barba Tradicional (5€)</option>
+                    <option value="Diseño de Cejas (3€)">Diseño de Cejas (3€)</option>
                 </select>
                 <label class="checkbox-patrocinio">
                     <input type="checkbox" id="mPatrocinado">
@@ -491,7 +486,6 @@
         </form>
     </div>
 
-    <!-- TOP CLIENTES FRECUENTES -->
     <div class="seccion-bloque">
         <h3>Control de Frecuencia y Fidelidad</h3>
         <p style="color: var(--gris-secundario); font-size: 0.9rem; margin-bottom: 15px;">Listado automático de clientes repetidos ordenados por nivel de asistencia.</p>
@@ -514,7 +508,6 @@
 
     <br>
 
-    <!-- TABLA DE CITAS GENERALES -->
     <h3>Historial y Agenda de Turnos</h3>
     <div class="barra-herramientas">
         <div style="display:flex; align-items:center; gap:10px;">
@@ -537,8 +530,7 @@
                 </tr>
             </thead>
             <tbody id="tabla-citas-cuerpo">
-                <!-- Dinámico -->
-            </tbody>
+                </tbody>
         </table>
     </div>
 </section>
@@ -683,8 +675,8 @@
                 cHoy++; 
                 iHoy += precio;
 
-                // Lógica de división de ganancias del día
-                const de laBarberia = precio * 0.40;
+                // Lógica de división de ganancias del día (Corregida la sintaxis aquí)
+                const deLaBarberia = precio * 0.40;
                 const deVictor = precio * 0.60;
 
                 if (cita.patrocinado === true) {
@@ -782,7 +774,7 @@
             servicio: servicio,
             cita_fecha: fechaHoy,
             cita_hora: horaFmt + " (Puerta)",
-            patrocinado: esPatrocinado // Se envía el estado a la base de datos global
+            patrocinado: esPatrocinado 
         };
 
         fetch(`${FIREBASE_URL}citas.json`, {
@@ -818,7 +810,6 @@
                 if(partes.length === 3) fechaFormateada = `${partes[2]}/${partes[1]}/${partes[0]}`;
             }
 
-            // Validar si el registro guardado en la nube tiene la marca de patrocinado
             const badgePatrocinio = cita.patrocinado ? `<span class="badge-patrocinio">Patrocinado</span>` : '';
 
             fila.innerHTML = `
