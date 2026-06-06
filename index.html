@@ -504,6 +504,258 @@
             transform: scale(0.99);
         }
 
+        /* ==========================================================================
+           SECCIÓN DE GESTIÓN / REAGENDACIÓN DE CITAS
+           ========================================================================== */
+        .contenedor-reagendar {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .titulo-reagendar {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ffffff;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .fila-reagendar {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-codigo {
+            flex: 1;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .btn-reagendar {
+            padding: 0 20px;
+            background-color: #242424;
+            color: #ffffff;
+            border: 1px solid var(--borde-sutil);
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-reagendar:hover {
+            background-color: #333333;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* ==========================================================================
+           VENTANA MODAL - PASE DE CITA PREMIUM (TICKET VIP)
+           ========================================================================== */
+        .modal-cita-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-cita-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .ticket-vip {
+            background-color: #1a1a1a;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+            overflow: hidden;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-cita-overlay.show .ticket-vip {
+            transform: scale(1);
+        }
+
+        .ticket-header {
+            background: linear-gradient(135deg, #1f1f1f 0%, #151515 100%);
+            padding: 24px;
+            text-align: center;
+            border-bottom: 2px dashed #282828;
+            position: relative;
+        }
+
+        /* Simulación de cortes circulares laterales de ticket de entrada */
+        .ticket-header::before, .ticket-header::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            width: 20px;
+            height: 20px;
+            background-color: rgba(0,0,0,0.85);
+            border-radius: 50%;
+        }
+        .ticket-header::before { left: -10px; }
+        .ticket-header::after { right: -10px; }
+
+        .ticket-header h3 {
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .ticket-header p {
+            font-size: 0.75rem;
+            color: var(--gris-secundario);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .ticket-body {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .ticket-dato {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .ticket-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            color: var(--gris-secundario);
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .ticket-valor {
+            font-size: 0.95rem;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .ticket-codigo-box {
+            background-color: #121212;
+            border: 1px dashed rgba(204, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .ticket-codigo-num {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--rojo-acento);
+            letter-spacing: 4px;
+        }
+
+        .ticket-footer {
+            padding: 0 24px 24px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-ticket-accion {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-ticket-primario {
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+        }
+        .btn-ticket-primario:hover { background-color: #e0e0e0; }
+
+        .btn-ticket-secundario {
+            background-color: transparent;
+            color: var(--gris-texto);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .btn-ticket-secundario:hover { background-color: rgba(255, 255, 255, 0.04); }
+
+        /* ==========================================================================
+           SECCIÓN DE UBICACIÓN / DIRECCIÓN
+           ========================================================================== */
+        .ubicacion-section {
+            padding: 60px 5%;
+            background-color: #0d0d0d;
+            border-top: 1px solid var(--borde-sutil);
+            text-align: center;
+        }
+
+        .contenedor-direccion {
+            max-width: 550px;
+            margin: 0 auto;
+            background-color: var(--fondo-tarjeta);
+            border: 1px solid var(--borde-sutil);
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: var(--shadow-premium);
+        }
+
+        .direccion-texto {
+            font-size: 0.95rem;
+            color: #ffffff;
+            line-height: 1.5;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .btn-mapa {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--rojo-acento);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.2s ease;
+        }
+
+        .btn-mapa:hover {
+            color: #ff3333;
+        }
+
         /* Botón Inferior de Acceso */
         .contenedor-admin-abajo {
             display: flex;
@@ -562,13 +814,14 @@
     </div>
 </header>
 
-<!-- Menú Desplegable Lateral -->
+<!-- Menú Desplegable Lateral con la sección de Ubicación añadida -->
 <nav class="menu-desplegable" id="menuLateral">
     <a href="#inicio" class="menu-link">Inicio</a>
     <a href="#galeria" class="menu-link">Cortes</a>
     <a href="#precios" class="menu-link">Servicios</a>
     <a href="#agenda" class="menu-link">Agendar Cita</a>
-    <a href="admin.html" class="link-admin-menu">Acceso Administrador</a>
+    <a href="#ubicacion" class="menu-link">Ubicación</a>
+    <a href="admin.html" class="link-admin-menu">Acceso Administrator</a>
 </nav>
 
     <!-- Sección de Bienvenida Principal -->
@@ -696,6 +949,15 @@
             </div>
             
             <button type="submit" class="btn-submit">Confirmar Reserva</button>
+
+            <!-- APARTADO PARA REAGENDAR CITA -->
+            <div class="contenedor-reagendar">
+                <div class="titulo-reagendar">¿Necesitas gestionar o reagendar tu cita?</div>
+                <div class="fila-reagendar">
+                    <input type="text" id="codigoGestion" class="input-codigo" placeholder="CÓDIGO DE CITA" maxlength="6">
+                    <button type="button" id="btnGestionar" class="btn-reagendar">Buscar</button>
+                </div>
+            </div>
         </form>
 
         <div class="contenedor-admin-abajo">
@@ -703,9 +965,61 @@
         </div>
     </section>
 
+    <!-- SECCIÓN DE UBICACIÓN Y DIRECCIÓN (ACTUALIZADA) -->
+    <section id="ubicacion" class="ubicacion-section">
+        <h2>Ubicación</h2>
+        <p class="subtitulo">Visítanos y vive la experiencia premium</p>
+        <div class="contenedor-direccion">
+            <p class="direccion-texto">
+                <strong>Spartanos Barber Shop</strong><br>
+                Urb. La Gaviota, San Diego,<br>
+                Estado Carabobo, Venezuela.
+            </p>
+            <a href="https://maps.google.com/?q=Spartanos+Barber+Shop+La+Gaviota+San+Diego+Carabobo" target="_blank" class="btn-mapa">
+                <svg width="14" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Ver en Google Maps
+            </a>
+        </div>
+    </section>
+
     <footer>
         <p>&copy; 2026 Víctor Styles. Todos los derechos reservados.</p>
     </footer>
+
+<!-- VENTANA INTERACTIVA PASE VIP / TICKET DE RESERVA -->
+<div class="modal-cita-overlay" id="modalCita">
+    <div class="ticket-vip">
+        <div class="ticket-header">
+            <h3>Pase de Cita</h3>
+            <p>Víctor Styles Barbería</p>
+        </div>
+        <div class="ticket-body">
+            <div class="ticket-dato">
+                <span class="ticket-label">Cliente</span>
+                <span class="ticket-valor" id="lblTicketCliente">-</span>
+            </div>
+            <div class="ticket-dato">
+                <span class="ticket-label">Servicio</span>
+                <span class="ticket-valor" id="lblTicketServicio">-</span>
+            </div>
+            <div class="ticket-dato">
+                <span class="ticket-label">Fecha y Hora</span>
+                <span class="ticket-valor" id="lblTicketFechaHora">-</span>
+            </div>
+            <div class="ticket-dato">
+                <span class="ticket-label">Código Único de Gestión</span>
+                <div class="ticket-codigo-box">
+                    <span class="ticket-codigo-num" id="lblTicketCodigo">000000</span>
+                </div>
+            </div>
+        </div>
+        <div class="ticket-footer">
+            <button class="btn-ticket-accion btn-ticket-primario" id="btnGuardarTicket">Guardar / Compartir Pase</button>
+            <button class="btn-ticket-accion btn-ticket-secundario" id="btnCopiarTicket">Copiar Datos de Cita</button>
+            <button class="btn-ticket-accion btn-ticket-secundario" style="border:none; margin-top:5px; color:#aaa;" id="btnCerrarTicket">Cerrar</button>
+        </div>
+    </div>
+</div>
 
 <script>
     // Lógica para abrir y cerrar el menú desplegable en el teléfono
@@ -749,8 +1063,23 @@
     const inputFecha = document.getElementById('fecha');
     const selectHora = document.getElementById('hora');
 
+    // Elementos del Ticket/Modal
+    const modalCita = document.getElementById('modalCita');
+    const lblTicketCliente = document.getElementById('lblTicketCliente');
+    const lblTicketServicio = document.getElementById('lblTicketServicio');
+    const lblTicketFechaHora = document.getElementById('lblTicketFechaHora');
+    const lblTicketCodigo = document.getElementById('lblTicketCodigo');
+    const btnGuardarTicket = document.getElementById('btnGuardarTicket');
+    const btnCopiarTicket = document.getElementById('btnCopiarTicket');
+    const btnCerrarTicket = document.getElementById('btnCerrarTicket');
+    const inputCodigoGestion = document.getElementById('codigoGestion');
+    const btnGestionar = document.getElementById('btnGestionar');
+
+    // Variable global temporal para almacenar los datos del pase activo
+    let textoCitaGlobalParaCopiar = "";
+
     // ==========================================
-    // NUEVO: FUNCIONES DE ZONA HORARIA VENEZUELA
+    // FUNCIONES DE ZONA HORARIA VENEZUELA
     // ==========================================
     function obtenerFechaVenezuelaObj() {
         const cadenaCaracas = new Date().toLocaleString("en-US", { timeZone: "America/Caracas" });
@@ -763,6 +1092,16 @@
         const mes = String(d.getMonth() + 1).padStart(2, '0');
         const dia = String(d.getDate()).padStart(2, '0');
         return `${año}-${mes}-${dia}`;
+    }
+
+    // Generador de códigos alfanuméricos únicos para las citas
+    function generarCodigoUnicoCita() {
+        const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let resultado = '';
+        for (let i = 0; i < 6; i++) {
+            resultado += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+        }
+        return resultado;
     }
 
     // Al cargar la página, configuramos el mínimo del calendario y recordamos al cliente
@@ -831,10 +1170,10 @@
 
                         let tiempoHace30 = tiempoActual - 30;
                         let horasHace30 = Math.floor(tiempoHace30 / 60);
-                        let minutosHace30 = tiempoHace30 % 60;
+                        let minutesHace30 = tiempoHace30 % 60;
                         let ampmHace30 = horasHace30 >= 12 ? 'PM' : 'AM';
                         let horas12Hace30 = horasHace30 % 12 || 12;
-                        let minutosHace30Str = minutosHace30.toString().padStart(2, '0');
+                        let minutosHace30Str = minutesHace30.toString().padStart(2, '0');
                         let textoHoraHace30DeComparacion = `${horas12Hace30}:${minutosHace30Str} ${ampmHace30}`;
 
                         const estaOcupadaAhora = citasOcupadas.some(cita => 
@@ -886,16 +1225,17 @@
         const horaTexto = selectHora.options[selectHora.selectedIndex].text;
         const nombreInput = document.getElementById('nombre').value.trim();
         const telefonoInput = document.getElementById('telefono').value.trim();
+        const codigoCitaGenerado = generarCodigoUnicoCita();
         
         const datosCita = {
             cliente_nombre: nombreInput,
             cliente_telefono: telefonoInput,
             servicio: document.getElementById('servicio').value,
             cita_fecha: fechaValue,
-            cita_hora: horaTexto
+            cita_hora: horaTexto,
+            codigo_gestion: codigoCitaGenerado
         };
 
-        // GUARDAR EN LOCALSTORAGE para que el cliente no tenga que reescribir la próxima vez
         localStorage.setItem('barberia_nombre', nombreInput);
         localStorage.setItem('barberia_telefono', telefonoInput);
 
@@ -907,7 +1247,14 @@
             return emailjs.send('service_vsrbt7k', 'template_8j4r6p2', datosCita);
         })
         .then(function() {
-            alert(`¡Excelente, ${datosCita.cliente_nombre}! Tu cita a las ${horaTexto} quedó agendada y bloqueada en el sistema global.`);
+            lblTicketCliente.textContent = datosCita.cliente_nombre;
+            lblTicketServicio.textContent = datosCita.servicio;
+            lblTicketFechaHora.textContent = `${datosCita.cita_fecha} a las ${datosCita.cita_hora}`;
+            lblTicketCodigo.textContent = datosCita.codigo_gestion;
+
+            textoCitaGlobalParaCopiar = `💈 VÍCTOR STYLES BARBERÍA 💈\n\nPase de Cita Confirmada\n\n👤 Cliente: ${datosCita.cliente_nombre}\n✂️ Servicio: ${datosCita.servicio}\n📅 Fecha: ${datosCita.cita_fecha}\n⏰ Hora: ${datosCita.cita_hora}\n🔑 Código de Gestión: ${datosCita.codigo_gestion}\n\n📍 Ubicación: Spartanos Barber Shop, Urb. La Gaviota, San Diego, Carabobo.\n\n*Usa tu código para reagendar si lo necesitas.`;
+
+            modalCita.classList.add('show');
         })
         .catch(error => {
             console.error('Error en el flujo de automatización:', error);
@@ -918,9 +1265,94 @@
         selectHora.disabled = true;
         selectHora.innerHTML = '<option value="" disabled selected>Primero selecciona un día</option>';
         
-        // Mantenemos los campos llenos con la información guardada para comodidad visual
         document.getElementById('nombre').value = nombreInput;
         document.getElementById('telefono').value = telefonoInput;
+    });
+
+    // ==========================================================================
+    // LÓGICA DE INTERACCIÓN DE LA VENTANA INTERACTIVA (TICKET VIP)
+    // ==========================================================================
+    btnCerrarTicket.addEventListener('click', () => {
+        modalCita.classList.remove('show');
+    });
+
+    btnCopiarTicket.addEventListener('click', () => {
+        navigator.clipboard.writeText(textoCitaGlobalParaCopiar)
+            .then(() => {
+                btnCopiarTicket.textContent = "¡Copiado con éxito!";
+                setTimeout(() => { btnCopiarTicket.textContent = "Copiar Datos de Cita"; }, 2000);
+            })
+            .catch(err => console.error("Error al copiar texto: ", err));
+    });
+
+    btnGuardarTicket.addEventListener('click', () => {
+        if (navigator.share) {
+            navigator.share({
+                title: 'Mi Cita - Víctor Styles',
+                text: textoCitaGlobalParaCopiar
+            }).catch(err => console.log(err));
+        } else {
+            const blob = new Blob([textoCitaGlobalParaCopiar], { type: 'text/plain;charset=utf-8' });
+            const enlaceDescarga = document.createElement('a');
+            enlaceDescarga.href = URL.createObjectURL(blob);
+            enlaceDescarga.download = `Cita_VictorStyles_${lblTicketCodigo.textContent}.txt`;
+            enlaceDescarga.click();
+        }
+    });
+
+    // ==========================================================================
+    // SISTEMA DE CONTROL PARA REAGENDAR CITA POR CÓDIGO
+    // ==========================================================================
+    btnGestionar.addEventListener('click', () => {
+        const codigoIngresado = inputCodigoGestion.value.trim().toUpperCase();
+        if (!codigoIngresado) {
+            alert("Por favor, ingresa un código válido.");
+            return;
+        }
+
+        btnGestionar.textContent = "Buscando...";
+        btnGestionar.disabled = true;
+
+        fetch(`${FIREBASE_URL}citas.json`)
+            .then(response => response.json())
+            .then(citas => {
+                let citaEncontradaClave = null;
+                let citaDatos = null;
+
+                if (citas) {
+                    Object.keys(citas).forEach(clave => {
+                        if (citas[clave].codigo_gestion === codigoIngresado) {
+                            citaEncontradaClave = clave;
+                            citaDatos = citas[clave];
+                        }
+                    });
+                }
+
+                if (citaEncontradaClave) {
+                    const confirmacion = confirm(`Cita localizada a nombre de ${citaDatos.cliente_nombre}.\n¿Deseas cancelarla para proceder a reagendar un nuevo espacio?`);
+                    if (confirmacion) {
+                        fetch(`${FIREBASE_URL}citas/${citaEncontradaClave}.json`, { method: 'DELETE' })
+                            .then(() => {
+                                alert("Tu espacio anterior ha sido liberado. El formulario está listo para que elijas tu nueva fecha y hora.");
+                                document.getElementById('nombre').value = citaDatos.cliente_nombre;
+                                document.getElementById('telefono').value = citaDatos.cliente_telefono;
+                                document.getElementById('servicio').value = citaDatos.servicio;
+                                document.getElementById('nombre').scrollIntoView({ behavior: 'smooth' });
+                                inputCodigoGestion.value = "";
+                            });
+                    }
+                } else {
+                    alert("No se encontró ninguna cita registrada con ese código. Verifica e intenta de nuevo.");
+                }
+            })
+            .catch(error => {
+                console.error("Error al gestionar la cita:", error);
+                alert("Error de conexión al buscar el código.");
+            })
+            .finally(() => {
+                btnGestionar.textContent = "Buscar";
+                btnGestionar.disabled = false;
+            });
     });
 </script>
 <script>
