@@ -14,6 +14,7 @@
             --rojo-hover: #b30000;
             --verde-exito: #10b981;
             --azul-enlace: #3b82f6;
+            --naranja-alerta: #f59e0b;
         }
 
         * {
@@ -208,7 +209,71 @@
         .tarjeta-contable .monto-ingreso { font-size: 1.1rem; font-weight: 700; color: var(--verde-exito); }
 
         /* ==========================================================================
-           NUEVO: FORMULARIO AGREGAR CLIENTE MANUAL (SIN CITA)
+           SECCIÓN DE BARBERÍA (40% / 60%) Y PATROCINIOS
+           ========================================================================== */
+        .seccion-reparto-ganancias {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tarjeta-ganancia {
+            background-color: #151515;
+            border-left: 4px solid var(--azul-enlace);
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .tarjeta-ganancia.barberia { border-left-color: var(--naranja-alerta); }
+        .tarjeta-ganancia.neto { border-left-color: var(--verde-exito); }
+        .tarjeta-ganancia.deuda { border-left-color: var(--rojo-acento); }
+
+        .tarjeta-ganancia h5 { font-size: 0.8rem; text-transform: uppercase; color: var(--gris-secundario); margin-bottom: 5px; }
+        .tarjeta-ganancia .monto-calculado { font-size: 1.5rem; font-weight: bold; color: #fff; }
+
+        .checkbox-patrocinio {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--gris-secundario);
+            cursor: pointer;
+        }
+
+        .checkbox-patrocinio input {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: var(--rojo-acento);
+        }
+
+        /* ==========================================================================
+           CALCULADORA RÁPIDA INTEGRADA
+           ========================================================================== */
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 2fr 1fr;
+            gap: 10px;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .calc-resultado {
+            background-color: #121212;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--verde-exito);
+            text-align: center;
+            min-height: 41px;
+        }
+
+        /* ==========================================================================
+           REGISTRO DE CLIENTE MANUAL
            ========================================================================== */
         .seccion-bloque {
             background-color: var(--fondo-tarjeta);
@@ -287,6 +352,17 @@
 
         .btn-eliminar { background-color: var(--rojo-acento); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
         .sin-citas { text-align: center; padding: 30px; color: var(--gris-secundario); font-style: italic; }
+        
+        .badge-patrocinio {
+            background-color: #2e1a05;
+            color: var(--naranja-alerta);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border: 1px solid #4a2b00;
+            margin-left: 5px;
+        }
     </style>
 </head>
 <body>
@@ -347,7 +423,44 @@
         </div>
     </div>
 
-    <!-- NUEVO: REGISTRO DE CLIENTE MANUAL (SIN AGENDAR) -->
+    <!-- SECCIÓN DE BARBERÍA: DIVISION DE INGRESOS (40% / 60%) -->
+    <div class="seccion-bloque">
+        <h3>Cierre de Caja del Día (División de Ganancias)</h3>
+        <p style="color: var(--gris-secundario); font-size: 0.9rem; margin-bottom: 15px;">Cálculo automatizado basado en las tarifas de los servicios registrados hoy.</p>
+        
+        <div class="seccion-reparto-ganancias">
+            <div class="tarjeta-ganancia barberia">
+                <h5>Barbería (40%)</h5>
+                <div class="monto-calculado" id="gananciaBarberia">0,00€</div>
+            </div>
+            <div class="tarjeta-ganancia neto">
+                <h5>Tu Neto (60%)</h5>
+                <div class="monto-calculado" id="gananciaVictor">0,00€</div>
+            </div>
+            <div class="tarjeta-ganancia deuda">
+                <h5>Deuda a la Barbería (Por Patrocinios)</h5>
+                <div class="monto-calculado" id="deudaPatrocinios">0,00€</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CALCULADORA INDEPENDIENTE -->
+    <div class="seccion-bloque">
+        <h3>Calculadora Auxiliar Contable</h3>
+        <div class="calc-grid">
+            <input type="number" id="calcN1" placeholder="Valor A" style="background:#121212; border:1px solid #333; color:#fff; padding:10px; border-radius:4px; text-align:center;">
+            <select id="calcOperacion" style="background:#121212; border:1px solid #333; color:#fff; padding:10px; border-radius:4px; text-align:center; font-weight:bold;">
+                <option value="+">+</option>
+                <option value="-">-</option>
+                <option value="*">×</option>
+                <option value="/">÷</option>
+            </select>
+            <input type="number" id="calcN2" placeholder="Valor B" style="background:#121212; border:1px solid #333; color:#fff; padding:10px; border-radius:4px; text-align:center;">
+            <div class="calc-resultado" id="calcResultado">0.00</div>
+        </div>
+    </div>
+
+    <!-- REGISTRO DE CLIENTE MANUAL -->
     <div class="seccion-bloque">
         <h3>Registrar Cliente en Puerta (Sin Agenda)</h3>
         <form class="form-manual" id="formManual" onsubmit="guardarClienteManual(event)">
@@ -362,20 +475,23 @@
             <div class="form-grupo">
                 <label for="mServicio">Servicio Realizado</label>
                 <select id="mServicio" required>
-                    <!-- Servicios exactamente iguales a tus precios del Index -->
-                    <option value="Corte de Pelo (10€)">Corte de Pelo (10€)</option>
-                    <option value="Corte + Barba (13€)">Corte + Barba (13€)</option>
-                    <option value="Corte + Barba + Cejas (15€)">Corte + Barba + Cejas (15€)</option>
-                    <option value="Corte + Cejas (11€)">Corte + Cejas (11€)</option>
-                    <option value="Barba Tradicional (5€)">Barba Tradicional (5€)</option>
-                    <option value="Diseño de Cejas (3€)">Diseño de Cejas (3€)</option>
+                    <option value="Corte Sencillo (10€)">Corte Sencillo (10€)</option>
+                    <option value="Corte Premium (13€)">Corte Premium (13€)</option>
+                    <option value="Corte con Barba Sencillo (16€)">Corte con Barba Sencillo (16€)</option>
+                    <option value="Corte con Barba Premium (19€)">Corte con Barba Premium (19€)</option>
+                    <option value="Barba Sola (6€)">Barba Sola (6€)</option>
+                    <option value="Cero con Barba Premium (13€)">Cero con Barba Premium (13€)</option>
                 </select>
+                <label class="checkbox-patrocinio">
+                    <input type="checkbox" id="mPatrocinado">
+                    ¿Trabajo patrocinado? (Pago directo al barbero)
+                </label>
             </div>
             <button type="submit" class="btn-guardar-manual">Agregar Trabajo</button>
         </form>
     </div>
 
-    <!-- NUEVO: TOP CLIENTES FRECUENTES -->
+    <!-- TOP CLIENTES FRECUENTES -->
     <div class="seccion-bloque">
         <h3>Control de Frecuencia y Fidelidad</h3>
         <p style="color: var(--gris-secundario); font-size: 0.9rem; margin-bottom: 15px;">Listado automático de clientes repetidos ordenados por nivel de asistencia.</p>
@@ -471,6 +587,27 @@
         obtenerCitasServidor();
         filtroFecha.addEventListener('change', function() { renderizarTabla(this.value); });
         btnVerTodo.addEventListener('click', function() { filtroFecha.value = ''; renderizarTabla(''); });
+        
+        // Inicializar listeners de la calculadora rápida
+        document.getElementById('calcN1').addEventListener('input', ejecutarCalculoRapido);
+        document.getElementById('calcN2').addEventListener('input', ejecutarCalculoRapido);
+        document.getElementById('calcOperacion').addEventListener('change', ejecutarCalculoRapido);
+    }
+
+    // CALCULADORA LÓGICA
+    function ejecutarCalculoRapido() {
+        const n1 = parseFloat(document.getElementById('calcN1').value) || 0;
+        const n2 = parseFloat(document.getElementById('calcN2').value) || 0;
+        const op = document.getElementById('calcOperacion').value;
+        let res = 0;
+
+        switch(op) {
+            case '+': res = n1 + n2; break;
+            case '-': res = n1 - n2; break;
+            case '*': res = n1 * n2; break;
+            case '/': res = n2 !== 0 ? n1 / n2 : 0; break;
+        }
+        document.getElementById('calcResultado').textContent = res.toFixed(2);
     }
 
     function obtenerCitasServidor() {
@@ -501,9 +638,10 @@
         return coincidencia ? parseInt(coincidencia[1], 10) : 0;
     }
 
-    // OBTENER LA FECHA REAL EN FORMATO LOCAL (EVITA EL ERROR DE ZONA HORARIA)
+    // SE CORRIGE EL CONFLICTO HORARIO EVALUANDO ESTRICTAMENTE LA HORA DE CARACAS, VENEZUELA
     function obtenerFechaLocalVenezuela() {
-        const d = new Date();
+        const cadenaCaracas = new Date().toLocaleString("en-US", { timeZone: "America/Caracas" });
+        const d = new Date(cadenaCaracas);
         const año = d.getFullYear();
         const mes = String(d.getMonth() + 1).padStart(2, '0');
         const dia = String(d.getDate()).padStart(2, '0');
@@ -511,7 +649,7 @@
     }
 
     function procesarContabilidad() {
-        const hoyStr = obtenerFechaLocalVenezuela(); // Corregido aquí
+        const hoyStr = obtenerFechaLocalVenezuela(); 
         const d = new Date();
         const mesActual = d.getMonth();
         const anioActual = d.getFullYear();
@@ -519,6 +657,12 @@
         let cHoy = 0, iHoy = 0;
         let cMes = 0, iMes = 0;
         let cAnio = 0, iAnio = 0;
+        
+        // Variables para la división 40% - 60% de HOY
+        let totalBarberiaHoy = 0;
+        let totalVictorHoy = 0;
+        let totalDeudaPatrocinioHoy = 0;
+
         const mapaFechasActivas = {};
 
         todasLasCitas.forEach(cita => {
@@ -534,8 +678,24 @@
                 cAnio++; iAnio += precio;
                 if (cMesObj === mesActual) { cMes++; iMes += precio; }
             }
+            
             if (cita.cita_fecha === hoyStr) {
-                cHoy++; iHoy += precio;
+                cHoy++; 
+                iHoy += precio;
+
+                // Lógica de división de ganancias del día
+                const de laBarberia = precio * 0.40;
+                const deVictor = precio * 0.60;
+
+                if (cita.patrocinado === true) {
+                    // Si el cliente te pagó a ti directo, acumulas la deuda del 40% que le debes dar al local
+                    totalDeudaPatrocinioHoy += deLaBarberia;
+                    totalVictorHoy += precio; 
+                } else {
+                    // Flujo normal de caja compartida de la barbería
+                    totalBarberiaHoy += deLaBarberia;
+                    totalVictorHoy += deVictor;
+                }
             }
         });
 
@@ -549,9 +709,13 @@
         document.getElementById('cortesAnio').textContent = cAnio;
         document.getElementById('ingresosAnio').textContent = `${iAnio},00€`;
         document.getElementById('promedioDiario').textContent = promedio;
+
+        // Inyección de datos en la interfaz gráfica del 40/60
+        document.getElementById('gananciaBarberia').textContent = `${totalBarberiaHoy.toFixed(2)}€`;
+        document.getElementById('gananciaVictor').textContent = `${totalVictorHoy.toFixed(2)}€`;
+        document.getElementById('deudaPatrocinios').textContent = `${totalDeudaPatrocinioHoy.toFixed(2)}€`;
     }
 
-    // NUEVO: SISTEMA DE CÁLCULO DE FRECUENCIA
     function calcularFrecuencias() {
         tablaFrecuencia.innerHTML = '';
         if (todasLasCitas.length === 0) {
@@ -577,7 +741,6 @@
             }
         });
 
-        // Convertir a lista y ordenar: Primero los que tengan más visitas (más fieles)
         const listaFrecuencia = Object.values(clientesMap).sort((a, b) => b.totalVisitas - a.totalVisitas);
 
         listaFrecuencia.forEach(c => {
@@ -588,7 +751,6 @@
                 if(p.length === 3) fFmt = `${p[2]}/${p[1]}/${p[0]}`;
             }
 
-            // Resalta con color verde si ha venido más de 2 veces
             const medalla = c.totalVisitas > 2 ? ` <span style="color:var(--verde-exito); font-size:0.8rem;">★ Fiel</span>` : '';
 
             fila.innerHTML = `
@@ -601,16 +763,16 @@
         });
     }
 
-    // NUEVO: AGREGAR CLIENTE MANUAL EN TIEMPO REAL
+    // REGISTRO DE CLIENTE MANUAL EN TIEMPO REAL CON LA OPCIÓN DE PATROCINADO
     window.guardarClienteManual = function(e) {
         e.preventDefault();
         
         const nombre = document.getElementById('mNombre').value;
         const telefono = document.getElementById('mTelefono').value;
         const servicio = document.getElementById('mServicio').value;
+        const esPatrocinado = document.getElementById('mPatrocinado').checked;
         const fechaHoy = obtenerFechaLocalVenezuela();
 
-        // Para clientes que entran directo por puerta, la hora de registro es la actual en formato digital
         const ahora = new Date();
         const horaFmt = `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`;
 
@@ -619,7 +781,8 @@
             cliente_telefono: telefono,
             servicio: servicio,
             cita_fecha: fechaHoy,
-            cita_hora: horaFmt + " (Puerta)"
+            cita_hora: horaFmt + " (Puerta)",
+            patrocinado: esPatrocinado // Se envía el estado a la base de datos global
         };
 
         fetch(`${FIREBASE_URL}citas.json`, {
@@ -630,7 +793,7 @@
         .then(() => {
             alert("¡Trabajo en puerta añadido al balance con éxito!");
             document.getElementById('formManual').reset();
-            obtenerCitasServidor(); // Recalcula ingresos y frecuencia de inmediato
+            obtenerCitasServidor(); 
         })
         .catch(error => {
             console.error("Error al registrar manual:", error);
@@ -655,8 +818,11 @@
                 if(partes.length === 3) fechaFormateada = `${partes[2]}/${partes[1]}/${partes[0]}`;
             }
 
+            // Validar si el registro guardado en la nube tiene la marca de patrocinado
+            const badgePatrocinio = cita.patrocinado ? `<span class="badge-patrocinio">Patrocinado</span>` : '';
+
             fila.innerHTML = `
-                <td><strong>${cita.cliente_nombre || 'Sin nombre'}</strong></td>
+                <td><strong>${cita.cliente_nombre || 'Sin nombre'}</strong>${badgePatrocinio}</td>
                 <td>${cita.cliente_telefono || 'Sin teléfono'}</td>
                 <td>${cita.servicio || 'No especificado'}</td>
                 <td>${fechaFormateada}</td>
