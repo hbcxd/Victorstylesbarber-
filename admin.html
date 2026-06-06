@@ -39,7 +39,7 @@
         }
 
         h2 { font-size: 1.8rem; padding: 0 10px; }
-        h3 { font-size: 1.2rem; margin-top: 10px; text-align: left; border-bottom: 1px solid #252525; padding-bottom: 10px; }
+        h3 { font-size: 1.2rem; margin-top: 10px; text-align: left; border-bottom: 1px solid #252525; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
 
         .subtitulo {
             text-align: center;
@@ -49,8 +49,33 @@
             padding: 0 15px;
         }
 
+        .btn-colapsar {
+            background: transparent;
+            border: none;
+            color: var(--gris-secundario);
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 5px 10px;
+        }
+        .btn-colapsar:hover { color: #fff; }
+
+        .contenido-colapsable {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            max-height: 2000px;
+            opacity: 1;
+            overflow: hidden;
+        }
+        .contenido-colapsable.minimizado {
+            max-height: 0 !important;
+            opacity: 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
         /* ==========================================================================
-           PANTALLA DE INICIO DE SESIÓN (RESPONSIVA)
+           PANTALLA DE INICIO DE SESIÓN
            ========================================================================== */
         .login-container {
             position: fixed;
@@ -231,7 +256,7 @@
         }
 
         @media (min-width: 768px) {
-            .seccion-reparto-ganancias { grid-template-columns: repeat(3, 1fr); }
+            .seccion-reparto-ganancias { grid-template-columns: repeat(4, 1fr); }
         }
 
         .tarjeta-ganancia {
@@ -244,6 +269,7 @@
         .tarjeta-ganancia.barberia { border-left-color: var(--naranja-alerta); }
         .tarjeta-ganancia.neto { border-left-color: var(--verde-exito); }
         .tarjeta-ganancia.deuda { border-left-color: var(--rojo-acento); }
+        .tarjeta-ganancia.gastos { border-left-color: #e11d48; }
 
         .tarjeta-ganancia h5 { font-size: 0.75rem; text-transform: uppercase; color: var(--gris-secundario); margin-bottom: 5px; }
         .tarjeta-ganancia .monto-calculado { font-size: 1.3rem; font-weight: bold; color: #fff; }
@@ -374,7 +400,7 @@
         }
 
         /* ==========================================================================
-           SISTEMA DE TABLAS RESPONSIVAS (CARD-MODE PARA TELÉFONOS)
+           SISTEMA DE TABLAS RESPONSIVAS
            ========================================================================== */
         .contenedor-tabla {
             width: 100%;
@@ -405,11 +431,10 @@
         .btn-eliminar { background-color: var(--rojo-acento); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
         .sin-citas { text-align: center; padding: 25px; color: var(--gris-secundario); font-style: italic; }
 
-        /* DISEÑO DE TABLA ADAPTABLE A TELÉFONO (MÁXIMO 767px) */
         @media screen and (max-width: 767px) {
             .contenedor-tabla { background: transparent; border: none; }
             table, thead, tbody, th, td, tr { display: block; width: 100%; }
-            thead { display: none; } /* Ocultamos los encabezados de columnas tradicionales */
+            thead { display: none; } 
             
             tr {
                 background-color: var(--fondo-tarjeta);
@@ -431,7 +456,6 @@
             
             td:last-child { border-bottom: none; justify-content: center; padding-top: 12px; }
             
-            /* Inyectamos títulos usando el atributo personalizado data-label */
             td::before {
                 content: attr(data-label);
                 float: left;
@@ -471,7 +495,7 @@
     <a href="index.html#galeria">Cortes</a>
     <a href="index.html#precios">Servicios</a>
     <a href="index.html#agenda">Agendar Cita</a>
-    <a href="admin.html" class="link-admin-menu">Panel Administrador</a>
+    <a href="admin.html" class="link-admin-menu">Panel Administrator</a>
 </nav>
 
 <section class="admin-section">
@@ -502,8 +526,8 @@
     </div>
 
     <div class="seccion-bloque">
-        <h3>Cierre de Caja del Día (División de Ganancias)</h3>
-        <p style="color: var(--gris-secundario); font-size: 0.85rem; margin-bottom: 15px;">Calculado únicamente en base a los trabajos marcados como "Atendido" el día de hoy.</p>
+        <h3>Cierre de Caja <span id="fechaCierreTitulo">(Hoy)</span></h3>
+        <p style="color: var(--gris-secundario); font-size: 0.85rem; margin-bottom: 15px;">Calculado únicamente en base a los trabajos marcados como "Atendido" para la fecha o rango seleccionado.</p>
         
         <div class="seccion-reparto-ganancias">
             <div class="tarjeta-ganancia barberia">
@@ -511,14 +535,43 @@
                 <div class="monto-calculado" id="gananciaBarberia">0,00€</div>
             </div>
             <div class="tarjeta-ganancia neto">
-                <h5>Tu Neto (60%)</h5>
+                <h5>Tu Neto Inicial (60%)</h5>
                 <div class="monto-calculado" id="gananciaVictor">0,00€</div>
             </div>
             <div class="tarjeta-ganancia deuda">
                 <h5>Deuda al Local (Patrocinios)</h5>
                 <div class="monto-calculado" id="deudaPatrocinios">0,00€</div>
             </div>
+            <div class="tarjeta-ganancia gastos">
+                <h5>Descuentos por Gastos</h5>
+                <div class="monto-calculado" id="totalGastosCierre">0,00€</div>
+            </div>
         </div>
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #252525; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: bold; text-transform: uppercase; font-size: 0.9rem; color: var(--verde-exito);">Tu Neto Real (Ganancia - Gastos):</span>
+            <span id="netoRealCalculado" style="font-size: 1.6rem; font-weight: 800; color: #fff;">0,00€</span>
+        </div>
+    </div>
+
+    <div class="seccion-bloque">
+        <h3>Registrar Gasto / Descuento de Materiales</h3>
+        <form class="form-manual" id="formGastos" onsubmit="guardarGastoManual(event)">
+            <div class="form-grupo">
+                <label for="gConcepto">Concepto / Producto</label>
+                <input type="text" id="gConcepto" placeholder="Ej. Cuchillas, Cera, Café" required>
+            </div>
+            <div class="form-grupo">
+                <label for="gMonto">Monto gastado (€)</label>
+                <input type="number" id="gMonto" step="0.01" placeholder="Ej. 4.50" required>
+            </div>
+            <div class="form-grupo">
+                <label for="gFecha">Fecha del Gasto</label>
+                <input type="date" id="gFecha" required>
+            </div>
+            <div class="full-width-btn">
+                <button type="submit" class="btn-guardar-manual" style="background-color: #e11d48;">Registrar Gasto</button>
+            </div>
+        </form>
     </div>
 
     <div class="seccion-bloque">
@@ -569,53 +622,64 @@
     </div>
 
     <div class="seccion-bloque">
-        <h3>Control de Frecuencia y Fidelidad</h3>
-        <p style="color: var(--gris-secundario); font-size: 0.85rem; margin-bottom: 15px;">Listado automático de clientes repetidos ordenados por nivel de asistencia.</p>
-        <div class="contenedor-tabla" style="margin-bottom:0;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Cliente</th>
-                        <th>Teléfono</th>
-                        <th style="text-align:center;">Total Visitas</th>
-                        <th>Última Vez</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-frecuencia-cuerpo">
-                    <tr><td colspan="4" class="sin-citas">Cargando métricas de fidelidad...</td></tr>
-                </tbody>
-            </table>
+        <h3>
+            Control de Frecuencia y Fidelidad
+            <button class="btn-colapsar" onclick="toggleSeccion('contenidoFrecuencia', this)">[ Minimizar ]</button>
+        </h3>
+        <div id="contenidoFrecuencia" class="contenido-colapsable">
+            <p style="color: var(--gris-secundario); font-size: 0.85rem; margin-bottom: 15px; margin-top:10px;">Listado automático de clientes repetidos ordenados por nivel de asistencia.</p>
+            <div class="contenedor-tabla" style="margin-bottom:0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Teléfono</th>
+                            <th style="text-align:center;">Total Visitas</th>
+                            <th>Última Vez</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-frecuencia-cuerpo">
+                        <tr><td colspan="4" class="sin-citas">Cargando métricas de fidelidad...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <br>
 
-    <h3>Historial y Agenda de Turnos</h3>
-    <div class="barra-herramientas">
-        <div style="display:flex; align-items:center; gap:10px; justify-content: space-between; width: 100%;">
-            <div style="display:flex; align-items:center; gap:8px;">
-                <label for="filtroFecha" style="font-size:0.85rem; color:var(--gris-secundario); white-space:nowrap;">Fecha:</label>
-                <input type="date" id="filtroFecha">
+    <h3>
+        Historial y Agenda de Turnos
+        <button class="btn-colapsar" onclick="toggleSeccion('contenidoHistorial', this)">[ Minimizar ]</button>
+    </h3>
+    
+    <div id="contenidoHistorial" class="contenido-colapsable">
+        <div class="barra-herramientas" style="margin-top:15px;">
+            <div style="display:flex; align-items:center; gap:10px; justify-content: space-between; width: 100%;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <label for="filtroFecha" style="font-size:0.85rem; color:var(--gris-secundario); white-space:nowrap;">Fecha:</label>
+                    <input type="date" id="filtroFecha">
+                </div>
+                <button class="btn-reiniciar" id="btnVerTodo">Ver Todo</button>
             </div>
-            <button class="btn-reiniciar" id="btnVerTodo">Ver Todo</button>
         </div>
-    </div>
 
-    <div class="contenedor-tabla">
-        <table>
-            <thead>
-                <tr>
-                    <th>Cliente</th>
-                    <th>Servicio</th>
-                    <th>Fecha / Hora</th>
-                    <th>Estado</th>
-                    <th>Tipo Pago</th>
-                    <th>Acción</th>
-                </tr>
-            </thead>
-            <tbody id="tabla-citas-cuerpo">
+        <div class="contenedor-tabla">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Servicio</th>
+                        <th>Fecha / Hora</th>
+                        <th>Estado</th>
+                        <th>Tipo Pago</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-citas-cuerpo">
                 </tbody>
-        </table>
+            </table>
+        </div>
     </div>
 </section>
 
@@ -652,17 +716,41 @@
         menuOverlay.classList.toggle('show');
     }
 
+    // FUNCIÓN PARA MINIMIZAR SECCIONES
+    window.toggleSeccion = function(idContenido, boton) {
+        const contenedor = document.getElementById(idContenido);
+        contenedor.classList.toggle('minimizado');
+        if (contenedor.classList.contains('minimizado')) {
+            boton.textContent = '[ Mostrar ]';
+        } else {
+            boton.textContent = '[ Minimizar ]';
+        }
+    }
+
     // CORE DEL PANEL
     const tablaCuerpo = document.getElementById('tabla-citas-cuerpo');
     const tablaFrecuencia = document.getElementById('tabla-frecuencia-cuerpo');
     const filtroFecha = document.getElementById('filtroFecha');
     const btnVerTodo = document.getElementById('btnVerTodo');
     let todasLasCitas = [];
+    let todosLosGastos = [];
 
     function inicializarSistema() {
-        obtenerCitasServidor();
-        filtroFecha.addEventListener('change', function() { renderizarTabla(this.value); });
-        btnVerTodo.addEventListener('click', function() { filtroFecha.value = ''; renderizarTabla(''); });
+        // Colocar fecha de hoy por defecto en el campo de gastos
+        document.getElementById('gFecha').value = obtenerFechaLocalVenezuela();
+        
+        cargarDatosDesdeServidor();
+
+        filtroFecha.addEventListener('change', function() { 
+            renderizarTabla(this.value); 
+            procesarContabilidad(this.value);
+        });
+        
+        btnVerTodo.addEventListener('click', function() { 
+            filtroFecha.value = ''; 
+            renderizarTabla(''); 
+            procesarContabilidad('');
+        });
         
         // Inicializar la calculadora
         document.getElementById('calcN1').addEventListener('input', ejecutarCalculoRapido);
@@ -685,26 +773,38 @@
         document.getElementById('calcResultado').textContent = res.toFixed(2);
     }
 
-    function obtenerCitasServidor() {
-        fetch(`${FIREBASE_URL}citas.json`)
-            .then(response => response.json())
-            .then(data => {
-                if (!data) {
-                    todasLasCitas = [];
-                    procesarContabilidad();
-                    renderizarTabla('');
-                    calcularFrecuencias();
-                    return;
-                }
-                todasLasCitas = Object.keys(data).map(id => ({
+    function cargarDatosDesdeServidor() {
+        // Obtenemos citas y gastos en paralelo
+        Promise.all([
+            fetch(`${FIREBASE_URL}citas.json`).then(r => r.json()),
+            fetch(`${FIREBASE_URL}gastos.json`).then(r => r.json())
+        ])
+        .then(([citasData, gastosData]) => {
+            // Procesar Citas
+            if (!citasData) {
+                todasLasCitas = [];
+            } else {
+                todasLasCitas = Object.keys(citasData).map(id => ({
                     id: id,
-                    ...data[id]
+                    ...citasData[id]
                 })).sort((a, b) => new Date(a.cita_fecha) - new Date(b.cita_fecha));
+            }
 
-                procesarContabilidad();
-                renderizarTabla('');
-                calcularFrecuencias();
-            });
+            // Procesar Gastos
+            if (!gastosData) {
+                todosLosGastos = [];
+            } else {
+                todosLosGastos = Object.keys(gastosData).map(id => ({
+                    id: id,
+                    ...gastosData[id]
+                }));
+            }
+
+            const fechaInicialFiltro = filtroFecha.value; // Respeta el filtro si ya hay uno puesto
+            procesarContabilidad(fechaInicialFiltro);
+            renderizarTabla(fechaInicialFiltro);
+            calcularFrecuencias();
+        });
     }
 
     function extraerPrecio(servicioTexto) {
@@ -722,26 +822,37 @@
         return `${año}-${mes}-${dia}`;
     }
 
-    function procesarContabilidad() {
+    function procesarContabilidad(fechaFiltroActivo) {
         const hoyStr = obtenerFechaLocalVenezuela(); 
         const d = new Date();
         const mesActual = d.getMonth();
         const anioActual = d.getFullYear();
 
+        // Contadores para tarjetas fijas superiores
         let cHoy = 0, iHoy = 0;
         let cMes = 0, iMes = 0;
         let cAnio = 0, iAnio = 0;
-        
-        let totalBarberiaHoy = 0;
-        let totalVictorHoy = 0;
-        let totalDeudaPatrocinioHoy = 0;
-
         const mapaFechasActivas = {};
 
+        // Variables exclusivas de la sección Cierre de Caja
+        let totalBarberiaCierre = 0;
+        let totalVictorCierre = 0;
+        let totalDeudaPatrocinioCierre = 0;
+        let totalGastosCierre = 0;
+
+        // Actualizar etiqueta de texto de la sección de cierre
+        const tituloCierre = document.getElementById('fechaCierreTitulo');
+        if(fechaFiltroActivo) {
+            const p = fechaFiltroActivo.split('-');
+            tituloCierre.textContent = `(${p[2]}/${p[1]}/${p[0]})`;
+        } else {
+            tituloCierre.textContent = "(Histórico Acumulado)";
+        }
+
+        // 1. Procesar Citas
         todasLasCitas.forEach(cita => {
             if (!cita.cita_fecha) return;
             
-            // Solo procesamos contabilidad si el estado es 'Atendido' o si el campo no existe (por compatibilidad hacia atrás)
             const estadoActual = cita.estado || 'Atendido';
             if (estadoActual !== 'Atendido') return;
 
@@ -752,31 +863,41 @@
 
             mapaFechasActivas[cita.cita_fecha] = true;
 
+            // Bloques fijos superiores
             if (cAnioObj === anioActual) {
                 cAnio++; iAnio += precio;
                 if (cMesObj === mesActual) { cMes++; iMes += precio; }
             }
-            
             if (cita.cita_fecha === hoyStr) {
-                cHoy++; 
-                iHoy += precio;
+                cHoy++; iHoy += precio;
+            }
 
+            // Lógica del Cierre de Caja (Filtrable o Acumulado)
+            if (!fechaFiltroActivo || cita.cita_fecha === fechaFiltroActivo) {
                 const deLaBarberia = precio * 0.40;
                 const deVictor = precio * 0.60;
 
                 if (cita.patrocinado === true) {
-                    totalDeudaPatrocinioHoy += deLaBarberia;
-                    totalVictorHoy += precio; 
+                    totalDeudaPatrocinioCierre += deLaBarberia;
+                    totalVictorCierre += precio; 
                 } else {
-                    totalBarberiaHoy += deLaBarberia;
-                    totalVictorHoy += deVictor;
+                    totalBarberiaCierre += deLaBarberia;
+                    totalVictorCierre += deVictor;
                 }
+            }
+        });
+
+        // 2. Procesar Gastos para el cierre de caja
+        todosLosGastos.forEach(gasto => {
+            if (!fechaFiltroActivo || gasto.fecha === fechaFiltroActivo) {
+                totalGastosCierre += parseFloat(gasto.monto || 0);
             }
         });
 
         const totalDiasActivos = Object.keys(mapaFechasActivas).length;
         const promedio = totalDiasActivos > 0 ? (cHoy / totalDiasActivos).toFixed(1) : '0.0';
 
+        // Renderizar en tarjetas superiores
         document.getElementById('cortesHoy').textContent = cHoy;
         document.getElementById('ingresosHoy').textContent = `${iHoy},00€`;
         document.getElementById('cortesMes').textContent = cMes;
@@ -785,9 +906,15 @@
         document.getElementById('ingresosAnio').textContent = `${iAnio},00€`;
         document.getElementById('promedioDiario').textContent = promedio;
 
-        document.getElementById('gananciaBarberia').textContent = `${totalBarberiaHoy.toFixed(2)}€`;
-        document.getElementById('gananciaVictor').textContent = `${totalVictorHoy.toFixed(2)}€`;
-        document.getElementById('deudaPatrocinios').textContent = `${totalDeudaPatrocinioHoy.toFixed(2)}€`;
+        // Renderizar en sección dinámica Cierre de Caja
+        document.getElementById('gananciaBarberia').textContent = `${totalBarberiaCierre.toFixed(2)}€`;
+        document.getElementById('gananciaVictor').textContent = `${totalVictorCierre.toFixed(2)}€`;
+        document.getElementById('deudaPatrocinios').textContent = `${totalDeudaPatrocinioCierre.toFixed(2)}€`;
+        document.getElementById('totalGastosCierre').textContent = `${totalGastosCierre.toFixed(2)}€`;
+
+        // Cálculo Final Neto Real (Tu Neto 60% - Gastos)
+        const netoReal = totalVictorCierre - totalGastosCierre;
+        document.getElementById('netoRealCalculado').textContent = `${netoReal.toFixed(2)}€`;
     }
 
     function calcularFrecuencias() {
@@ -844,6 +971,31 @@
         });
     }
 
+    window.guardarGastoManual = function(e) {
+        e.preventDefault();
+        const concepto = document.getElementById('gConcepto').value;
+        const monto = parseFloat(document.getElementById('gMonto').value);
+        const fecha = document.getElementById('gFecha').value;
+
+        const nuevoGasto = { concepto, monto, fecha };
+
+        fetch(`${FIREBASE_URL}gastos.json`, {
+            method: 'POST',
+            body: JSON.stringify(nuevoGasto)
+        })
+        .then(response => response.json())
+        .then(() => {
+            alert("¡Gasto registrado y descontado correctamente!");
+            document.getElementById('formGastos').reset();
+            document.getElementById('gFecha').value = obtenerFechaLocalVenezuela();
+            cargarDatosDesdeServidor(); 
+        })
+        .catch(error => {
+            console.error("Error al registrar gasto:", error);
+            alert("Error al conectar con el servidor.");
+        });
+    }
+
     window.guardarClienteManual = function(e) {
         e.preventDefault();
         
@@ -863,7 +1015,7 @@
             cita_fecha: fechaHoy,
             cita_hora: horaFmt + " (Puerta)",
             patrocinado: esPatrocinado,
-            estado: 'Atendido' // Las entradas por puerta se asumen directo como atendidas
+            estado: 'Atendido'
         };
 
         fetch(`${FIREBASE_URL}citas.json`, {
@@ -874,7 +1026,7 @@
         .then(() => {
             alert("¡Trabajo en puerta añadido al balance con éxito!");
             document.getElementById('formManual').reset();
-            obtenerCitasServidor(); 
+            cargarDatosDesdeServidor(); 
         })
         .catch(error => {
             console.error("Error al registrar manual:", error);
@@ -882,15 +1034,12 @@
         });
     }
 
-    // ACTUALIZACIÓN DE ESTADOS REMOTOS DIRECTAMENTE DESDE LA TABLA
     window.cambiarEstadoRemoto = function(idCita, nuevoEstado) {
         fetch(`${FIREBASE_URL}citas/${idCita}/estado.json`, {
             method: 'PUT',
             body: JSON.stringify(nuevoEstado)
         })
-        .then(() => {
-            obtenerCitasServidor(); // Recalcula balances automáticamente en vivo
-        })
+        .then(() => { cargarDatosDesdeServidor(); })
         .catch(err => console.error("Error al actualizar estado:", err));
     }
 
@@ -899,9 +1048,7 @@
             method: 'PUT',
             body: JSON.stringify(esPatrocinado === 'true')
         })
-        .then(() => {
-            obtenerCitasServidor(); // Recalcula balances automáticamente en vivo
-        })
+        .then(() => { cargarDatosDesdeServidor(); })
         .catch(err => console.error("Error al actualizar patrocinio:", err));
     }
 
@@ -925,7 +1072,6 @@
             const estadoActual = cita.estado || 'Atendido';
             const esPatrocinado = cita.patrocinado === true;
 
-            // Inyectamos las etiquetas data-label para el comportamiento adaptativo del móvil
             fila.innerHTML = `
                 <td data-label="Cliente">
                     <strong>${cita.cliente_nombre || 'Sin nombre'}</strong><br>
@@ -957,7 +1103,7 @@
     window.eliminarCita = function(idCita) {
         if (confirm("¿Estás seguro de eliminar este registro? Los balances contables se recalcularán.")) {
             fetch(`${FIREBASE_URL}citas/${idCita}.json`, { method: 'DELETE' })
-            .then(() => { obtenerCitasServidor(); });
+            .then(() => { cargarDatosDesdeServidor(); });
         }
     }
 </script>
