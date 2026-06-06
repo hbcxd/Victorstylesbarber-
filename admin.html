@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración | Víctor Styles</title>
     <style>
-        /* Variables de color para mantener la consistencia minimalista */
         :root {
             --fondo-oscuro: #121212;
             --fondo-tarjeta: #1a1a1a;
@@ -14,9 +13,9 @@
             --rojo-acento: #cc0000;
             --rojo-hover: #b30000;
             --verde-exito: #10b981;
+            --azul-enlace: #3b82f6;
         }
 
-        /* Configuración General */
         * {
             margin: 0;
             padding: 0;
@@ -30,14 +29,16 @@
             padding-top: 90px; 
         }
 
-        h2 {
+        h2, h3 {
             text-align: center;
-            font-size: 2rem;
             color: #ffffff;
             letter-spacing: 2px;
             text-transform: uppercase;
             margin-bottom: 10px;
         }
+
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.3rem; margin-top: 10px; text-align: left; border-bottom: 1px solid #252525; padding-bottom: 10px; }
 
         .subtitulo {
             text-align: center;
@@ -46,7 +47,7 @@
         }
 
         /* ==========================================================================
-           PANTALLA DE INICIO DE SESIÓN (LOGIN SEGURIDAD)
+           PANTALLA DE INICIO DE SESIÓN
            ========================================================================== */
         .login-container {
             position: fixed;
@@ -73,20 +74,6 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .login-box h3 {
-            font-size: 1.5rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 10px;
-            color: #ffffff;
-        }
-
-        .login-box p {
-            color: var(--gris-secundario);
-            font-size: 0.9rem;
-            margin-bottom: 25px;
-        }
-
         .login-box input {
             width: 100%;
             padding: 14px;
@@ -101,9 +88,7 @@
             margin-bottom: 20px;
         }
 
-        .login-box input:focus {
-            border-color: var(--rojo-acento);
-        }
+        .login-box input:focus { border-color: var(--rojo-acento); }
 
         .btn-login {
             width: 100%;
@@ -115,19 +100,12 @@
             text-transform: uppercase;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 0.95rem;
-            transition: background 0.3s;
         }
 
-        .error-login {
-            color: var(--rojo-acento);
-            font-size: 0.85rem;
-            margin-top: 10px;
-            display: none;
-        }
+        .error-login { color: var(--rojo-acento); font-size: 0.85rem; margin-top: 10px; display: none; }
 
         /* ==========================================================================
-           BARRA DE NAVEGACIÓN Y MENÚ DESPLEGABLE
+           BARRA DE NAVEGACIÓN Y MENÚ
            ========================================================================== */
         header {
             display: flex;
@@ -185,7 +163,6 @@
         }
 
         .menu-desplegable.open { left: 0; }
-
         .menu-desplegable a {
             color: #ffffff;
             text-decoration: none;
@@ -195,33 +172,19 @@
             text-transform: uppercase;
             padding: 15px 0;
             border-bottom: 1px solid #222;
-            transition: color 0.3s ease;
         }
-
-        .menu-desplegable a:active, .menu-desplegable a:hover { color: var(--rojo-acento); }
-
-        .menu-desplegable .link-admin-menu {
-            margin-top: auto;
-            color: var(--rojo-acento);
-            font-size: 0.9rem;
-            border: 1px solid var(--rojo-acento);
-            border-radius: 4px;
-            text-align: center;
-            padding: 10px;
-            background-color: #1a0c0c;
-        }
-
-        .logo { display: flex; align-items: center; flex-shrink: 0; }
+        .menu-desplegable a:hover { color: var(--rojo-acento); }
+        .menu-desplegable .link-admin-menu { margin-top: auto; color: var(--rojo-acento); font-size: 0.9rem; border: 1px solid var(--rojo-acento); border-radius: 4px; text-align: center; padding: 10px; background-color: #1a0c0c; }
         .logo img { height: 55px; width: auto; display: block; }
         .menu-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.5); z-index: 1040; display: none; }
         .menu-overlay.show { display: block; }
 
         /* ==========================================================================
-           NUEVO: PANEL DE TARJETAS CONTABLES (ESTILO DASHBOARD)
+           PANEL CONTABLE
            ========================================================================== */
         .admin-section {
             padding: 20px 5%;
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
         }
 
@@ -238,32 +201,62 @@
             border-radius: 8px;
             padding: 20px;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
 
-        .tarjeta-contable h4 {
-            font-size: 0.85rem;
+        .tarjeta-contable h4 { font-size: 0.85rem; text-transform: uppercase; color: var(--gris-secundario); margin-bottom: 10px; }
+        .tarjeta-contable .dato-principal { font-size: 1.8rem; font-weight: 800; color: #ffffff; }
+        .tarjeta-contable .monto-ingreso { font-size: 1.1rem; font-weight: 700; color: var(--verde-exito); }
+
+        /* ==========================================================================
+           NUEVO: FORMULARIO AGREGAR CLIENTE MANUAL (SIN CITA)
+           ========================================================================== */
+        .seccion-bloque {
+            background-color: var(--fondo-tarjeta);
+            border: 1px solid #252525;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-manual {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .form-grupo {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-grupo label { font-size: 0.85rem; color: var(--gris-secundario); text-transform: uppercase; }
+        .form-grupo input, .form-grupo select {
+            background-color: #121212;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            outline: none;
+        }
+        .form-grupo input:focus, .form-grupo select:focus { border-color: var(--rojo-acento); }
+
+        .btn-guardar-manual {
+            background-color: var(--verde-exito);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
             text-transform: uppercase;
-            color: var(--gris-secundario);
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
-
-        .tarjeta-contable .dato-principal {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: #ffffff;
-            margin-bottom: 5px;
-        }
-
-        .tarjeta-contable .monto-ingreso {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--verde-exito);
+            align-self: flex-end;
+            height: 41px;
         }
 
         /* ==========================================================================
-           NUEVO: FILTRADO POR FECHAS Y BUSCADOR
+           FILTRADO Y TABLAS
            ========================================================================== */
         .barra-herramientas {
             background-color: var(--fondo-tarjeta);
@@ -272,97 +265,27 @@
             padding: 15px 20px;
             margin-bottom: 20px;
             display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-items: center;
             justify-content: space-between;
-        }
-
-        .filtro-grupo {
-            display: flex;
             align-items: center;
+            flex-wrap: wrap;
             gap: 10px;
         }
 
-        .filtro-grupo label {
-            font-size: 0.9rem;
-            color: var(--gris-secundario);
-        }
-
-        .filtro-grupo input[type="date"] {
-            background-color: #121212;
-            border: 1px solid #333;
-            color: #ffffff;
-            padding: 8px 12px;
-            border-radius: 4px;
-            outline: none;
-        }
-
-        .filtro-grupo input[type="date"]:focus {
-            border-color: var(--rojo-acento);
-        }
-
-        .btn-reiniciar {
-            background-color: #222;
-            color: #fff;
-            border: 1px solid #444;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        .btn-reiniciar:active { background-color: #333; }
-
-        /* ==========================================================================
-           ESTRUCTURA DE LA TABLA ADMINISTRATIVA
-           ========================================================================== */
         .contenedor-tabla {
             width: 100%;
             overflow-x: auto; 
             background-color: var(--fondo-tarjeta);
             border: 1px solid #252525;
             border-radius: 8px;
+            margin-bottom: 40px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            min-width: 700px; 
-        }
-
-        th, td {
-            padding: 15px;
-            border-bottom: 1px solid #252525;
-            font-size: 0.95rem;
-        }
-
-        th {
-            background-color: #111111;
-            color: #ffffff;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-        }
-
+        table { width: 100%; border-collapse: collapse; text-align: left; min-width: 700px; }
+        th, td { padding: 15px; border-bottom: 1px solid #252525; font-size: 0.95rem; }
+        th { background-color: #111111; color: #ffffff; text-transform: uppercase; font-size: 0.85rem; }
         tr:hover { background-color: #222222; }
 
-        .btn-eliminar {
-            background-color: var(--rojo-acento);
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-        }
-
-        .btn-eliminar:active { background-color: var(--rojo-hover); }
+        .btn-eliminar { background-color: var(--rojo-acento); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
         .sin-citas { text-align: center; padding: 30px; color: var(--gris-secundario); font-style: italic; }
     </style>
 </head>
@@ -383,20 +306,16 @@
 
 <header>
     <button class="menu-hamburguesa" id="btnHamburguesa">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span>
     </button>
-    <div class="logo"> 
-        <img src="LOGO.png" alt="Logo Víctor Styles">
-    </div>
+    <div class="logo"><img src="LOGO.png" alt="Logo Víctor Styles"></div>
 </header>
 
 <nav class="menu-desplegable" id="menuLateral">
-    <a href="index.html#inicio" class="menu-link">Inicio</a>
-    <a href="index.html#galeria" class="menu-link">Cortes</a>
-    <a href="index.html#precios" class="menu-link">Servicios</a>
-    <a href="index.html#agenda" class="menu-link">Agendar Cita</a>
+    <a href="index.html#inicio">Inicio</a>
+    <a href="index.html#galeria">Cortes</a>
+    <a href="index.html#precios">Servicios</a>
+    <a href="index.html#agenda">Agendar Cita</a>
     <a href="admin.html" class="link-admin-menu">Panel Administrador</a>
 </nav>
 
@@ -404,7 +323,7 @@
     <h2>Panel de Control Contable</h2>
     <p class="subtitulo">Métricas de rendimiento, ingresos y balances de la barbería.</p>
 
-    <!-- MATRIZ DE RENDIMIENTO CONTABLE -->
+    <!-- MATRIZ CONTABLE -->
     <div class="grid-contable">
         <div class="tarjeta-contable">
             <h4>Hoy</h4>
@@ -428,18 +347,67 @@
         </div>
     </div>
 
-    <!-- FILTRADO Y HERRAMIENTAS -->
-    <div class="barra-herramientas">
-        <div class="filtro-grupo">
-            <label for="filtroFecha">Buscar por fecha:</label>
-            <input type="date" id="filtroFecha">
-        </div>
-        <div>
-            <button class="btn-reiniciar" id="btnVerTodo">Ver Todo</button>
+    <!-- NUEVO: REGISTRO DE CLIENTE MANUAL (SIN AGENDAR) -->
+    <div class="seccion-bloque">
+        <h3>Registrar Cliente en Puerta (Sin Agenda)</h3>
+        <form class="form-manual" id="formManual" onsubmit="guardarClienteManual(event)">
+            <div class="form-grupo">
+                <label for="mNombre">Nombre del Cliente</label>
+                <input type="text" id="mNombre" placeholder="Ej. Juan Pérez" required>
+            </div>
+            <div class="form-grupo">
+                <label for="mTelefono">Teléfono</label>
+                <input type="tel" id="mTelefono" placeholder="Ej. 04141234567" required>
+            </div>
+            <div class="form-grupo">
+                <label for="mServicio">Servicio Realizado</label>
+                <select id="mServicio" required>
+                    <!-- Servicios exactamente iguales a tus precios del Index -->
+                    <option value="Corte de Pelo (10€)">Corte de Pelo (10€)</option>
+                    <option value="Corte + Barba (13€)">Corte + Barba (13€)</option>
+                    <option value="Corte + Barba + Cejas (15€)">Corte + Barba + Cejas (15€)</option>
+                    <option value="Corte + Cejas (11€)">Corte + Cejas (11€)</option>
+                    <option value="Barba Tradicional (5€)">Barba Tradicional (5€)</option>
+                    <option value="Diseño de Cejas (3€)">Diseño de Cejas (3€)</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-guardar-manual">Agregar Trabajo</button>
+        </form>
+    </div>
+
+    <!-- NUEVO: TOP CLIENTES FRECUENTES -->
+    <div class="seccion-bloque">
+        <h3>Control de Frecuencia y Fidelidad</h3>
+        <p style="color: var(--gris-secundario); font-size: 0.9rem; margin-bottom: 15px;">Listado automático de clientes repetidos ordenados por nivel de asistencia.</p>
+        <div class="contenedor-tabla" style="margin-bottom:0;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Teléfono</th>
+                        <th>Total Visitas</th>
+                        <th>Última Vez</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-frecuencia-cuerpo">
+                    <tr><td colspan="4" class="sin-citas">Cargando métricas de fidelidad...</td></tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <!-- TABLA DE CONTROL -->
+    <br>
+
+    <!-- TABLA DE CITAS GENERALES -->
+    <h3>Historial y Agenda de Turnos</h3>
+    <div class="barra-herramientas">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <label for="filtroFecha" style="font-size:0.9rem; color:var(--gris-secundario);">Filtrar por Fecha:</label>
+            <input type="date" id="filtroFecha" style="background:#121212; border:1px solid #333; color:#fff; padding:8px; border-radius:4px;">
+        </div>
+        <button class="btn-reiniciar" id="btnVerTodo" style="background:#222; color:#fff; padding:8px 16px; border:1px solid #444; border-radius:4px; cursor:pointer;">Ver Todo</button>
+    </div>
+
     <div class="contenedor-tabla">
         <table>
             <thead>
@@ -453,17 +421,15 @@
                 </tr>
             </thead>
             <tbody id="tabla-citas-cuerpo">
-                <!-- Se carga dinámicamente -->
+                <!-- Dinámico -->
             </tbody>
         </table>
     </div>
 </section>
 
 <script>
-    // ==========================================
-    // SISTEMA DE CONTROL DE ACCESO (CONTRASEÑA)
-    // ==========================================
     const CLAVE_ADMINISTRADOR = 'Ve-030699'; 
+    const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
 
     const pantallaLogin = document.getElementById('pantallaLogin');
     const campoClave = document.getElementById('campoClave');
@@ -479,56 +445,35 @@
             campoClave.value = '';
         }
     }
-
     btnIngresar.addEventListener('click', verificarAcceso);
     campoClave.addEventListener('keypress', function(e) { if (e.key === 'Enter') verificarAcceso(); });
 
-    // ==========================================
-    // LÓGICA DEL MENÚ DESPLEGABLE LATERAL
-    // ==========================================
+    // MENÚ DESPLEGABLE
     const btnHamburguesa = document.getElementById('btnHamburguesa');
     const menuLateral = document.getElementById('menuLateral');
     const menuOverlay = document.getElementById('menuOverlay');
-    const linksMenu = document.querySelectorAll('.menu-desplegable a');
-
+    btnHamburguesa.addEventListener('click', toggleMenu);
+    menuOverlay.addEventListener('click', toggleMenu);
     function toggleMenu() {
         btnHamburguesa.classList.toggle('open');
         menuLateral.classList.toggle('open');
         menuOverlay.classList.toggle('show');
     }
 
-    btnHamburguesa.addEventListener('click', toggleMenu);
-    menuOverlay.addEventListener('click', toggleMenu);
-    linksMenu.forEach(link => link.addEventListener('click', toggleMenu));
-
-    // ==========================================
-    // CORE CONTABLE Y MANEJO DE BASE DE DATOS
-    // ==========================================
-    const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
+    // CORE DEL PANEL
     const tablaCuerpo = document.getElementById('tabla-citas-cuerpo');
+    const tablaFrecuencia = document.getElementById('tabla-frecuencia-cuerpo');
     const filtroFecha = document.getElementById('filtroFecha');
     const btnVerTodo = document.getElementById('btnVerTodo');
-
-    let todasLasCitas = []; // Memoria temporal de datos cargados de la nube
+    let todasLasCitas = [];
 
     function inicializarSistema() {
         obtenerCitasServidor();
-        
-        // Listener para el buscador por fecha de la tabla
-        filtroFecha.addEventListener('change', function() {
-            renderizarTabla(this.value);
-        });
-
-        // Botón para limpiar filtro
-        btnVerTodo.addEventListener('click', function() {
-            filtroFecha.value = '';
-            renderizarTabla('');
-        });
+        filtroFecha.addEventListener('change', function() { renderizarTabla(this.value); });
+        btnVerTodo.addEventListener('click', function() { filtroFecha.value = ''; renderizarTabla(''); });
     }
 
     function obtenerCitasServidor() {
-        tablaCuerpo.innerHTML = '<tr><td colspan="6" style="text-align: center;">Cargando base de datos contable...</td></tr>';
-
         fetch(`${FIREBASE_URL}citas.json`)
             .then(response => response.json())
             .then(data => {
@@ -536,111 +481,174 @@
                     todasLasCitas = [];
                     procesarContabilidad();
                     renderizarTabla('');
+                    calcularFrecuencias();
                     return;
                 }
-
-                // Convertir el objeto loco de Firebase en un Array limpio
                 todasLasCitas = Object.keys(data).map(id => ({
                     id: id,
                     ...data[id]
                 })).sort((a, b) => new Date(a.cita_fecha) - new Date(b.cita_fecha));
 
                 procesarContabilidad();
-                renderizarTabla(''); // Carga inicial mostrando todos los registros
-            })
-            .catch(error => {
-                console.error("Error contable:", error);
-                tablaCuerpo.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Error al procesar la contabilidad de la nube.</td></tr>';
+                renderizarTabla('');
+                calcularFrecuencias();
             });
     }
 
-    // EXTRAE EL PRECIO ENTRE PARÉNTESIS USANDO EXPRESIONES REGULARES
     function extraerPrecio(servicioTexto) {
         if (!servicioTexto) return 0;
-        // Busca cualquier número que esté acompañado por el símbolo € dentro de un paréntesis
         const coincidencia = servicioTexto.match(/\((\d+)€\)/);
         return coincidencia ? parseInt(coincidencia[1], 10) : 0;
     }
 
+    // OBTENER LA FECHA REAL EN FORMATO LOCAL (EVITA EL ERROR DE ZONA HORARIA)
+    function obtenerFechaLocalVenezuela() {
+        const d = new Date();
+        const año = d.getFullYear();
+        const mes = String(d.getMonth() + 1).padStart(2, '0');
+        const dia = String(d.getDate()).padStart(2, '0');
+        return `${año}-${mes}-${dia}`;
+    }
+
     function procesarContabilidad() {
-        // Obtener fechas clave basadas en el huso horario local actual (Año 2026)
-        const ahora = new Date();
-        const hoyStr = ahora.toISOString().split('T')[0];
-        
-        const mesActual = ahora.getMonth(); // 0 = Enero, 11 = Diciembre
-        const anioActual = ahora.getFullYear();
+        const hoyStr = obtenerFechaLocalVenezuela(); // Corregido aquí
+        const d = new Date();
+        const mesActual = d.getMonth();
+        const anioActual = d.getFullYear();
 
         let cHoy = 0, iHoy = 0;
         let cMes = 0, iMes = 0;
         let cAnio = 0, iAnio = 0;
-
-        // Diccionario para registrar cuántos cortes se hicieron por cada fecha única (para el promedio diario)
         const mapaFechasActivas = {};
 
         todasLasCitas.forEach(cita => {
             if (!cita.cita_fecha) return;
-
             const precio = extraerPrecio(cita.servicio);
-            const fechaCitaObj = new Date(cita.cita_fecha + 'T00:00:00');
-            
-            const citaAnio = fechaCitaObj.getFullYear();
-            const citaMes = fechaCitaObj.getMonth();
+            const partes = cita.cita_fecha.split('-');
+            const cAnioObj = parseInt(partes[0], 10);
+            const cMesObj = parseInt(partes[1], 10) - 1;
 
-            // Guardar en el mapa de días trabajados
-            mapaFechasActivas[cita.cita_fecha] = (mapaFechasActivas[cita.cita_fecha] || 0) + 1;
+            mapaFechasActivas[cita.cita_fecha] = true;
 
-            // 1. Cálculo del Año
-            if (citaAnio === anioActual) {
-                cAnio++;
-                iAnio += precio;
-
-                // 2. Cálculo del Mes
-                if (citaMes === mesActual) {
-                    cMes++;
-                    iMes += precio;
-                }
+            if (cAnioObj === anioActual) {
+                cAnio++; iAnio += precio;
+                if (cMesObj === mesActual) { cMes++; iMes += precio; }
             }
-
-            // 3. Cálculo del Día de Hoy
             if (cita.cita_fecha === hoyStr) {
-                cHoy++;
-                iHoy += precio;
+                cHoy++; iHoy += precio;
             }
         });
 
-        // Cálculo del promedio de cortes diarios (basado únicamente en los días en los que hubo actividad)
         const totalDiasActivos = Object.keys(mapaFechasActivas).length;
         const promedio = totalDiasActivos > 0 ? (todasLasCitas.length / totalDiasActivos).toFixed(1) : '0.0';
 
-        // Pintar los resultados en las tarjetas superiores
         document.getElementById('cortesHoy').textContent = cHoy;
         document.getElementById('ingresosHoy').textContent = `${iHoy},00€`;
-
         document.getElementById('cortesMes').textContent = cMes;
         document.getElementById('ingresosMes').textContent = `${iMes},00€`;
-
         document.getElementById('cortesAnio').textContent = cAnio;
         document.getElementById('ingresosAnio').textContent = `${iAnio},00€`;
-
         document.getElementById('promedioDiario').textContent = promedio;
+    }
+
+    // NUEVO: SISTEMA DE CÁLCULO DE FRECUENCIA
+    function calcularFrecuencias() {
+        tablaFrecuencia.innerHTML = '';
+        if (todasLasCitas.length === 0) {
+            tablaFrecuencia.innerHTML = '<tr><td colspan="4" class="sin-citas">No hay registros suficientes.</td></tr>';
+            return;
+        }
+
+        const clientesMap = {};
+
+        todasLasCitas.forEach(cita => {
+            const tlf = cita.cliente_telefono ? cita.cliente_telefono.trim() : 'Sin Teléfono';
+            if (!clientesMap[tlf]) {
+                clientesMap[tlf] = {
+                    nombre: cita.cliente_nombre || 'Desconocido',
+                    telefono: tlf,
+                    totalVisitas: 0,
+                    ultimaFecha: cita.cita_fecha
+                };
+            }
+            clientesMap[tlf].totalVisitas++;
+            if (new Date(cita.cita_fecha) > new Date(clientesMap[tlf].ultimaFecha)) {
+                clientesMap[tlf].ultimaFecha = cita.cita_fecha;
+            }
+        });
+
+        // Convertir a lista y ordenar: Primero los que tengan más visitas (más fieles)
+        const listaFrecuencia = Object.values(clientesMap).sort((a, b) => b.totalVisitas - a.totalVisitas);
+
+        listaFrecuencia.forEach(c => {
+            const fila = document.createElement('tr');
+            let fFmt = c.ultimaFecha;
+            if(c.ultimaFecha) {
+                const p = c.ultimaFecha.split('-');
+                if(p.length === 3) fFmt = `${p[2]}/${p[1]}/${p[0]}`;
+            }
+
+            // Resalta con color verde si ha venido más de 2 veces
+            const medalla = c.totalVisitas > 2 ? ` <span style="color:var(--verde-exito); font-size:0.8rem;">★ Fiel</span>` : '';
+
+            fila.innerHTML = `
+                <td><strong>${c.nombre}</strong>${medalla}</td>
+                <td>${c.telefono}</td>
+                <td style="text-align:center; font-weight:bold; color:#fff;">${c.totalVisitas}</td>
+                <td>${fFmt}</td>
+            `;
+            tablaFrecuencia.appendChild(fila);
+        });
+    }
+
+    // NUEVO: AGREGAR CLIENTE MANUAL EN TIEMPO REAL
+    window.guardarClienteManual = function(e) {
+        e.preventDefault();
+        
+        const nombre = document.getElementById('mNombre').value;
+        const telefono = document.getElementById('mTelefono').value;
+        const servicio = document.getElementById('mServicio').value;
+        const fechaHoy = obtenerFechaLocalVenezuela();
+
+        // Para clientes que entran directo por puerta, la hora de registro es la actual en formato digital
+        const ahora = new Date();
+        const horaFmt = `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`;
+
+        const nuevaCitaManual = {
+            cliente_nombre: nombre,
+            cliente_telefono: telefono,
+            servicio: servicio,
+            cita_fecha: fechaHoy,
+            cita_hora: horaFmt + " (Puerta)"
+        };
+
+        fetch(`${FIREBASE_URL}citas.json`, {
+            method: 'POST',
+            body: JSON.stringify(nuevaCitaManual)
+        })
+        .then(response => response.json())
+        .then(() => {
+            alert("¡Trabajo en puerta añadido al balance con éxito!");
+            document.getElementById('formManual').reset();
+            obtenerCitasServidor(); // Recalcula ingresos y frecuencia de inmediato
+        })
+        .catch(error => {
+            console.error("Error al registrar manual:", error);
+            alert("No se pudo conectar con Firebase.");
+        });
     }
 
     function renderizarTabla(fechaFiltroStr) {
         tablaCuerpo.innerHTML = '';
-
-        // Filtrar si el usuario seleccionó una fecha específica
-        const citasFiltradas = fechaFiltroStr 
-            ? todasLasCitas.filter(c => c.cita_fecha === fechaFiltroStr)
-            : todasLasCitas;
+        const citasFiltradas = fechaFiltroStr ? todasLasCitas.filter(c => c.cita_fecha === fechaFiltroStr) : todasLasCitas;
 
         if (citasFiltradas.length === 0) {
-            tablaCuerpo.innerHTML = '<tr><td colspan="6" class="sin-citas">No se encontraron citas para el criterio seleccionado.</td></tr>';
+            tablaCuerpo.innerHTML = '<tr><td colspan="6" class="sin-citas">No hay citas en este rango.</td></tr>';
             return;
         }
 
         citasFiltradas.forEach(cita => {
             const fila = document.createElement('tr');
-
             let fechaFormateada = cita.cita_fecha;
             if(cita.cita_fecha) {
                 const partes = cita.cita_fecha.split('-');
@@ -660,18 +668,9 @@
     }
 
     window.eliminarCita = function(idCita) {
-        if (confirm("¿Estás seguro de que deseas eliminar y liberar este turno permanentemente? El balance contable se actualizará.")) {
-            fetch(`${FIREBASE_URL}citas/${idCita}.json`, {
-                method: 'DELETE'
-            })
-            .then(() => {
-                alert("La cita ha sido removida con éxito.");
-                obtenerCitasServidor(); // Recarga y recalcula todo desde internet
-            })
-            .catch(error => {
-                console.error("Error al borrar el registro:", error);
-                alert("Hubo un error al intentar eliminar la cita.");
-            });
+        if (confirm("¿Estás seguro de eliminar este registro? Los balances contables se recalcularán.")) {
+            fetch(`${FIREBASE_URL}citas/${idCita}.json`, { method: 'DELETE' })
+            .then(() => { obtenerCitasServidor(); });
         }
     }
 </script>
