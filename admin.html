@@ -38,17 +38,19 @@
             margin-bottom: 10px;
         }
 
-        h2 { font-size: 2rem; }
-        h3 { font-size: 1.3rem; margin-top: 10px; text-align: left; border-bottom: 1px solid #252525; padding-bottom: 10px; }
+        h2 { font-size: 1.8rem; padding: 0 10px; }
+        h3 { font-size: 1.2rem; margin-top: 10px; text-align: left; border-bottom: 1px solid #252525; padding-bottom: 10px; }
 
         .subtitulo {
             text-align: center;
             color: var(--gris-secundario);
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+            padding: 0 15px;
         }
 
         /* ==========================================================================
-           PANTALLA DE INICIO DE SESIÓN
+           PANTALLA DE INICIO DE SESIÓN (RESPONSIVA)
            ========================================================================== */
         .login-container {
             position: fixed;
@@ -67,7 +69,7 @@
         .login-box {
             background-color: var(--fondo-tarjeta);
             border: 1px solid #252525;
-            padding: 40px 30px;
+            padding: 30px 20px;
             border-radius: 8px;
             width: 100%;
             max-width: 400px;
@@ -106,7 +108,7 @@
         .error-login { color: var(--rojo-acento); font-size: 0.85rem; margin-top: 10px; display: none; }
 
         /* ==========================================================================
-           BARRA DE NAVEGACIÓN Y MENÚ
+           BARRA DE NAVEGACIÓN
            ========================================================================== */
         header {
             display: flex;
@@ -181,47 +183,61 @@
         .menu-overlay.show { display: block; }
 
         /* ==========================================================================
-           PANEL CONTABLE
+           CONTENEDORES Y BLOQUES GENÉRICOS
            ========================================================================== */
         .admin-section {
-            padding: 20px 5%;
+            padding: 15px 4%;
             max-width: 1100px;
             margin: 0 auto;
         }
 
+        .seccion-bloque {
+            background-color: var(--fondo-tarjeta);
+            border: 1px solid #252525;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        /* GRID CONTABLE */
         .grid-contable {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        @media (min-width: 768px) {
+            .grid-contable { grid-template-columns: repeat(4, 1fr); }
         }
 
         .tarjeta-contable {
             background-color: var(--fondo-tarjeta);
             border: 1px solid #252525;
             border-radius: 8px;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
         }
 
-        .tarjeta-contable h4 { font-size: 0.85rem; text-transform: uppercase; color: var(--gris-secundario); margin-bottom: 10px; }
-        .tarjeta-contable .dato-principal { font-size: 1.8rem; font-weight: 800; color: #ffffff; }
-        .tarjeta-contable .monto-ingreso { font-size: 1.1rem; font-weight: 700; color: var(--verde-exito); }
+        .tarjeta-contable h4 { font-size: 0.75rem; text-transform: uppercase; color: var(--gris-secundario); margin-bottom: 8px; }
+        .tarjeta-contable .dato-principal { font-size: 1.5rem; font-weight: 800; color: #ffffff; }
+        .tarjeta-contable .monto-ingreso { font-size: 1rem; font-weight: 700; color: var(--verde-exito); }
 
-        /* ==========================================================================
-           SECCIÓN DE BARBERÍA (40% / 60%) Y PATROCINIOS
-           ========================================================================== */
+        /* REPARTO DE GANANCIAS */
         .seccion-reparto-ganancias {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .seccion-reparto-ganancias { grid-template-columns: repeat(3, 1fr); }
         }
 
         .tarjeta-ganancia {
             background-color: #151515;
             border-left: 4px solid var(--azul-enlace);
-            padding: 15px 20px;
+            padding: 15px;
             border-radius: 0 8px 8px 0;
         }
 
@@ -229,35 +245,19 @@
         .tarjeta-ganancia.neto { border-left-color: var(--verde-exito); }
         .tarjeta-ganancia.deuda { border-left-color: var(--rojo-acento); }
 
-        .tarjeta-ganancia h5 { font-size: 0.8rem; text-transform: uppercase; color: var(--gris-secundario); margin-bottom: 5px; }
-        .tarjeta-ganancia .monto-calculado { font-size: 1.5rem; font-weight: bold; color: #fff; }
+        .tarjeta-ganancia h5 { font-size: 0.75rem; text-transform: uppercase; color: var(--gris-secundario); margin-bottom: 5px; }
+        .tarjeta-ganancia .monto-calculado { font-size: 1.3rem; font-weight: bold; color: #fff; }
 
-        .checkbox-patrocinio {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 10px;
-            font-size: 0.9rem;
-            color: var(--gris-secundario);
-            cursor: pointer;
-        }
-
-        .checkbox-patrocinio input {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-            accent-color: var(--rojo-acento);
-        }
-
-        /* ==========================================================================
-           CALCULADORA RÁPIDA INTEGRADA
-           ========================================================================== */
+        /* CALCULADORA */
         .calc-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr 2fr 1fr;
+            grid-template-columns: 1fr;
             gap: 10px;
-            align-items: center;
             margin-top: 15px;
+        }
+
+        @media (min-width: 480px) {
+            .calc-grid { grid-template-columns: 2fr 1fr 2fr 1.5fr; align-items: center; }
         }
 
         .calc-resultado {
@@ -269,25 +269,23 @@
             font-size: 1.1rem;
             color: var(--verde-exito);
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             min-height: 41px;
         }
 
-        /* ==========================================================================
-           REGISTRO DE CLIENTE MANUAL
-           ========================================================================== */
-        .seccion-bloque {
-            background-color: var(--fondo-tarjeta);
-            border: 1px solid #252525;
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 30px;
-        }
-
+        /* FORMULARIOS */
         .form-manual {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+            grid-template-columns: 1fr;
+            gap: 12px;
             margin-top: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .form-manual { grid-template-columns: repeat(3, 1fr); }
+            .form-manual .full-width-btn { grid-column: span 3; display: flex; justify-content: flex-end; }
         }
 
         .form-grupo {
@@ -296,72 +294,154 @@
             gap: 5px;
         }
 
-        .form-grupo label { font-size: 0.85rem; color: var(--gris-secundario); text-transform: uppercase; }
+        .form-grupo label { font-size: 0.8rem; color: var(--gris-secundario); text-transform: uppercase; }
         .form-grupo input, .form-grupo select {
             background-color: #121212;
             border: 1px solid #333;
             color: #fff;
-            padding: 10px;
+            padding: 12px;
             border-radius: 4px;
             outline: none;
+            font-size: 0.95rem;
+            width: 100%;
         }
         .form-grupo input:focus, .form-grupo select:focus { border-color: var(--rojo-acento); }
+
+        .checkbox-patrocinio {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--gris-secundario);
+            cursor: pointer;
+        }
+
+        .checkbox-patrocinio input { width: 18px; height: 18px; accent-color: var(--rojo-acento); }
 
         .btn-guardar-manual {
             background-color: var(--verde-exito);
             color: white;
             border: none;
-            padding: 12px;
+            padding: 12px 25px;
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
             text-transform: uppercase;
-            align-self: flex-end;
-            height: 41px;
+            width: 100%;
+            font-size: 0.9rem;
         }
 
-        /* ==========================================================================
-           FILTRADO Y TABLAS
-           ========================================================================== */
+        @media (min-width: 768px) {
+            .btn-guardar-manual { width: auto; }
+        }
+
+        /* HERRAMIENTAS Y FILTROS */
         .barra-herramientas {
             background-color: var(--fondo-tarjeta);
             border: 1px solid #252525;
             border-radius: 8px;
-            padding: 15px 20px;
-            margin-bottom: 20px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
+            flex-direction: column;
             gap: 10px;
         }
 
+        @media (min-width: 550px) {
+            .barra-herramientas { flex-direction: row; justify-content: space-between; align-items: center; }
+        }
+
+        .barra-herramientas input[type="date"] {
+            background: #121212;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-reiniciar {
+            background: #222;
+            color: #fff;
+            padding: 10px 16px;
+            border: 1px solid #444;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        /* ==========================================================================
+           SISTEMA DE TABLAS RESPONSIVAS (CARD-MODE PARA TELÉFONOS)
+           ========================================================================== */
         .contenedor-tabla {
             width: 100%;
-            overflow-x: auto; 
             background-color: var(--fondo-tarjeta);
             border: 1px solid #252525;
             border-radius: 8px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
-        table { width: 100%; border-collapse: collapse; text-align: left; min-width: 700px; }
-        th, td { padding: 15px; border-bottom: 1px solid #252525; font-size: 0.95rem; }
-        th { background-color: #111111; color: #ffffff; text-transform: uppercase; font-size: 0.85rem; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th, td { padding: 12px 15px; border-bottom: 1px solid #252525; font-size: 0.9rem; }
+        th { background-color: #111111; color: #ffffff; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
         tr:hover { background-color: #222222; }
 
-        .btn-eliminar { background-color: var(--rojo-acento); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
-        .sin-citas { text-align: center; padding: 30px; color: var(--gris-secundario); font-style: italic; }
-        
-        .badge-patrocinio {
-            background-color: #2e1a05;
-            color: var(--naranja-alerta);
-            padding: 2px 6px;
+        .select-tabla {
+            background-color: #121212;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 6px;
             border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            border: 1px solid #4a2b00;
-            margin-left: 5px;
+            font-size: 0.85rem;
+            outline: none;
+            width: 100%;
+            max-width: 130px;
+        }
+        .select-tabla:focus { border-color: var(--azul-enlace); }
+
+        .btn-eliminar { background-color: var(--rojo-acento); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
+        .sin-citas { text-align: center; padding: 25px; color: var(--gris-secundario); font-style: italic; }
+
+        /* DISEÑO DE TABLA ADAPTABLE A TELÉFONO (MÁXIMO 767px) */
+        @media screen and (max-width: 767px) {
+            .contenedor-tabla { background: transparent; border: none; }
+            table, thead, tbody, th, td, tr { display: block; width: 100%; }
+            thead { display: none; } /* Ocultamos los encabezados de columnas tradicionales */
+            
+            tr {
+                background-color: var(--fondo-tarjeta);
+                border: 1px solid #252525;
+                border-radius: 8px;
+                margin-bottom: 15px;
+                padding: 10px 15px;
+            }
+            
+            td {
+                text-align: right;
+                padding: 8px 0;
+                border-bottom: 1px solid #222;
+                position: relative;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            td:last-child { border-bottom: none; justify-content: center; padding-top: 12px; }
+            
+            /* Inyectamos títulos usando el atributo personalizado data-label */
+            td::before {
+                content: attr(data-label);
+                float: left;
+                font-weight: bold;
+                text-transform: uppercase;
+                font-size: 0.75rem;
+                color: var(--gris-secundario);
+            }
+            
+            .select-tabla { max-width: 160px; }
         }
     </style>
 </head>
@@ -370,7 +450,7 @@
 <div class="login-container" id="pantallaLogin">
     <div class="login-box">
         <h3>Acceso Restringido</h3>
-        <p>Introduce tu clave de administrador para gestionar las citas.</p>
+        <p style="color:var(--gris-secundario); font-size:0.9rem; margin-bottom:15px;">Introduce tu clave de administrador para gestionar las citas.</p>
         <input type="password" id="campoClave" placeholder="••••••••" autocomplete="current-password">
         <button class="btn-login" id="btnIngresar">Ingresar</button>
         <div class="error-login" id="mensajeError">Contraseña incorrecta. Inténtalo de nuevo.</div>
@@ -391,7 +471,7 @@
     <a href="index.html#galeria">Cortes</a>
     <a href="index.html#precios">Servicios</a>
     <a href="index.html#agenda">Agendar Cita</a>
-    <a href="admin.html" class="link-admin-menu">Panel Administrator</a>
+    <a href="admin.html" class="link-admin-menu">Panel Administrador</a>
 </nav>
 
 <section class="admin-section">
@@ -417,13 +497,13 @@
         <div class="tarjeta-contable">
             <h4>Promedio Diario</h4>
             <div class="dato-principal" id="promedioDiario">0.0</div>
-            <div class="monto-ingreso" style="color: var(--gris-secundario); font-size: 0.8rem;">Cortes / día activo</div>
+            <div class="monto-ingreso" style="color: var(--gris-secundario); font-size: 0.75rem;">Cortes/día act.</div>
         </div>
     </div>
 
     <div class="seccion-bloque">
         <h3>Cierre de Caja del Día (División de Ganancias)</h3>
-        <p style="color: var(--gris-secundario); font-size: 0.9rem; margin-bottom: 15px;">Cálculo automatizado basado en las tarifas de los servicios registrados hoy.</p>
+        <p style="color: var(--gris-secundario); font-size: 0.85rem; margin-bottom: 15px;">Calculado únicamente en base a los trabajos marcados como "Atendido" el día de hoy.</p>
         
         <div class="seccion-reparto-ganancias">
             <div class="tarjeta-ganancia barberia">
@@ -435,7 +515,7 @@
                 <div class="monto-calculado" id="gananciaVictor">0,00€</div>
             </div>
             <div class="tarjeta-ganancia deuda">
-                <h5>Deuda a la Barbería (Por Patrocinios)</h5>
+                <h5>Deuda al Local (Patrocinios)</h5>
                 <div class="monto-calculado" id="deudaPatrocinios">0,00€</div>
             </div>
         </div>
@@ -479,23 +559,25 @@
                 </select>
                 <label class="checkbox-patrocinio">
                     <input type="checkbox" id="mPatrocinado">
-                    ¿Trabajo patrocinado? (Pago directo al barbero)
+                    ¿Trabajo patrocinado? (Pago directo)
                 </label>
             </div>
-            <button type="submit" class="btn-guardar-manual">Agregar Trabajo</button>
+            <div class="full-width-btn">
+                <button type="submit" class="btn-guardar-manual">Agregar Trabajo</button>
+            </div>
         </form>
     </div>
 
     <div class="seccion-bloque">
         <h3>Control de Frecuencia y Fidelidad</h3>
-        <p style="color: var(--gris-secundario); font-size: 0.9rem; margin-bottom: 15px;">Listado automático de clientes repetidos ordenados por nivel de asistencia.</p>
+        <p style="color: var(--gris-secundario); font-size: 0.85rem; margin-bottom: 15px;">Listado automático de clientes repetidos ordenados por nivel de asistencia.</p>
         <div class="contenedor-tabla" style="margin-bottom:0;">
             <table>
                 <thead>
                     <tr>
                         <th>Cliente</th>
                         <th>Teléfono</th>
-                        <th>Total Visitas</th>
+                        <th style="text-align:center;">Total Visitas</th>
                         <th>Última Vez</th>
                     </tr>
                 </thead>
@@ -510,11 +592,13 @@
 
     <h3>Historial y Agenda de Turnos</h3>
     <div class="barra-herramientas">
-        <div style="display:flex; align-items:center; gap:10px;">
-            <label for="filtroFecha" style="font-size:0.9rem; color:var(--gris-secundario);">Filtrar por Fecha:</label>
-            <input type="date" id="filtroFecha" style="background:#121212; border:1px solid #333; color:#fff; padding:8px; border-radius:4px;">
+        <div style="display:flex; align-items:center; gap:10px; justify-content: space-between; width: 100%;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <label for="filtroFecha" style="font-size:0.85rem; color:var(--gris-secundario); white-space:nowrap;">Fecha:</label>
+                <input type="date" id="filtroFecha">
+            </div>
+            <button class="btn-reiniciar" id="btnVerTodo">Ver Todo</button>
         </div>
-        <button class="btn-reiniciar" id="btnVerTodo" style="background:#222; color:#fff; padding:8px 16px; border:1px solid #444; border-radius:4px; cursor:pointer;">Ver Todo</button>
     </div>
 
     <div class="contenedor-tabla">
@@ -522,10 +606,10 @@
             <thead>
                 <tr>
                     <th>Cliente</th>
-                    <th>Teléfono</th>
                     <th>Servicio</th>
-                    <th>Fecha</th>
-                    <th>Hora</th>
+                    <th>Fecha / Hora</th>
+                    <th>Estado</th>
+                    <th>Tipo Pago</th>
                     <th>Acción</th>
                 </tr>
             </thead>
@@ -580,13 +664,12 @@
         filtroFecha.addEventListener('change', function() { renderizarTabla(this.value); });
         btnVerTodo.addEventListener('click', function() { filtroFecha.value = ''; renderizarTabla(''); });
         
-        // Inicializar listeners de la calculadora rápida
+        // Inicializar la calculadora
         document.getElementById('calcN1').addEventListener('input', ejecutarCalculoRapido);
         document.getElementById('calcN2').addEventListener('input', ejecutarCalculoRapido);
         document.getElementById('calcOperacion').addEventListener('change', ejecutarCalculoRapido);
     }
 
-    // CALCULADORA LÓGICA
     function ejecutarCalculoRapido() {
         const n1 = parseFloat(document.getElementById('calcN1').value) || 0;
         const n2 = parseFloat(document.getElementById('calcN2').value) || 0;
@@ -630,7 +713,6 @@
         return coincidencia ? parseInt(coincidencia[1], 10) : 0;
     }
 
-    // SE CORRIGE EL CONFLICTO HORARIO EVALUANDO ESTRICTAMENTE LA HORA DE CARACAS, VENEZUELA
     function obtenerFechaLocalVenezuela() {
         const cadenaCaracas = new Date().toLocaleString("en-US", { timeZone: "America/Caracas" });
         const d = new Date(cadenaCaracas);
@@ -650,7 +732,6 @@
         let cMes = 0, iMes = 0;
         let cAnio = 0, iAnio = 0;
         
-        // Variables para la división 40% - 60% de HOY
         let totalBarberiaHoy = 0;
         let totalVictorHoy = 0;
         let totalDeudaPatrocinioHoy = 0;
@@ -659,6 +740,11 @@
 
         todasLasCitas.forEach(cita => {
             if (!cita.cita_fecha) return;
+            
+            // Solo procesamos contabilidad si el estado es 'Atendido' o si el campo no existe (por compatibilidad hacia atrás)
+            const estadoActual = cita.estado || 'Atendido';
+            if (estadoActual !== 'Atendido') return;
+
             const precio = extraerPrecio(cita.servicio);
             const partes = cita.cita_fecha.split('-');
             const cAnioObj = parseInt(partes[0], 10);
@@ -675,16 +761,13 @@
                 cHoy++; 
                 iHoy += precio;
 
-                // Lógica de división de ganancias del día (Corregida la sintaxis aquí)
                 const deLaBarberia = precio * 0.40;
                 const deVictor = precio * 0.60;
 
                 if (cita.patrocinado === true) {
-                    // Si el cliente te pagó a ti directo, acumulas la deuda del 40% que le debes dar al local
                     totalDeudaPatrocinioHoy += deLaBarberia;
                     totalVictorHoy += precio; 
                 } else {
-                    // Flujo normal de caja compartida de la barbería
                     totalBarberiaHoy += deLaBarberia;
                     totalVictorHoy += deVictor;
                 }
@@ -692,7 +775,7 @@
         });
 
         const totalDiasActivos = Object.keys(mapaFechasActivas).length;
-        const promedio = totalDiasActivos > 0 ? (todasLasCitas.length / totalDiasActivos).toFixed(1) : '0.0';
+        const promedio = totalDiasActivos > 0 ? (cHoy / totalDiasActivos).toFixed(1) : '0.0';
 
         document.getElementById('cortesHoy').textContent = cHoy;
         document.getElementById('ingresosHoy').textContent = `${iHoy},00€`;
@@ -702,7 +785,6 @@
         document.getElementById('ingresosAnio').textContent = `${iAnio},00€`;
         document.getElementById('promedioDiario').textContent = promedio;
 
-        // Inyección de datos en la interfaz gráfica del 40/60
         document.getElementById('gananciaBarberia').textContent = `${totalBarberiaHoy.toFixed(2)}€`;
         document.getElementById('gananciaVictor').textContent = `${totalVictorHoy.toFixed(2)}€`;
         document.getElementById('deudaPatrocinios').textContent = `${totalDeudaPatrocinioHoy.toFixed(2)}€`;
@@ -727,13 +809,20 @@
                     ultimaFecha: cita.cita_fecha
                 };
             }
-            clientesMap[tlf].totalVisitas++;
-            if (new Date(cita.cita_fecha) > new Date(clientesMap[tlf].ultimaFecha)) {
-                clientesMap[tlf].ultimaFecha = cita.cita_fecha;
+            if ((cita.estado || 'Atendido') === 'Atendido') {
+                clientesMap[tlf].totalVisitas++;
+                if (new Date(cita.cita_fecha) > new Date(clientesMap[tlf].ultimaFecha)) {
+                    clientesMap[tlf].ultimaFecha = cita.cita_fecha;
+                }
             }
         });
 
-        const listaFrecuencia = Object.values(clientesMap).sort((a, b) => b.totalVisitas - a.totalVisitas);
+        const listaFrecuencia = Object.values(clientesMap).filter(c => c.totalVisitas > 0).sort((a, b) => b.totalVisitas - a.totalVisitas);
+
+        if (listaFrecuencia.length === 0) {
+            tablaFrecuencia.innerHTML = '<tr><td colspan="4" class="sin-citas">No hay clientes atendidos todavía.</td></tr>';
+            return;
+        }
 
         listaFrecuencia.forEach(c => {
             const fila = document.createElement('tr');
@@ -746,16 +835,15 @@
             const medalla = c.totalVisitas > 2 ? ` <span style="color:var(--verde-exito); font-size:0.8rem;">★ Fiel</span>` : '';
 
             fila.innerHTML = `
-                <td><strong>${c.nombre}</strong>${medalla}</td>
-                <td>${c.telefono}</td>
-                <td style="text-align:center; font-weight:bold; color:#fff;">${c.totalVisitas}</td>
-                <td>${fFmt}</td>
+                <td data-label="Cliente"><strong>${c.nombre}</strong>${medalla}</td>
+                <td data-label="Teléfono">${c.telefono}</td>
+                <td data-label="Visitas Total" style="text-align:center; font-weight:bold; color:#fff;">${c.totalVisitas}</td>
+                <td data-label="Última vez">${fFmt}</td>
             `;
             tablaFrecuencia.appendChild(fila);
         });
     }
 
-    // REGISTRO DE CLIENTE MANUAL EN TIEMPO REAL CON LA OPCIÓN DE PATROCINADO
     window.guardarClienteManual = function(e) {
         e.preventDefault();
         
@@ -774,7 +862,8 @@
             servicio: servicio,
             cita_fecha: fechaHoy,
             cita_hora: horaFmt + " (Puerta)",
-            patrocinado: esPatrocinado 
+            patrocinado: esPatrocinado,
+            estado: 'Atendido' // Las entradas por puerta se asumen directo como atendidas
         };
 
         fetch(`${FIREBASE_URL}citas.json`, {
@@ -793,32 +882,73 @@
         });
     }
 
+    // ACTUALIZACIÓN DE ESTADOS REMOTOS DIRECTAMENTE DESDE LA TABLA
+    window.cambiarEstadoRemoto = function(idCita, nuevoEstado) {
+        fetch(`${FIREBASE_URL}citas/${idCita}/estado.json`, {
+            method: 'PUT',
+            body: JSON.stringify(nuevoEstado)
+        })
+        .then(() => {
+            obtenerCitasServidor(); // Recalcula balances automáticamente en vivo
+        })
+        .catch(err => console.error("Error al actualizar estado:", err));
+    }
+
+    window.cambiarPatrocinioRemoto = function(idCita, esPatrocinado) {
+        fetch(`${FIREBASE_URL}citas/${idCita}/patrocinado.json`, {
+            method: 'PUT',
+            body: JSON.stringify(esPatrocinado === 'true')
+        })
+        .then(() => {
+            obtenerCitasServidor(); // Recalcula balances automáticamente en vivo
+        })
+        .catch(err => console.error("Error al actualizar patrocinio:", err));
+    }
+
     function renderizarTabla(fechaFiltroStr) {
         tablaCuerpo.innerHTML = '';
         const citasFiltradas = fechaFiltroStr ? todasLasCitas.filter(c => c.cita_fecha === fechaFiltroStr) : todasLasCitas;
 
         if (citasFiltradas.length === 0) {
-            tablaCuerpo.innerHTML = '<tr><td colspan="6" class="sin-citas">No hay citas en este rango.</td></tr>';
+            tablaCuerpo.innerHTML = '<tr><td colspan="6" class="sin-citas">No hay registros en este rango.</td></tr>';
             return;
         }
 
         citasFiltradas.forEach(cita => {
             const fila = document.createElement('tr');
-            let fechaFormateada = cita.cita_fecha;
+            let fFmt = cita.cita_fecha;
             if(cita.cita_fecha) {
                 const partes = cita.cita_fecha.split('-');
-                if(partes.length === 3) fechaFormateada = `${partes[2]}/${partes[1]}/${partes[0]}`;
+                if(partes.length === 3) fFmt = `${partes[2]}/${partes[1]}/${partes[0]}`;
             }
 
-            const badgePatrocinio = cita.patrocinado ? `<span class="badge-patrocinio">Patrocinado</span>` : '';
+            const estadoActual = cita.estado || 'Atendido';
+            const esPatrocinado = cita.patrocinado === true;
 
+            // Inyectamos las etiquetas data-label para el comportamiento adaptativo del móvil
             fila.innerHTML = `
-                <td><strong>${cita.cliente_nombre || 'Sin nombre'}</strong>${badgePatrocinio}</td>
-                <td>${cita.cliente_telefono || 'Sin teléfono'}</td>
-                <td>${cita.servicio || 'No especificado'}</td>
-                <td>${fechaFormateada}</td>
-                <td><span style="color: #ffffff; font-weight: bold;">${cita.cita_hora || '---'}</span></td>
-                <td><button class="btn-eliminar" onclick="eliminarCita('${cita.id}')">Eliminar</button></td>
+                <td data-label="Cliente">
+                    <strong>${cita.cliente_nombre || 'Sin nombre'}</strong><br>
+                    <span style="font-size:0.8rem; color:var(--gris-secundario);">${cita.cliente_telefono || ''}</span>
+                </td>
+                <td data-label="Servicio">${cita.servicio || 'No especificado'}</td>
+                <td data-label="Fecha/Hora">${fFmt} a las <span style="color:#fff; font-weight:bold;">${cita.cita_hora || '---'}</span></td>
+                <td data-label="Estado">
+                    <select class="select-tabla" onchange="cambiarEstadoRemoto('${cita.id}', this.value)">
+                        <option value="Pendiente" ${estadoActual === 'Pendiente' ? 'selected' : ''}>⏳ Pendiente</option>
+                        <option value="Atendido" ${estadoActual === 'Atendido' ? 'selected' : ''}>✅ Atendido</option>
+                        <option value="Cancelado" ${estadoActual === 'Cancelado' ? 'selected' : ''}>❌ Cancelado</option>
+                    </select>
+                </td>
+                <td data-label="Tipo Pago">
+                    <select class="select-tabla" onchange="cambiarPatrocinioRemoto('${cita.id}', this.value)">
+                        <option value="false" ${!esPatrocinado ? 'selected' : ''}>💼 Normal (40/60)</option>
+                        <option value="true" ${esPatrocinado ? 'selected' : ''}>⭐ Patrocinado</option>
+                    </select>
+                </td>
+                <td data-label="Acción">
+                    <button class="btn-eliminar" onclick="eliminarCita('${cita.id}')">Eliminar</button>
+                </td>
             `;
             tablaCuerpo.appendChild(fila);
         });
