@@ -3,790 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spartanos Barber Shop - Panel Admin</title>
+    <title>Panel de Administración | Víctor Styles</title>
     <style>
-        /* Estilos Premium a tono con la Barbería */
-        body {
-            background-color: #0a0a0a;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
+        /* Variables de color para mantener la consistencia minimalista */
+        :root {
+            --fondo-oscuro: #121212;
+            --fondo-tarjeta: #1a1a1a;
+            --gris-texto: #e0e0e0;
+            --gris-secundario: #a0a0a0;
+            --rojo-acento: #cc0000;
+            --rojo-hover: #b30000;
         }
-        .container {
-            max-width: 800px;
+
+        /* Configuración General */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--fondo-oscuro);
+            color: var(--gris-texto);
+            padding-top: 90px; /* Espacio para que la barra fija no tape el contenido */
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 2rem;
+            color: #ffffff;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .subtitulo {
+            text-align: center;
+            color: var(--gris-secundario);
+            margin-bottom: 30px;
+        }
+
+        /* ==========================================================================
+           BARRA DE NAVEGACIÓN Y MENÚ DESPLEGABLE (IGUAL A INDEX)
+           ========================================================================== */
+        header {
+            display: flex;
+            flex-direction: row; 
+            justify-content: space-between;
+            align-items: center;        
+            padding: 10px 4%;          
+            background-color: #121212;  
+            position: fixed;            
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #222;
+            height: 70px;
+        }
+
+        /* Botón de Hamburguesa */
+        .menu-hamburguesa {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 26px;
+            height: 18px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 1100;
+        }
+
+        .menu-hamburguesa span {
+            width: 100%;
+            height: 3px;
+            background-color: #ffffff;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        /* Animación de la hamburguesa */
+        .menu-hamburguesa.open span:nth-child(1) {
+            transform: translateY(7.5px) rotate(45deg);
+        }
+        .menu-hamburguesa.open span:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-hamburguesa.open span:nth-child(3) {
+            transform: translateY(-7.5px) rotate(-45deg);
+        }
+
+        /* Panel Lateral Desplegable */
+        .menu-desplegable {
+            position: fixed;
+            top: 0;
+            left: -280px; 
+            width: 280px;
+            height: 100vh;
+            background-color: #161616;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.7);
+            z-index: 1050;
+            display: flex;
+            flex-direction: column;
+            padding: 90px 30px 40px 30px;
+            transition: left 0.3s ease-in-out;
+        }
+
+        .menu-desplegable.open {
+            left: 0; 
+        }
+
+        .menu-desplegable a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 15px 0;
+            border-bottom: 1px solid #222;
+            transition: color 0.3s ease;
+        }
+
+        .menu-desplegable a:active, .menu-desplegable a:hover {
+            color: var(--rojo-acento);
+        }
+
+        /* Enlace de administración resaltado activo */
+        .menu-desplegable .link-admin-menu {
+            margin-top: auto;
+            color: var(--rojo-acento);
+            font-size: 0.9rem;
+            border: 1px solid var(--rojo-acento);
+            border-radius: 4px;
+            text-align: center;
+            padding: 10px;
+            background-color: #1a0c0c;
+        }
+
+        /* Contenedor del Logo */
+        .logo {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;            
+        }
+
+        .logo img {
+            height: 55px;      
+            width: auto;        
+            display: block;
+        }
+
+        /* Capa de fondo oscura */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1040;
+            display: none;
+        }
+
+        .menu-overlay.show {
+            display: block;
+        }
+
+        /* ==========================================================================
+           CONTENIDO DEL PANEL DE ADMINISTRACIÓN
+           ========================================================================== */
+        .admin-section {
+            padding: 20px 5%;
+            max-width: 900px;
             margin: 0 auto;
         }
-        h1, h2, h3 {
-            text-align: center;
-            color: #ffffff;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        h1 {
-            border-bottom: 2px solid #cc0000;
-            padding-bottom: 10px;
-        }
-        
-        /* Contenedor del Logo */
-        .logo-container {
-            text-align: center;
-            margin-bottom: -80px; 
-            margin-top: 50px;
-        }
-        .logo-admin {
-            max-width: 150px;
-            height: auto;
-            object-fit: contain;
-            filter: drop-shadow(0px 4px 10px rgba(204, 0, 0, 0.3));
-        }
-        .logo-panel-header {
-            max-width: 100px;
-            height: auto;
-            display: block;
-            margin: 0 auto 15px auto;
-            filter: drop-shadow(0px 2px 5px rgba(204, 0, 0, 0.2));
-        }
 
-        /* Pantalla de Bloqueo / Login */
-        .login-box {
-            background-color: #141414;
-            padding: 40px 30px 30px 30px;
-            border-radius: 12px;
-            text-align: center;
-            margin-top: 100px;
-            border: 1px solid #222;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 15px rgba(204, 0, 0, 0.15);
-        }
-        input[type="password"], input[type="text"], input[type="date"], input[type="time"], select {
-            padding: 12px;
-            background-color: #222;
-            border: 1px solid #333;
-            color: white;
-            border-radius: 4px;
-            font-size: 1rem;
-            box-sizing: border-box;
-            transition: border 0.3s;
-        }
-        input[type="password"]:focus, input[type="text"]:focus, select:focus {
-            border-color: #cc0000;
-            outline: none;
-        }
-        input[type="password"] {
-            width: 80%;
-            margin-bottom: 20px;
-            text-align: center;
-            letter-spacing: 3px;
-        }
-        button {
-            padding: 12px 25px;
-            background-color: #cc0000;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: background 0.3s, transform 0.2s;
-        }
-        button:hover {
-            background-color: #a00000;
-            transform: translateY(-1px);
-        }
-        button:active {
-            transform: translateY(1px);
-        }
-
-        /* Paneles */
-        .panel-citas {
-            display: none; 
+        .contenedor-tabla {
+            width: 100%;
+            overflow-x: auto; /* Permite deslizar la tabla de lado en pantallas pequeñas */
+            background-color: var(--fondo-tarjeta);
+            border: 1px solid #252525;
+            border-radius: 8px;
             margin-top: 20px;
         }
-        /* Bloque de Contadores y Filtros */
-        .dashboard-box {
-            background-color: #141414;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            border: 1px solid #222;
-        }
-        .grid-filtros {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
-        }
-        /* Tarjetas de Citas */
-        .cita-tarjeta {
-            background-color: #141414;
-            border-left: 4px solid #cc0000;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-            position: relative;
-        }
-        .cita-tarjeta.atendido { border-left-color: #25D366; opacity: 0.8; }
-        .cita-tarjeta.cancelado { border-left-color: #555; opacity: 0.5; }
-        
-        .cita-tarjeta h3 {
-            margin: 0 0 8px 0;
-            text-align: left;
-            font-size: 1.2rem;
-        }
-        .cita-meta {
-            font-size: 0.9rem;
-            color: #aaaaaa;
-            margin: 4px 0;
-        }
-        .btn-whatsapp {
-            display: inline-block;
-            margin-top: 8px;
-            color: #25D366;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-        /* Botones de Acción Doble y Triple */
-        .acciones-cita {
-            margin-top: 12px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .btn-status {
-            padding: 6px 12px;
-            font-size: 0.8rem;
-            text-transform: none;
-        }
-        .btn-atendido { background-color: #1e7e34; }
-        .btn-atendido:hover { background-color: #155724; }
-        .btn-cancelado { background-color: #6c757d; }
-        .btn-cancelado:hover { background-color: #545b62; }
-        .btn-editar { background-color: #0056b3; }
-        .btn-editar:hover { background-color: #004085; }
-        
-        .btn-nuevo {
-            background-color: #ffc107;
-            color: #000;
-            width: 100%;
-            margin-top: 15px;
-        }
-        .btn-nuevo:hover { background-color: #e0a800; }
 
-        /* Modal / Ventana Emergente */
-        .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 1000; 
-            left: 0; 
-            top: 0; 
-            width: 100%; 
-            height: 100%; 
-            overflow: auto; 
-            background-color: rgba(0,0,0,0.8); 
-        }
-        .modal-content {
-            background-color: #141414;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #333;
-            width: 90%;
-            max-width: 450px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(204,0,0,0.4);
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .close:hover, .close:focus { color: white; text-decoration: none; }
-        .modal label { display: block; margin-top: 10px; color: #aaa; font-size: 0.9rem; }
-        .modal input, .modal select { width: 100%; margin-top: 5px; margin-bottom: 5px; }
-
-        /* Estadísticas */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-        .stat-card {
-            background-color: #1c1c1c;
-            padding: 15px;
-            border-radius: 6px;
-            text-align: center;
-            border-top: 3px solid #cc0000;
-        }
-        .stat-card.money { border-top-color: #ffc107; }
-        .stat-card .num {
-            font-size: 1.6rem;
-            font-weight: bold;
-            color: #fff;
-            margin-top: 5px;
-        }
-        .no-citas {
-            text-align: center;
-            color: #666;
-            margin-top: 5px;
-        }
-        /* Tabla de historial */
-        .tabla-historial {
+        table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
-            font-size: 0.9rem;
-        }
-        .tabla-historial th, .tabla-historial td {
-            border: 1px solid #333;
-            padding: 10px;
             text-align: left;
+            min-width: 600px; /* Asegura que mantenga forma en móviles */
         }
-        .tabla-historial th {
-            background-color: #222;
-            color: #ffc107;
+
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #252525;
+            font-size: 0.95rem;
         }
-        .tabla-historial tr:nth-child(even) {
-            background-color: #1a1a1a;
+
+        th {
+            background-color: #111111;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        tr:hover {
+            background-color: #222222;
+        }
+
+        .btn-eliminar {
+            background-color: var(--rojo-acento);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .btn-eliminar:active {
+            background-color: var(--rojo-hover);
+        }
+
+        .sin-citas {
+            text-align: center;
+            padding: 30px;
+            color: var(--gris-secundario);
+            font-style: italic;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
+<!-- Capa oscura trasera del menú -->
+<div class="menu-overlay" id="menuOverlay"></div>
+
+<!-- Encabezado con Botón de Hamburguesa Izquierda y Logo Derecha -->
+<header>
+    <button class="menu-hamburguesa" id="btnHamburguesa">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
     
-    <div id="loginSection">
-        <div class="logo-container">
-            <img src="IMAGENES/LOGO.png" alt="Logo Barbería" class="logo-admin">
-        </div>
-        <div class="login-box">
-            <h2 style="margin-top: 40px;">Acceso Administrador</h2>
-            <p style="color: #888;">Introduce la clave secreta para ver la agenda</p>
-            <input type="password" id="adminPassword" placeholder="Escribe la contraseña aquí">
-            <br>
-            <button onclick="verificarAcceso()">Entrar a la Agenda</button>
-        </div>
+    <div class="logo"> 
+        <img src="LOGO.png" alt="Logo Víctor Styles">
     </div>
+</header>
 
-    <div id="adminPanel" class="panel-citas">
-        <img src="IMAGENES/LOGO.png" alt="Logo Barbería" class="logo-panel-header">
-        <h1>Agenda de Clientes</h1>
-        
-        <div class="dashboard-box">
-            <h3 style="margin-top:0; font-size: 1rem; color: #cc0000; text-align: left;">📋 Resumen de Hoy</h3>
-            <div id="contadorHoy" style="font-size: 1.1rem; font-weight: bold;">
-                Citas agendadas para hoy: <span id="numCitasHoy" style="color: #ffc107;">0</span>
-            </div>
-            <button class="btn-nuevo" onclick="abrirModalNuevo()">➕ Agregar Cliente Sin Cita</button>
-        </div>
+<!-- Menú Desplegable Lateral (Redirecciona a index.html) -->
+<nav class="menu-desplegable" id="menuLateral">
+    <a href="index.html#inicio" class="menu-link">Inicio</a>
+    <a href="index.html#galeria" class="menu-link">Cortes</a>
+    <a href="index.html#precios" class="menu-link">Servicios</a>
+    <a href="index.html#agenda" class="menu-link">Agendar Cita</a>
+    <a href="admin.html" class="link-admin-menu">Panel Administrador</a>
+</nav>
 
-        <div class="dashboard-box">
-            <h3 style="margin-top:0; font-size: 1rem; text-align: left;">🔍 Filtros de Búsqueda (Agenda)</h3>
-            <div class="grid-filtros">
-                <input type="text" id="filtroNombre" placeholder="Buscar por nombre..." oninput="filtrarCitas()">
-                <input type="date" id="filtroFecha" onchange="filtrarCitas()">
-                <input type="time" id="filtroHora" onchange="filtrarCitas()">
-            </div>
-            <div style="text-align: right; margin-top: 10px;">
-                <button onclick="limpiarFiltros()" style="background-color: #333; font-size: 0.8rem; padding: 6px 12px;">Limpiar Filtros</button>
-                <button onclick="cargarCitas()" style="background-color: #222; font-size: 0.8rem; padding: 6px 12px;">🔄 Actualizar</button>
-            </div>
-        </div>
+<!-- Panel de Control Principal -->
+<section class="admin-section">
+    <h2>Citas Reservadas</h2>
+    <p class="subtitulo">Gestión, control y seguimiento de los turnos en tiempo real.</p>
 
-        <div id="listaCitas"></div>
-
-        <hr style="border: 1px solid #222; margin: 40px 0;">
-        
-        <h2>💰 Histórico Contable y Cierre de Caja</h2>
-        <div class="dashboard-box" style="border-top: 3px solid #ffc107;">
-            <p style="color:#888; font-size:0.9rem; margin-top:0;">Consulta los ingresos y servicios prestados seleccionando un período específico.</p>
-            <div class="grid-filtros">
-                <div>
-                    <label style="font-size:0.8rem; color:#aaa; display:block; margin-bottom:5px;">Tipo de Filtro:</label>
-                    <select id="tipoFiltroHistorico" onchange="cambiarTipoFiltroHistorico()" style="width:100%;">
-                        <option value="dia">Por Día Exacto</option>
-                        <option value="mes">Por Mes</option>
-                        <option value="ano">Por Año</option>
-                    </select>
-                </div>
-                <div>
-                    <label style="font-size:0.8rem; color:#aaa; display:block; margin-bottom:5px;">Selecciona la Fecha:</label>
-                    <input type="date" id="fechaHistorico" onchange="calcularHistorico()" style="width:100%;">
-                </div>
-            </div>
-
-            <div class="stats-grid" style="margin-top: 20px;">
-                <div class="stat-card" style="border-top-color: #25D366;">
-                    <div class="cita-meta">Servicios Realizados</div>
-                    <div class="num" id="hist_cantidad">0</div>
-                </div>
-                <div class="stat-card money">
-                    <div class="cita-meta" style="color:#ffc107;">Total Generado Periodo</div>
-                    <div class="num" id="hist_dinero" style="color:#25D366;">0.00 €</div>
-                </div>
-            </div>
-
-            <div id="contenedorTablaHistorial" style="margin-top:20px; display:none;">
-                <h4 style="text-align:left; color:#ffc107; margin-bottom:10px;">Desglose de Servicios:</h4>
-                <div style="overflow-x:auto;">
-                    <table class="tabla-historial">
-                        <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Hora</th>
-                                <th>Cliente</th>
-                                <th>Servicio</th>
-                                <th>Monto</th>
-                            </tr>
-                        </thead>
-                        <tbody id="cuerpoTablaHistorial">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <hr style="border: 1px solid #222; margin: 40px 0;">
-
-        <h2>📊 Estadísticas Generales (Resumen Automático)</h2>
-        <p style="color:#888; text-align:center; font-size:0.9rem; margin-top:-10px;">Basado en clientes marcados como "Atendidos"</p>
-        
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="cita-meta">Clientes Hoy</div>
-                <div class="num" id="statDiario">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="cita-meta">Clientes Mes</div>
-                <div class="num" id="statMensual">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="cita-meta">Clientes Año</div>
-                <div class="num" id="statAnual">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="cita-meta">Promedio Diario</div>
-                <div class="num" id="statPromedio">0</div>
-            </div>
-            <div class="stat-card money">
-                <div class="cita-meta" style="color:#ffc107;">Total Histórico</div>
-                <div class="num" id="statDinero" style="color:#25D366;">0.00 €</div>
-            </div>
-        </div>
+    <div class="contenedor-tabla">
+        <table>
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Teléfono</th>
+                    <th>Servicio</th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-citas-cuerpo">
+                <!-- Los datos de Firebase se cargarán dinámicamente aquí -->
+            </tbody>
+        </table>
     </div>
-
-</div>
-
-<div id="modalCita" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="cerrarModal()">&times;</span>
-        <h2 id="modalTitulo" style="border-bottom:none;">Modificar Cita</h2>
-        <input type="hidden" id="modalId">
-        
-        <label>Nombre del Cliente:</label>
-        <input type="text" id="modalNombre" placeholder="Nombre completo">
-        
-        <label>Teléfono:</label>
-        <input type="text" id="modalTelefono" placeholder="Ej: +584120000000">
-        
-        <label>Servicio:</label>
-        <input type="text" id="modalServicio" placeholder="Ej: Corte y Barba">
-        
-        <label>Fecha:</label>
-        <input type="date" id="modalFecha">
-        
-        <label>Hora:</label>
-        <input type="time" id="modalHora">
-        
-        <label>Estado:</label>
-        <select id="modalEstado">
-            <option value="pendiente">Pendiente</option>
-            <option value="atendido">Atendido</option>
-            <option value="cancelado">Cancelado</option>
-        </select>
-        
-        <button onclick="guardarCita()" style="width: 100%; margin-top: 20px;">Guardar Cambios</button>
-    </div>
-</div>
+</section>
 
 <script>
-    const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
-    const CLAVE_SECRETA = "Ve-030699"; 
-    
-    const PRECIO_SERVICIO = 10; 
+    // Lógica idéntica para abrir y cerrar el menú desplegable lateral
+    const btnHamburguesa = document.getElementById('btnHamburguesa');
+    const menuLateral = document.getElementById('menuLateral');
+    const menuOverlay = document.getElementById('menuOverlay');
+    const linksMenu = document.querySelectorAll('.menu-desplegable a');
 
-    let todasLasCitas = [];
-
-    function verificarAcceso() {
-        const inputClave = document.getElementById('adminPassword').value;
-        if(inputClave === CLAVE_SECRETA) {
-            document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('adminPanel').style.display = 'block';
-            
-            document.getElementById('fechaHistorico').value = new Date().toISOString().split('T')[0];
-            
-            cargarCitas(); 
-        } else {
-            alert("❌ Contraseña incorrecta. Acceso denegado.");
-        }
+    function toggleMenu() {
+        btnHamburguesa.classList.toggle('open');
+        menuLateral.classList.toggle('open');
+        menuOverlay.classList.toggle('show');
     }
 
+    btnHamburguesa.addEventListener('click', toggleMenu);
+    menuOverlay.addEventListener('click', toggleMenu);
+
+    linksMenu.forEach(link => {
+        link.addEventListener('click', toggleMenu);
+    });
+
+    // ==========================================================================
+    // INTEGRACIÓN Y CONTROLADOR DE DATOS DE LA BASE DE DATOS (FIREBASE REALTIME)
+    // ==========================================================================
+    const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
+    const tablaCuerpo = document.getElementById('tabla-citas-cuerpo');
+
+    // Función principal para leer y renderizar las citas desde la nube
     function cargarCitas() {
-        const listaDiv = document.getElementById('listaCitas');
-        listaDiv.innerHTML = '<p class="no-citas">Consultando la nube de Firebase...</p>';
+        tablaCuerpo.innerHTML = '<tr><td colspan="6" style="text-align: center;">Cargando lista de turnos...</td></tr>';
 
         fetch(`${FIREBASE_URL}citas.json`)
             .then(response => response.json())
             .then(data => {
-                todasLasCitas = [];
+                tablaCuerpo.innerHTML = '';
+
                 if (!data) {
-                    listaDiv.innerHTML = '<p class="no-citas">No hay clientes agendados en este momento.</p>';
-                    actualizarEstadisticas();
-                    calcularHistorico();
+                    tablaCuerpo.innerHTML = '<tr><td colspan="6" class="sin-citas">No hay citas registradas en el sistema.</td></tr>';
                     return;
                 }
 
-                todasLasCitas = Object.keys(data).map(key => {
-                    return { id: key, ...data[key] };
+                // Transformamos el objeto de Firebase en una lista y lo ordenamos por fecha
+                const listaCitas = Object.keys(data).map(id => ({
+                    id: id,
+                    ...data[id]
+                })).sort((a, b) => new Date(a.cita_fecha) - new Date(b.cita_fecha));
+
+                listaCitas.forEach(cita => {
+                    const fila = document.createElement('tr');
+
+                    // Formateo visual sutil de la fecha (AAAA-MM-DD a DD/MM/AAAA)
+                    let fechaFormateada = cita.cita_fecha;
+                    if(cita.cita_fecha) {
+                        const partes = cita.cita_fecha.split('-');
+                        if(partes.length === 3) fechaFormateada = `${partes[2]}/${partes[1]}/${partes[0]}`;
+                    }
+
+                    fila.innerHTML = `
+                        <td><strong>${cita.cliente_nombre || 'Sin nombre'}</strong></td>
+                        <td>${cita.cliente_telefono || 'Sin teléfono'}</td>
+                        <td>${cita.servicio || 'No especificado'}</td>
+                        <td>${fechaFormateada}</td>
+                        <td><span style="color: #ffffff; font-weight: bold;">${cita.cita_hora || '---'}</span></td>
+                        <td><button class="btn-eliminar" onclick="eliminarCita('${cita.id}')">Eliminar</button></td>
+                    `;
+                    tablaCuerpo.appendChild(fila);
                 });
-
-                todasLasCitas.sort((a, b) => new Date(a.cita_fecha || "") - new Date(b.cita_fecha || ""));
-
-                mostrarCitas(todasLasCitas);
-                actualizarEstadisticas();
-                calcularHistorico(); 
             })
             .catch(error => {
-                console.error("Error al leer Firebase:", error);
-                listaDiv.innerHTML = '<p class="no-citas" style="color: red;">Error al conectar con la base de datos.</p>';
+                console.error("Error al obtener datos de Firebase:", error);
+                tablaCuerpo.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Error de comunicación con la base de datos.</td></tr>';
             });
     }
 
-    function mostrarCitas(citas) {
-        const listaDiv = document.getElementById('listaCitas');
-        listaDiv.innerHTML = '';
-
-        if(citas.length === 0) {
-            listaDiv.innerHTML = '<p class="no-citas">No se encontraron citas con los filtros aplicados.</p>';
-            return;
-        }
-
-        citas.forEach(cita => {
-            let nombre = cita.cliente_nombre || "Cliente Registrado";
-            let telefono = cita.cliente_telefono || "No especificado";
-            let servicio = cita.servicio || "No especificado";
-            let fecha = cita.cita_fecha || "Sin fecha";
-            let hora = cita.cita_hora || "Sin hora";
-            let estado = cita.estado || "pendiente"; 
-
-            const tarjeta = document.createElement('div');
-            tarjeta.className = `cita-tarjeta ${estado}`;
-            tarjeta.innerHTML = `
-                <h3>${nombre}</h3>
-                <div class="cita-meta"><strong>Servicio:</strong> ${servicio}</div>
-                <div class="cita-meta"><strong>Día:</strong> ${fecha}</div>
-                <div class="cita-meta"><strong>Hora asignada:</strong> ${hora}</div>
-                <div class="cita-meta"><strong>Teléfono:</strong> ${telefono}</div>
-                <div class="cita-meta"><strong>Estado:</strong> <span style="text-transform:uppercase; font-weight:bold;">${estado}</span></div>
-                
-                <a href="https://wa.me/${telefono}" target="_blank" class="btn-whatsapp">💬 Escribir por WhatsApp</a>
-                
-                <div class="acciones-cita">
-                    <button class="btn-status btn-atendido" onclick="cambiarEstadoCita('${cita.id}', 'atendido')">✓ Atendido</button>
-                    <button class="btn-status btn-cancelado" onclick="cambiarEstadoCita('${cita.id}', 'cancelado')">✕ Cancelar</button>
-                    <button class="btn-status btn-editar" onclick="abrirModalEditar('${cita.id}')">✏️ Editar</button>
-                </div>
-            `;
-            listaDiv.appendChild(tarjeta);
-        });
-    }
-
-    function cambiarEstadoCita(idCita, nuevoEstado) {
-        fetch(`${FIREBASE_URL}citas/${idCita}/estado.json`, {
-            method: 'PUT',
-            body: JSON.stringify(nuevoEstado)
-        })
-        .then(response => response.json())
-        .then(() => {
-            cargarCitas(); 
-        })
-        .catch(error => console.error("Error al actualizar el estado:", error));
-    }
-
-    /* Lógica del Modal (Agregar/Editar) */
-    function abrirModalNuevo() {
-        document.getElementById('modalTitulo').innerText = 'Agregar Cliente Sin Cita';
-        document.getElementById('modalId').value = '';
-        document.getElementById('modalNombre').value = '';
-        document.getElementById('modalTelefono').value = '';
-        document.getElementById('modalServicio').value = 'Corte Clásico'; // Valor por defecto
-        
-        // Asignar fecha y hora actual
-        const ahora = new Date();
-        const fechaLocal = ahora.getFullYear() + '-' + String(ahora.getMonth() + 1).padStart(2, '0') + '-' + String(ahora.getDate()).padStart(2, '0');
-        const horaLocal = String(ahora.getHours()).padStart(2, '0') + ':' + String(ahora.getMinutes()).padStart(2, '0');
-        
-        document.getElementById('modalFecha').value = fechaLocal;
-        document.getElementById('modalHora').value = horaLocal;
-        document.getElementById('modalEstado').value = 'atendido'; // Por lo general si llega directo ya se atiende
-        
-        document.getElementById('modalCita').style.display = 'block';
-    }
-
-        function abrirModalEditar(id) {
-        const cita = todasLasCitas.find(c => c.id === id);
-        if(!cita) return;
-        
-        document.getElementById('modalTitulo').innerText = 'Modificar Cita';
-        document.getElementById('modalId').value = cita.id;
-        document.getElementById('modalNombre').value = cita.cliente_nombre || '';
-        document.getElementById('modalTelefono').value = cita.cliente_telefono || '';
-        document.getElementById('modalServicio').value = cita.servicio || '';
-        document.getElementById('modalFecha').value = cita.cita_fecha || '';
-        
-        // CORRECCIÓN AQUÍ: Si la hora ya viene en 24h (como "18:30"), se la ponemos directo al input.
-        // Si viene en 12h (como "6:30 PM"), la convertimos a 24h para que el input la entienda.
-        let horaCita = cita.cita_hora || '';
-        if (horaCita.includes('AM') || horaCita.includes('PM') || horaCita.includes('am') || horaCita.includes('pm')) {
-            document.getElementById('modalHora').value = formatearHora24(horaCita);
-        } else {
-            document.getElementById('modalHora').value = horaCita;
-        }
-        
-        document.getElementById('modalEstado').value = cita.estado || 'pendiente';
-        
-        document.getElementById('modalCita').style.display = 'block';
-    }
-
-    function cerrarModal() {
-        document.getElementById('modalCita').style.display = 'none';
-    }
-  // Convierte de 24h (18:30) a 12h SIN CERO (6:30 PM) para Firebase
-function formatearHora12(hora24) {
-    if (!hora24) return "";
-    let [horas, minutos] = hora24.split(':');
-    let h = parseInt(horas, 10);
-    
-    // Si en tu página de clientes dice "pm" o "am" en minúsculas, 
-    // cambia 'PM' y 'AM' aquí abajo por 'pm' y 'am'.
-    let ampm = h >= 12 ? 'PM' : 'AM'; 
-    
-    h = h % 12;
-    h = h ? h : 12; // Si la hora es 00, se convierte en 12
-    
-    // Aquí se genera la hora exacta: "6:30 PM" (nota el espacio antes de PM)
-    // Si tu página no tiene espacio (ej: "6:30PM"), quita el espacio entre } y $
-    return `${h}:${minutos} ${ampm}`; 
-}
-
-// Convierte de vuelta de 12h a 24h para que la ventana de edición la reconozca
-function formatearHora24(hora12) {
-    if (!hora12) return "";
-    
-    // Limpiamos la hora por si viene con espacios o en minúsculas
-    let horaLimpia = hora12.toUpperCase().trim();
-    let modificador = horaLimpia.includes('PM') ? 'PM' : 'AM';
-    let tiempo = horaLimpia.replace('PM', '').replace('AM', '').trim();
-    
-    let [horas, minutos] = tiempo.split(':');
-    if (!horas || !minutos) return "";
-    
-    if (horas === '12') horas = '00';
-    if (modificador === 'PM') horas = parseInt(horas, 10) + 12;
-    
-    // Devolvemos el formato de 24h con sus dos dígitos obligatorios
-    return `${horas.toString().padStart(2, '0')}:${minutos}`;
-}
-
-
-    function guardarCita() {
-        const id = document.getElementById('modalId').value;
-        const nombre = document.getElementById('modalNombre').value.trim();
-        
-        if(nombre === '') {
-            alert('Por favor, ingresa el nombre del cliente.');
-            return;
-        }
-
-        const citaData = {
-            cliente_nombre: nombre,
-            cliente_telefono: document.getElementById('modalTelefono').value.trim(),
-            servicio: document.getElementById('modalServicio').value.trim(),
-            cita_fecha: document.getElementById('modalFecha').value,
-            cita_hora: formatearHora12(document.getElementById('modalHora').value),
-            estado: document.getElementById('modalEstado').value
-        };
-
-        let url = `${FIREBASE_URL}citas.json`;
-        let method = 'POST'; // Para crear una nueva cita
-
-        if(id) { 
-            // Si hay un ID, entonces estamos editando (usamos PATCH para solo sobreescribir estos campos)
-            url = `${FIREBASE_URL}citas/${id}.json`;
-            method = 'PATCH';
-        }
-
-        fetch(url, {
-            method: method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(citaData)
-        })
-        .then(response => response.json())
-        .then(() => {
-            cerrarModal();
-            cargarCitas(); // Refrescar la pantalla
-        })
-        .catch(error => {
-            console.error("Error al guardar la cita:", error);
-            alert("Ocurrió un error al guardar los cambios.");
-        });
-    }
-
-    // Cerrar el modal si el usuario hace clic fuera de la caja
-    window.onclick = function(event) {
-        const modal = document.getElementById('modalCita');
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-
-    function filtrarCitas() {
-        const nombreBuscar = document.getElementById('filtroNombre').value.toLowerCase();
-        const fechaBuscar = document.getElementById('filtroFecha').value;
-        const horaBuscar = document.getElementById('filtroHora').value;
-
-        const citasFiltradas = todasLasCitas.filter(cita => {
-            const cumpleNombre = (cita.cliente_nombre || "").toLowerCase().includes(nombreBuscar);
-            const cumpleFecha = fechaBuscar ? (cita.cita_fecha === fechaBuscar) : true;
-            const cumpleHora = horaBuscar ? (cita.cita_hora.includes(horaBuscar)) : true;
-            
-            return cumpleNombre && cumpleFecha && cumpleHora;
-        });
-
-        mostrarCitas(citasFiltradas);
-    }
-
-    function limpiarFiltros() {
-        document.getElementById('filtroNombre').value = '';
-        document.getElementById('filtroFecha').value = '';
-        document.getElementById('filtroHora').value = '';
-        mostrarCitas(todasLasCitas);
-    }
-
-    function actualizarEstadisticas() {
-        const hoyStr = new Date().toISOString().split('T')[0];
-        const mesActual = hoyStr.substring(0, 7); 
-        const anoActual = hoyStr.substring(0, 4); 
-
-        const citasDeHoy = todasLasCitas.filter(cita => cita.cita_fecha === hoyStr);
-        document.getElementById('numCitasHoy').innerText = citasDeHoy.length;
-
-        const atendidos = todasLasCitas.filter(cita => cita.estado === 'atendido');
-
-        const atendidosHoy = atendidos.filter(cita => cita.cita_fecha === hoyStr).length;
-        const atendidosMes = atendidos.filter(cita => (cita.cita_fecha || "").startsWith(mesActual)).length;
-        const atendidosAno = atendidos.filter(cita => (cita.cita_fecha || "").startsWith(anoActual)).length;
-
-        // Suma el precio individual de cada servicio atendido
-const dineroTotal = atendidos.reduce((total, cita) => {
-    return total + obtenerPrecioServicio(cita.servicio);
-}, 0);
-        const diasUnicos = [...new Set(atendidos.map(cita => cita.cita_fecha))].length;
-        const promedioDiario = diasUnicos > 0 ? (atendidos.length / diasUnicos).toFixed(1) : 0;
-
-        document.getElementById('statDiario').innerText = atendidosHoy;
-        document.getElementById('statMensual').innerText = atendidosMes;
-        document.getElementById('statAnual').innerText = atendidosAno;
-        document.getElementById('statPromedio').innerText = promedioDiario;
-        document.getElementById('statDinero').innerText = `${dineroTotal.toFixed(2)} €`;
-    }
-
-    function cambiarTipoFiltroHistorico() {
-        const tipo = document.getElementById('tipoFiltroHistorico').value;
-        const inputFecha = document.getElementById('fechaHistorico');
-        
-        if (tipo === 'ano') {
-            inputFecha.type = 'number';
-            inputFecha.value = new Date().getFullYear();
-            inputFecha.placeholder = "Ej: 2026";
-        } else if (tipo === 'mes') {
-            inputFecha.type = 'month';
-            inputFecha.value = new Date().toISOString().substring(0, 7);
-        } else {
-            inputFecha.type = 'date';
-            inputFecha.value = new Date().toISOString().split('T')[0];
-        }
-        calcularHistorico();
-    }
-
-    function calcularHistorico() {
-        const tipo = document.getElementById('tipoFiltroHistorico').value;
-        const valorFecha = document.getElementById('fechaHistorico').value;
-        const cuerpoTabla = document.getElementById('cuerpoTablaHistorial');
-        const contenedorTabla = document.getElementById('contenedorTablaHistorial');
-        
-        if (!valorFecha) return;
-
-        const atendidos = todasLasCitas.filter(cita => cita.estado === 'atendido');
-        
-        let filtrados = [];
-
-        if (tipo === 'dia') {
-            filtrados = atendidos.filter(cita => cita.cita_fecha === valorFecha);
-        } else if (tipo === 'mes') {
-            filtrados = atendidos.filter(cita => (cita.cita_fecha || "").startsWith(valorFecha));
-        } else if (tipo === 'ano') {
-            filtrados = atendidos.filter(cita => (cita.cita_fecha || "").startsWith(valorFecha.toString()));
-        }
-
-         const totalServicios = filtrados.length;
-        
-        // CORRECCIÓN: Suma el precio real de cada servicio en el período filtrado
-        const totalDineroPeriodo = filtrados.reduce((total, cita) => {
-            return total + obtenerPrecioServicio(cita.servicio);
-        }, 0);
-
-        document.getElementById('hist_cantidad').innerText = totalServicios;
-        document.getElementById('hist_dinero').innerText = `${totalDineroPeriodo.toFixed(2)} €`;
-
-        cuerpoTabla.innerHTML = '';
-        if (filtrados.length > 0) {
-            contenedorTabla.style.display = 'block';
-            filtrados.forEach(cita => {
-                const fila = document.createElement('tr');
-                
-                // CORRECCIÓN: Extrae el precio específico de esta cita para mostrarlo en su respectiva fila
-                let precioCita = obtenerPrecioServicio(cita.servicio);
-                
-                fila.innerHTML = `
-                    <td>${cita.cita_fecha}</td>
-                    <td>${cita.cita_hora || 'N/A'}</td>
-                    <td>${cita.cliente_nombre || 'Cliente'}</td>
-                    <td>${cita.servicio || 'General'}</td>
-                    <td style="color:#25D366; font-weight:bold;">${precioCita.toFixed(2)} €</td>
-                `;
-                cuerpoTabla.appendChild(fila);
+    // Función global encargada de borrar el nodo de una cita mediante su ID de Firebase
+    window.eliminarCita = function(idCita) {
+        if (confirm("¿Estás seguro de que deseas eliminar y liberar este turno permanentemente?")) {
+            fetch(`${FIREBASE_URL}citas/${idCita}.json`, {
+                method: 'DELETE'
+            })
+            .then(() => {
+                alert("La cita ha sido removida con éxito.");
+                cargarCitas(); // Refresca la tabla automáticamente
+            })
+            .catch(error => {
+                console.error("Error al borrar el registro:", error);
+                alert("Hubo un error al intentar eliminar la cita.");
             });
-        } else {
-
-            contenedorTabla.style.display = 'none';
         }
     }
-     // Extrae el número dentro de los paréntesis del servicio. Ej: "Corte Sencillo (10€)" -> 10
-function obtenerPrecioServicio(servicioTexto) {
-    if (!servicioTexto) return 10; // Precio base por defecto por si acaso
-    
-    // Busca cualquier número que esté dentro de paréntesis
-    let coincidencia = servicioTexto.match(/\((\d+)/); 
-    
-    if (coincidencia && coincidencia[1]) {
-        return parseFloat(coincidencia[1]);
-    }
-    
-    return 10; // Si no tiene paréntesis con números, devuelve 10 por defecto
-}
+
+    // Carga inicial automatizada al abrir el archivo administrador
+    document.addEventListener('DOMContentLoaded', cargarCitas);
 </script>
 </body>
 </html>
