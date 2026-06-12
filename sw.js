@@ -38,3 +38,10 @@ self.addEventListener('fetch', (e) => {
     })
   );
 });
+// Escuchar el mensaje para forzar la actualización
+self.addEventListener('message', (evento) => {
+  if (evento.data && evento.data.action === 'skipWaiting') {
+    self.skipWaiting();
+  }
+});
+
