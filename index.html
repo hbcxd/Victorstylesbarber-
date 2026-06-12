@@ -86,7 +86,6 @@
             height: 75px;
         }
 
-        /* Botón de Hamburguesa (Esquina Superior Izquierda) */
         .menu-hamburguesa {
             display: flex;
             flex-direction: column;
@@ -107,12 +106,10 @@
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
         }
 
-        /* Animación de la hamburguesa cuando se abre */
         .menu-hamburguesa.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); background-color: var(--dorado-brillante); }
         .menu-hamburguesa.open span:nth-child(2) { opacity: 0; }
         .menu-hamburguesa.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); background-color: var(--dorado-brillante); }
 
-        /* Panel Lateral Desplegable */
         .menu-desplegable {
             position: fixed;
             top: 0;
@@ -174,7 +171,7 @@
         }
 
         .logo img {
-            height: 55px; /* Un pelo más grande para lucir el nuevo emblema */
+            height: 55px;
             width: auto;        
             display: block;
             filter: drop-shadow(0 2px 10px rgba(0,0,0,0.6));
@@ -615,7 +612,6 @@
             position: relative;
         }
 
-        /* Simulación de cortes circulares laterales de ticket de entrada */
         .ticket-header::before, .ticket-header::after {
             content: '';
             position: absolute;
@@ -808,6 +804,11 @@
     </style>
 </head>
 <body>
+
+<div id="alerta-actualizacion" style="display: none; position: fixed; bottom: 20px; right: 20px; background-color: var(--fondo-tarjeta); color: var(--gris-texto); padding: 16px 24px; border-radius: 8px; box-shadow: var(--shadow-premium); border: 1px solid var(--dorado-acento); z-index: 9999; text-align: center;">
+    <p style="margin: 0 0 10px 0; font-size: 0.9rem; font-weight: bold; color: var(--dorado-brillante);">¡Nueva versión disponible!</p>
+    <button onclick="aplicarActualizacion()" style="background: var(--gradiente-metal); color: #0a0a0a; border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; width: 100%; text-transform: uppercase; font-size: 0.8rem;">Actualizar ahora</button>
+</div>
 
 <div class="menu-overlay" id="menuOverlay"></div>
 
@@ -1023,7 +1024,6 @@
 </div>
 
 <script>
-    // Lógica para abrir y cerrar el menú desplegable en el teléfono
     const btnHamburguesa = document.getElementById('btnHamburguesa');
     const menuLateral = document.getElementById('menuLateral');
     const menuOverlay = document.getElementById('menuOverlay');
@@ -1042,15 +1042,9 @@
         link.addEventListener('click', toggleMenu);
     });
 
-    // ==========================================
-    // CONFIGURACIÓN DE TUS PLATAFORMAS (BACKEND)
-    // ==========================================
     const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
     emailjs.init('qVvgWBz_cfropwyVU');
 
-    // ==========================================
-    // MATRIZ DE HORARIOS DE LA BARBERÍA
-    // ==========================================
     const horariosBarberia = {
         1: { inicio: "09:00", fin: "16:00" }, // Lunes
         2: { inicio: "09:00", fin: "16:00" }, // Martes
@@ -1064,7 +1058,6 @@
     const inputFecha = document.getElementById('fecha');
     const selectHora = document.getElementById('hora');
 
-    // Elementos del Ticket/Modal
     const modalCita = document.getElementById('modalCita');
     const lblTicketCliente = document.getElementById('lblTicketCliente');
     const lblTicketServicio = document.getElementById('lblTicketServicio');
@@ -1076,12 +1069,8 @@
     const inputCodigoGestion = document.getElementById('codigoGestion');
     const btnGestionar = document.getElementById('btnGestionar');
 
-    // Variable global temporal para almacenar los datos del pase activo
     let textoCitaGlobalParaCopiar = "";
 
-    // ==========================================
-    // FUNCIONES DE ZONA HORARIA VENEZUELA
-    // ==========================================
     function obtenerFechaVenezuelaObj() {
         const cadenaCaracas = new Date().toLocaleString("en-US", { timeZone: "America/Caracas" });
         return new Date(cadenaCaracas);
@@ -1095,7 +1084,6 @@
         return `${año}-${mes}-${dia}`;
     }
 
-    // Generador de códigos alfanuméricos únicos para las citas
     function generarCodigoUnicoCita() {
         const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         let resultado = '';
@@ -1105,12 +1093,10 @@
         return resultado;
     }
 
-    // Al cargar la página, configuramos el mínimo del calendario y recordamos al cliente
     document.addEventListener('DOMContentLoaded', function() {
         const hoyVzlaStr = obtenerFechaVenezuelaStr();
         inputFecha.min = hoyVzlaStr;
 
-        // LOCALSTORAGE: Recordar datos del cliente
         const nombreGuardado = localStorage.getItem('barberia_nombre');
         const telefonoGuardado = localStorage.getItem('barberia_telefono');
         if (nombreGuardado && telefonoGuardado) {
@@ -1143,7 +1129,6 @@
                     let tiempoActual = hInicio * 60 + mInicio;
                     const tiempoFin = hFin * 60 + mFin;
 
-                    // Ajuste de zona horaria de Venezuela para la validación del mismo día
                     const ahoraVzla = obtenerFechaVenezuelaObj();
                     const hoyVzlaStr = obtenerFechaVenezuelaStr(ahoraVzla);
                     const esHoy = (fechaSeleccionadaStr === hoyVzlaStr);
@@ -1159,7 +1144,6 @@
                         let minutosStr = minutos.toString().padStart(2, '0');
                         let horaFormato24 = `${horasStr}:${minutosStr}`;
                         
-                        // Si la cita que está revisando es para hoy, bloquea los bloques que ya pasaron en Venezuela
                         if (esHoy && tiempoActual <= minutosTranscurridosHoy) {
                             tiempoActual += 30;
                             continue;
@@ -1216,9 +1200,6 @@
             });
     });
 
-    // ==========================================
-    // PROCESAMIENTO DEL FORMULARIO (ENVÍO GLOBAL)
-    // ==========================================
     document.getElementById('formulario-cita').addEventListener('submit', function(event) {
         event.preventDefault();
 
@@ -1253,7 +1234,7 @@
             lblTicketFechaHora.textContent = `${datosCita.cita_fecha} a las ${datosCita.cita_hora}`;
             lblTicketCodigo.textContent = datosCita.codigo_gestion;
 
-            textoCitaGlobalParaCopiar = `💈 VÍCTOR STYLES BARBERÍA 💈\n\nPase de Cita Confirmada\n\n👤 Cliente: ${datosCita.cliente_nombre}\n✂️ Servicio: ${datosCita.servicio}\n📅 Fecha: ${datosCita.cita_fecha}\n⏰ Hora: ${datosCita.cita_hora}\n🔑 Código de Gestión: ${datosCita.codigo_gestion}\n\n📍 Ubicación: Spartanos Barber Shop, Urb. La Gaviota, San Diego, Carabobo.\n\n*Usa tu código para reagendar si lo necesitas.`;
+            textoCitaGlobalParaCopiar = `💈 VÍCTOR STYLES BARBERÍA 💈\n\nPase de Cita Confirmada\n\n👤 Cliente: ${datosCita.cliente_nombre}\n✂️ Servicio: ${datosCita.servicio}\n📅 Fecha: ${datosCita.cita_fecha}\n⏰ Hora: ${datosCita.cita_hora}\n🔑 Código de Gestión: ${datosCita.codigo_gestion}\n\n📍 Ubicación: Víctor Styles Barbería, Urb. La Gaviota, San Diego, Carabobo.\n\n*Usa tu código para reagendar si lo necesitas.`;
 
             modalCita.classList.add('show');
         })
@@ -1270,9 +1251,6 @@
         document.getElementById('telefono').value = telefonoInput;
     });
 
-    // ==========================================================================
-    // LÓGICA DE INTERACCIÓN DE LA VENTANA INTERACTIVA (TICKET VIP)
-    // ==========================================================================
     btnCerrarTicket.addEventListener('click', () => {
         modalCita.classList.remove('show');
     });
@@ -1301,9 +1279,6 @@
         }
     });
 
-    // ==========================================================================
-    // SISTEMA DE CONTROL PARA REAGENDAR CITA POR CÓDIGO
-    // ==========================================================================
     btnGestionar.addEventListener('click', () => {
         const codigoIngresado = inputCodigoGestion.value.trim().toUpperCase();
         if (!codigoIngresado) {
@@ -1356,13 +1331,39 @@
             });
     });
 </script>
+
 <script>
+  let nuevoServiceWorker;
+
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then(reg => console.log('Service Worker registrado con éxito', reg))
-        .catch(err => console.error('Error al registrar el Service Worker', err));
+    navigator.serviceWorker.register('/sw.js').then(registro => {
+      registro.addEventListener('updatefound', () => {
+        nuevoServiceWorker = registro.installing;
+        
+        nuevoServiceWorker.addEventListener('statechange', () => {
+          if (nuevoServiceWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            document.getElementById('alerta-actualizacion').style.display = 'block';
+          }
+        });
+      });
+    }).catch(error => {
+      console.error('Error al registrar el Service Worker:', error);
     });
+
+    let actualizando = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!actualizando) {
+        window.location.reload();
+        actualizando = true;
+      }
+    });
+  }
+
+  function aplicarActualizacion() {
+    if (nuevoServiceWorker) {
+      document.getElementById('alerta-actualizacion').style.display = 'none';
+      nuevoServiceWorker.postMessage({ action: 'skipWaiting' });
+    }
   }
 </script>
 </body>
