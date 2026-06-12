@@ -4,24 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Víctor Styles | Barbería</title>
-    <!-- Vinculación del archivo de configuración de la App -->
     <link rel="manifest" href="manifest.json">
-    <!-- Inicialización única de EmailJS en el HEAD -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <style>
-        /* Variables de color para mantener la consistencia minimalista */
+        /* Variables de color adaptadas a la nueva identidad (Dorado Viejo, Bronce y Negro Premium) */
         :root {
-            --fondo-oscuro: #121212;
-            --fondo-tarjeta: #1a1a1a;
-            --fondo-input: #1f1f1f;
-            --gris-texto: #e0e0e0;
-            --gris-secundario: #a0a0a0;
-            --rojo-acento: #cc0000;
-            --rojo-hover: #b30000;
-            --borde-sutil: rgba(255, 255, 255, 0.04);
-            --borde-enfoque: rgba(204, 0, 0, 0.35);
-            --shadow-premium: 0 12px 40px -15px rgba(0, 0, 0, 0.8);
+            --fondo-oscuro: #0a0a0a;
+            --fondo-tarjeta: #121212;
+            --fondo-input: #181818;
+            --gris-texto: #e5e5e5;
+            --gris-secundario: #a6a6a6;
+            
+            /* Tonos extraídos directamente de tu nuevo logo */
+            --dorado-acento: #b8924e; 
+            --dorado-brillante: #dfba6b;
+            --bronce-oscuro: #866428;
+            
+            --borde-sutil: rgba(184, 146, 78, 0.08);
+            --borde-enfoque: rgba(184, 146, 78, 0.35);
+            --shadow-premium: 0 15px 45px -12px rgba(0, 0, 0, 0.9);
+            --gradiente-metal: linear-gradient(135deg, #866428 0%, #dfba6b 50%, #b8924e 100%);
         }
 
         /* Configuración General */
@@ -47,7 +50,7 @@
             letter-spacing: 3px;
             text-transform: uppercase;
             font-weight: 800;
-            background: linear-gradient(180deg, #ffffff 0%, #a0a0a0 100%);
+            background: linear-gradient(180deg, #ffffff 30%, var(--dorado-acento) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -71,7 +74,7 @@
             justify-content: space-between;
             align-items: center;        
             padding: 0 5%;          
-            background-color: rgba(18, 18, 18, 0.75);  
+            background-color: rgba(10, 10, 10, 0.8);  
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             position: fixed;            
@@ -105,9 +108,9 @@
         }
 
         /* Animación de la hamburguesa cuando se abre */
-        .menu-hamburguesa.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+        .menu-hamburguesa.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); background-color: var(--dorado-brillante); }
         .menu-hamburguesa.open span:nth-child(2) { opacity: 0; }
-        .menu-hamburguesa.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+        .menu-hamburguesa.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); background-color: var(--dorado-brillante); }
 
         /* Panel Lateral Desplegable */
         .menu-desplegable {
@@ -116,7 +119,7 @@
             left: -290px; 
             width: 290px;
             height: 100vh;
-            background-color: #151515;
+            background-color: #0e0e0e;
             border-right: 1px solid var(--borde-sutil);
             box-shadow: 20px 0 40px rgba(0, 0, 0, 0.9);
             z-index: 1050;
@@ -138,29 +141,29 @@
             letter-spacing: 1.5px;
             text-transform: uppercase;
             padding: 18px 0;
-            border-bottom: 1px solid var(--borde-sutil);
+            border-bottom: 1px solid rgba(184, 146, 78, 0.05);
             transition: color 0.2s ease;
         }
 
         .menu-desplegable a:active, .menu-desplegable a:hover {
-            color: var(--rojo-acento);
+            color: var(--dorado-brillante);
         }
 
         .menu-desplegable .link-admin-menu {
             margin-top: auto; 
-            color: var(--rojo-acento);
+            color: var(--dorado-acento);
             font-size: 0.8rem;
-            border: 1px solid rgba(204, 0, 0, 0.25);
+            border: 1px solid rgba(184, 146, 78, 0.2);
             border-radius: 8px;
             text-align: center;
             padding: 14px;
-            background-color: rgba(204, 0, 0, 0.02);
+            background-color: rgba(184, 146, 78, 0.02);
             transition: all 0.25s ease;
         }
 
         .menu-desplegable .link-admin-menu:hover, .menu-desplegable .link-admin-menu:active {
-            border-color: var(--rojo-acento);
-            background-color: rgba(204, 0, 0, 0.08);
+            border-color: var(--dorado-brillante);
+            background-color: rgba(184, 146, 78, 0.08);
             color: #ffffff;
         }
 
@@ -171,10 +174,10 @@
         }
 
         .logo img {
-            height: 44px;      
+            height: 55px; /* Un pelo más grande para lucir el nuevo emblema */
             width: auto;        
             display: block;
-            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+            filter: drop-shadow(0 2px 10px rgba(0,0,0,0.6));
         }
 
         .menu-overlay {
@@ -183,7 +186,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.8);
             z-index: 1040;
             display: none;
             backdrop-filter: blur(4px);
@@ -231,7 +234,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(180deg, rgba(18, 18, 18, 0.4) 0%, rgba(18, 18, 18, 0.95) 100%);
+            background: linear-gradient(180deg, rgba(10, 10, 10, 0.3) 0%, rgba(10, 10, 10, 0.98) 100%);
         }
 
         .hero-content {
@@ -249,7 +252,10 @@
             letter-spacing: 5px; 
             margin-bottom: 12px;
             text-transform: uppercase;
-            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            background: linear-gradient(180deg, #ffffff 40%, var(--dorado-acento) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.6));
         }
 
         .hero-subtitle {
@@ -264,22 +270,21 @@
         .hero-btn {
             display: inline-block;
             padding: 16px 36px;
-            background-color: var(--rojo-acento); 
-            color: #ffffff;
+            background: var(--gradiente-metal);
+            color: #0a0a0a;
             text-decoration: none;
-            font-weight: 700;
+            font-weight: 800;
             font-size: 0.85rem;
             letter-spacing: 2px;
             border-radius: 8px;
             text-transform: uppercase;
-            box-shadow: 0 8px 25px rgba(204, 0, 0, 0.35);
-            transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s ease, box-shadow 0.25s ease;
+            box-shadow: 0 8px 30px rgba(184, 146, 78, 0.25);
+            transition: transform 0.2s ease, box-shadow 0.25s ease;
         }
 
         .hero-btn:active {
             transform: scale(0.97); 
-            background-color: var(--rojo-hover);
-            box-shadow: 0 4px 12px rgba(204, 0, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(184, 146, 78, 0.15);
         }
 
         @media (min-width: 768px) {
@@ -319,7 +324,7 @@
             width: 100%;
             height: 360px;
             object-fit: cover;
-            filter: grayscale(25%);
+            filter: grayscale(40%);
             transition: filter 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -334,7 +339,7 @@
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: #ffffff;
+            color: var(--dorado-brillante);
         }
 
         /* ==========================================================================
@@ -342,7 +347,7 @@
            ========================================================================== */
         .precios-section {
             padding: 70px 5%;
-            background-color: #0b0b0b; 
+            background-color: #060606; 
             color: #ffffff;
         }
 
@@ -365,15 +370,15 @@
             padding: 22px;
             background-color: var(--fondo-tarjeta); 
             border: 1px solid var(--borde-sutil);
-            border-left: 4px solid #3a3a3a; 
+            border-left: 4px solid #2a2a2a; 
             border-radius: 12px;
             box-shadow: var(--shadow-premium);
             transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .precio-tarjeta.destacado {
-            border-left-image: linear-gradient(to bottom, var(--rojo-acento), #800000) 1 100%;
-            background: linear-gradient(90deg, #1a1a1a 0%, #1c1111 100%);
+            border-left: 4px solid var(--dorado-acento);
+            background: linear-gradient(90deg, #121212 0%, #1a1610 100%);
         }
 
         .servicio-info h3 {
@@ -382,6 +387,10 @@
             margin-bottom: 6px;
             letter-spacing: 0.5px;
             color: #ffffff;
+        }
+
+        .precio-tarjeta.destacado .servicio-info h3 {
+            color: var(--dorado-brillante);
         }
 
         .servicio-info p {
@@ -396,7 +405,7 @@
             font-size: 1.25rem;
             font-weight: 800;
             color: #ffffff;
-            background-color: #242424;
+            background-color: #1e1e1e;
             padding: 8px 16px;
             border-radius: 8px;
             min-width: 68px;
@@ -406,9 +415,10 @@
         }
 
         .precio-tarjeta.destacado .servicio-costo {
-            background-color: var(--rojo-acento);
+            background: var(--gradiente-metal);
+            color: #0a0a0a;
             border-color: transparent;
-            box-shadow: 0 4px 12px rgba(204, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(184, 146, 78, 0.3);
         }
 
         /* ==========================================================================
@@ -416,13 +426,13 @@
            ========================================================================== */
         .agenda-section {
             padding: 70px 5%;
-            background-color: #141414;
+            background-color: #0e0e0e;
         }
 
         .form-agenda {
             max-width: 520px;
             margin: 0 auto;
-            background-color: var(--fondo-oscuro);
+            background-color: var(--fondo-tarjeta);
             padding: 32px 26px;
             border-radius: 16px;
             border: 1px solid var(--borde-sutil);
@@ -438,7 +448,7 @@
 
         .grupo-input label {
             display: block;
-            color: var(--gris-secundario);
+            color: var(--dorado-acento);
             font-size: 0.72rem;
             text-transform: uppercase;
             font-weight: 700;
@@ -449,7 +459,7 @@
             width: 100%;
             padding: 14px 16px;
             background-color: var(--fondo-input);
-            border: 1px solid var(--borde-sutil);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             color: #ffffff;
             border-radius: 10px;
             outline: none;
@@ -461,18 +471,18 @@
         }
 
         .grupo-input input:focus, .grupo-input select:focus, .select-servicio:focus {
-            border-color: var(--rojo-acento);
+            border-color: var(--dorado-acento);
             box-shadow: 0 0 0 3px var(--borde-enfoque);
         }
 
         .grupo-input input[type="date"] {
-            background: var(--fondo-input) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23a0a0a0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'/%3E%3C/svg%3E") no-repeat right 16px center;
+            background: var(--fondo-input) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23b8924e'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'/%3E%3C/svg%3E") no-repeat right 16px center;
             background-size: 18px;
             cursor: pointer;
         }
 
         .grupo-input select, .select-servicio {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23a0a0a0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23b8924e'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 16px center;
             background-size: 16px;
@@ -483,21 +493,21 @@
         .btn-submit {
             width: 100%;
             padding: 15px;
-            background-color: var(--rojo-acento);
-            color: #ffffff;
+            background: var(--gradiente-metal);
+            color: #0a0a0a;
             border: none;
-            font-weight: 700;
+            font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 1px;
             font-size: 0.85rem;
             border-radius: 10px;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(204, 0, 0, 0.25);
+            box-shadow: 0 6px 20px rgba(184, 146, 78, 0.2);
             transition: all 0.25s ease;
         }
 
         .btn-submit:hover {
-            background-color: var(--rojo-hover);
+            filter: brightness(1.1);
         }
         
         .btn-submit:active {
@@ -510,7 +520,7 @@
         .contenedor-reagendar {
             margin-top: 30px;
             padding-top: 25px;
-            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+            border-top: 1px dashed rgba(184, 146, 78, 0.15);
         }
 
         .titulo-reagendar {
@@ -537,7 +547,7 @@
 
         .btn-reagendar {
             padding: 0 20px;
-            background-color: #242424;
+            background-color: #1e1e1e;
             color: #ffffff;
             border: 1px solid var(--borde-sutil);
             border-radius: 10px;
@@ -549,8 +559,9 @@
         }
 
         .btn-reagendar:hover {
-            background-color: #333333;
-            border-color: rgba(255, 255, 255, 0.2);
+            background-color: #282828;
+            border-color: rgba(184, 146, 78, 0.3);
+            color: var(--dorado-brillante);
         }
 
         /* ==========================================================================
@@ -562,7 +573,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: rgba(0, 0, 0, 0.85);
+            background-color: rgba(0, 0, 0, 0.9);
             z-index: 2000;
             display: flex;
             align-items: center;
@@ -581,8 +592,8 @@
         }
 
         .ticket-vip {
-            background-color: #1a1a1a;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background-color: #121212;
+            border: 1px solid rgba(184, 146, 78, 0.15);
             border-radius: 20px;
             width: 100%;
             max-width: 400px;
@@ -597,10 +608,10 @@
         }
 
         .ticket-header {
-            background: linear-gradient(135deg, #1f1f1f 0%, #151515 100%);
+            background: linear-gradient(135deg, #181818 0%, #0a0a0a 100%);
             padding: 24px;
             text-align: center;
-            border-bottom: 2px dashed #282828;
+            border-bottom: 2px dashed rgba(184, 146, 78, 0.2);
             position: relative;
         }
 
@@ -611,7 +622,7 @@
             bottom: -10px;
             width: 20px;
             height: 20px;
-            background-color: rgba(0,0,0,0.85);
+            background-color: #0a0a0a;
             border-radius: 50%;
         }
         .ticket-header::before { left: -10px; }
@@ -620,7 +631,7 @@
         .ticket-header h3 {
             font-size: 1.1rem;
             letter-spacing: 3px;
-            color: #ffffff;
+            color: var(--dorado-brillante);
             text-transform: uppercase;
             font-weight: 800;
             margin-bottom: 4px;
@@ -649,7 +660,7 @@
         .ticket-label {
             font-size: 0.65rem;
             text-transform: uppercase;
-            color: var(--gris-secundario);
+            color: var(--dorado-acento);
             letter-spacing: 1px;
             font-weight: 600;
         }
@@ -661,8 +672,8 @@
         }
 
         .ticket-codigo-box {
-            background-color: #121212;
-            border: 1px dashed rgba(204, 0, 0, 0.3);
+            background-color: #0a0a0a;
+            border: 1px dashed rgba(184, 146, 78, 0.4);
             border-radius: 10px;
             padding: 14px;
             text-align: center;
@@ -672,7 +683,7 @@
         .ticket-codigo-num {
             font-size: 1.5rem;
             font-weight: 900;
-            color: var(--rojo-acento);
+            color: var(--dorado-brillante);
             letter-spacing: 4px;
         }
 
@@ -698,25 +709,25 @@
         }
 
         .btn-ticket-primario {
-            background-color: #ffffff;
-            color: #000000;
+            background: var(--gradiente-metal);
+            color: #0a0a0a;
             border: none;
         }
-        .btn-ticket-primario:hover { background-color: #e0e0e0; }
+        .btn-ticket-primario:hover { filter: brightness(1.1); }
 
         .btn-ticket-secundario {
             background-color: transparent;
             color: var(--gris-texto);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(184, 146, 78, 0.2);
         }
-        .btn-ticket-secundario:hover { background-color: rgba(255, 255, 255, 0.04); }
+        .btn-ticket-secundario:hover { background-color: rgba(184, 146, 78, 0.05); color: var(--dorado-brillante); }
 
         /* ==========================================================================
            SECCIÓN DE UBICACIÓN / DIRECCIÓN
            ========================================================================== */
         .ubicacion-section {
             padding: 60px 5%;
-            background-color: #0d0d0d;
+            background-color: #060606;
             border-top: 1px solid var(--borde-sutil);
             text-align: center;
         }
@@ -743,7 +754,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            color: var(--rojo-acento);
+            color: var(--dorado-acento);
             text-decoration: none;
             font-size: 0.8rem;
             font-weight: 700;
@@ -753,7 +764,7 @@
         }
 
         .btn-mapa:hover {
-            color: #ff3333;
+            color: var(--dorado-brillante);
         }
 
         /* Botón Inferior de Acceso */
@@ -765,7 +776,7 @@
         }
 
         .btn-admin-inferior {
-            color: #777777;
+            color: #555555;
             text-decoration: none;
             font-size: 0.75rem;
             font-weight: 600;
@@ -779,9 +790,9 @@
         }
 
         .btn-admin-inferior:hover, .btn-admin-inferior:active {
-            color: #ffffff;
-            border-color: rgba(255, 255, 255, 0.2);
-            background-color: #1a1a1a;
+            color: var(--dorado-brillante);
+            border-color: rgba(184, 146, 78, 0.3);
+            background-color: #121212;
         }
 
         /* Pie de página */
@@ -789,7 +800,7 @@
             text-align: center;
             padding: 35px;
             background-color: var(--fondo-oscuro);
-            color: #444444;
+            color: #333333;
             font-size: 0.8rem;
             font-weight: 500;
             border-top: 1px solid var(--borde-sutil);
@@ -798,10 +809,8 @@
 </head>
 <body>
 
-<!-- Capa oscura trasera del menú -->
 <div class="menu-overlay" id="menuOverlay"></div>
 
-<!-- Encabezado con Botón de Hamburguesa Izquierda y Logo Derecha -->
 <header>
     <button class="menu-hamburguesa" id="btnHamburguesa">
         <span></span>
@@ -814,17 +823,15 @@
     </div>
 </header>
 
-<!-- Menú Desplegable Lateral con la sección de Ubicación añadida -->
 <nav class="menu-desplegable" id="menuLateral">
     <a href="#inicio" class="menu-link">Inicio</a>
     <a href="#galeria" class="menu-link">Cortes</a>
     <a href="#precios" class="menu-link">Servicios</a>
     <a href="#agenda" class="menu-link">Agendar Cita</a>
     <a href="#ubicacion" class="menu-link">Ubicación</a>
-    <a href="admin.html" class="link-admin-menu">Acceso Administrator</a>
+    <a href="admin.html" class="link-admin-menu">Acceso Administrador</a>
 </nav>
 
-    <!-- Sección de Bienvenida Principal -->
     <section id="inicio" class="hero-container">
         <div class="hero-media">
             <img src="Hero.jpg" alt="Fondo Víctor Styles" class="hero-img">
@@ -838,7 +845,6 @@
         </div>
     </section>
 
-    <!-- Sección de Galería -->
     <section id="galeria" class="galeria-section">
         <h2>Mi Trabajo</h2>
         <p class="subtitulo">Una muestra de los cortes y estilos recientes.</p>
@@ -849,7 +855,6 @@
         </div>
     </section>
 
-    <!-- Sección de Precios -->
     <section id="precios" class="precios-section">
         <div class="precios-header">
             <h2>Nuestros Servicios</h2>
@@ -862,7 +867,7 @@
                     <h3>Corte Sencillo</h3>
                     <p>Corte clásico o moderno con acabado limpio.</p>
                 </div>
-                <div class="servicio-costo">10€</div>
+                <div class="servicio-costo">10$</div>
             </div>
 
             <div class="precio-tarjeta destacado">
@@ -870,7 +875,7 @@
                     <h3>Corte Premium</h3>
                     <p>Corte estilizado, lavado, peinado y producto premium.</p>
                 </div>
-                <div class="servicio-costo">13€</div>
+                <div class="servicio-costo">13$</div>
             </div>
 
             <div class="precio-tarjeta">
@@ -878,7 +883,7 @@
                     <h3>Corte con Barba Sencillo</h3>
                     <p>Arreglo de cabello y perfilado de barba básico.</p>
                 </div>
-                <div class="servicio-costo">16€</div>
+                <div class="servicio-costo">16$</div>
             </div>
 
             <div class="precio-tarjeta destacado">
@@ -886,7 +891,7 @@
                     <h3>Corte con Barba Premium</h3>
                     <p>Servicio completo, ritual de toalla caliente y navaja.</p>
                 </div>
-                <div class="servicio-costo">19€</div>
+                <div class="servicio-costo">19$</div>
             </div>
 
             <div class="precio-tarjeta">
@@ -894,7 +899,7 @@
                     <h3>Barba Sola</h3>
                     <p>Perfilado, hidratación y cuidado de tu barba.</p>
                 </div>
-                <div class="servicio-costo">6€</div>
+                <div class="servicio-costo">6$</div>
             </div>
 
             <div class="precio-tarjeta">
@@ -902,12 +907,11 @@
                     <h3>Cero con Barba Premium</h3>
                     <p>Rasurado al ras (cero) combinado con arreglo premium de barba.</p>
                 </div>
-                <div class="servicio-costo">13€</div>
+                <div class="servicio-costo">13$</div>
             </div>
         </div>
     </section>
 
-    <!-- Sección de Agenda y Contacto -->
     <section id="agenda" class="agenda-section">
         <h2>Agenda tu Cita</h2>
         <p class="subtitulo">Selecciona el día y la hora para tu próximo corte.</p>
@@ -927,12 +931,12 @@
                 <label for="servicio">Selecciona el Servicio</label>
                 <select id="servicio" required class="select-servicio">
                     <option value="" disabled selected>-- Elige un servicio --</option>
-                    <option value="Corte Sencillo (10€)">Corte Sencillo - 10€</option>
-                    <option value="Corte Premium (13€)">Corte Premium - 13€</option>
-                    <option value="Corte con Barba Sencillo (16€)">Corte con Barba Sencillo - 16€</option>
-                    <option value="Corte con Barba Premium (19€)">Corte con Barba Premium - 19€</option>
-                    <option value="Barba Sola (6€)">Barba Sola - 6€</option>
-                    <option value="Cero con Barba Premium (13€)">Cero con Barba Premium - 13€</option>
+                    <option value="Corte Sencillo (10$)">Corte Sencillo - 10$</option>
+                    <option value="Corte Premium (13$)">Corte Premium - 13$</option>
+                    <option value="Corte con Barba Sencillo (16$)">Corte con Barba Sencillo - 16$</option>
+                    <option value="Corte con Barba Premium (19$)">Corte con Barba Premium - 19$</option>
+                    <option value="Barba Sola (6$)">Barba Sola - 6$</option>
+                    <option value="Cero con Barba Premium (13$)">Cero con Barba Premium - 13$</option>
                 </select>
             </div>
             
@@ -950,7 +954,6 @@
             
             <button type="submit" class="btn-submit">Confirmar Reserva</button>
 
-            <!-- APARTADO PARA REAGENDAR CITA -->
             <div class="contenedor-reagendar">
                 <div class="titulo-reagendar">¿Necesitas gestionar o reagendar tu cita?</div>
                 <div class="fila-reagendar">
@@ -965,7 +968,6 @@
         </div>
     </section>
 
-    <!-- SECCIÓN DE UBICACIÓN Y DIRECCIÓN (ACTUALIZADA) -->
     <section id="ubicacion" class="ubicacion-section">
         <h2>Ubicación</h2>
         <p class="subtitulo">Visítanos y vive la experiencia premium</p>
@@ -975,7 +977,7 @@
                 Urb. La Gaviota, San Diego,<br>
                 Estado Carabobo, Venezuela.
             </p>
-            <a href="https://maps.google.com/?q=Spartanos+Barber+Shop+La+Gaviota+San+Diego+Carabobo" target="_blank" class="btn-mapa">
+            <a href="https://maps.google.com" target="_blank" class="btn-mapa">
                 <svg width="14" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 Ver en Google Maps
             </a>
@@ -983,10 +985,9 @@
     </section>
 
     <footer>
-        <p>&copy; 2026 Víctor Styles. Todos los derechos reservados.</p>
+        <p>© 2026 Víctor Styles. Todos los derechos reservados.</p>
     </footer>
 
-<!-- VENTANA INTERACTIVA PASE VIP / TICKET DE RESERVA -->
 <div class="modal-cita-overlay" id="modalCita">
     <div class="ticket-vip">
         <div class="ticket-header">
