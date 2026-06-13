@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Víctor Styles | Barbería</title>
@@ -837,6 +838,7 @@
         <div class="hero-media">
             <img src="Hero.jpg" alt="Fondo Víctor Styles" class="hero-img">
             <div class="hero-overlay"></div>
+<div id="tsparticles" style="position: absolute; width: 100%; height: 100%; z-index: 1;"></div>
         </div>
         
         <div class="hero-content">
@@ -1365,6 +1367,18 @@
       nuevoServiceWorker.postMessage({ action: 'skipWaiting' });
     }
   }
+// Configuración de las partículas (Esto sí va dentro del <script>)
+tsParticles.load("tsparticles", {
+    particles: {
+        number: { value: 30 },
+        color: { value: ["#b8924e", "#ffffff"] },
+        shape: { type: "circle" },
+        opacity: { value: 0.3 },
+        size: { value: 3 },
+        move: { enable: true, speed: 1, direction: "none" }
+    },
+    interactivity: { events: { onHover: { enable: true, mode: "repulse" } } }
+});
 </script>
 </body>
 </html>
