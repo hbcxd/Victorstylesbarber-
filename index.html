@@ -802,6 +802,51 @@
             font-weight: 500;
             border-top: 1px solid var(--borde-sutil);
         }
+.badge-mundial {
+    display: inline-block;
+    padding: 4px 10px;
+    background-color: var(--dorado-acento);
+    color: #000;
+    font-size: 0.65rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 10px rgba(184, 146, 78, 0.4);
+}
+.btn-equipo {
+    background: #181818;
+    border: 1px solid var(--dorado-acento);
+    color: #ffffff;
+    padding: 12px 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.btn-equipo:hover {
+    background: var(--dorado-acento);
+    color: #0a0a0a;
+}
+
+.barra-progreso {
+    height: 6px;
+    background: #181818;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(184, 146, 78, 0.1);
+}
+
+.progreso-relleno {
+    height: 100%;
+    background: var(--gradiente-metal);
+    width: 0%;
+    transition: width 1s ease-in-out;
+}
     </style>
 </head>
 <body>
@@ -843,11 +888,28 @@
         
         <div class="hero-content">
             <h1 class="hero-title">VÍCTOR STYLES</h1>
+<div class="badge-mundial">Edición Mundialista 2026</div>
             <p class="hero-subtitle">Estilo, precisión y elegancia en cada corte.</p>
             <a href="#agenda" class="hero-btn">AGENDAR CITA</a>
         </div>
     </section>
+<section id="encuesta" class="encuesta-section" style="padding: 40px 5%; text-align: center; background-color: #0e0e0e; border-top: 1px solid var(--borde-sutil);">
+    <h2 style="font-size: 1.2rem; color: #ffffff; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;">¿Quién es tu favorito al título?</h2>
+    
+    <div id="contenedor-votos" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 400px; margin: 0 auto;">
+        <button class="btn-equipo" onclick="votar('Brasil')">🇧🇷 Brasil</button>
+        <button class="btn-equipo" onclick="votar('España')">🇪🇸 España</button>
+        <button class="btn-equipo" onclick="votar('Francia')">🇫🇷 Francia</button>
+        <button class="btn-equipo" onclick="votar('Portugal')">🇵🇹 Portugal</button>
+        <button class="btn-equipo" onclick="votar('Argentina')">🇦🇷 Argentina</button>
+        <button class="btn-equipo" onclick="votar('Otro')">🌍 Otro</button>
+    </div>
 
+    <div id="resultados-encuesta" style="margin-top: 20px; display: none; max-width: 400px; margin-left: auto; margin-right: auto;">
+        <p style="color: var(--gris-secundario); font-size: 0.8rem; margin-bottom: 15px;">Resultados en tiempo real:</p>
+        <div id="barras-resultados"></div>
+    </div>
+</section>
     <section id="galeria" class="galeria-section">
         <h2>Mi Trabajo</h2>
         <p class="subtitulo">Una muestra de los cortes y estilos recientes.</p>
@@ -1378,6 +1440,36 @@ tsParticles.load("tsparticles", {
         move: { enable: true, speed: 1, direction: "none" }
     },
     interactivity: { events: { onHover: { enable: true, mode: "repulse" } } }
+});
+const equipos = ["Brasil", "España", "Francia", "Portugal", "Argentina", "Otro"];
+
+function votar(equipo) {
+    const dbRef = firebase.database().ref('votos_mundial/' + equipo);
+    dbRef.transaction(current => (current || 0) + 1);
+    
+    // Ocultar botones y mostrar resultados
+    document.getElementById('contenedor-votos').style.display = 'none';
+    document.getElementById('resultados-encuesta').style.display = 'block';
+}
+
+firebase.database().ref('votos_mundial').on('value', (snapshot) => {
+    const data = snapshot.val() || {};
+    const total = Object.values(data).reduce((a, b) => a + b, 0);
+    const barras = document.getElementById('barras-resultados');
+    barras.innerHTML = '';
+
+    equipos.forEach(equipo => {
+        const votos = data[equipo] || 0;
+        const porcentaje = total > 0 ? Math.round((votos / total) * 100) : 0;
+        
+        barras.innerHTML += `
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 4px; color: #ffffff;">
+                <span>${equipo}</span>
+                <span>${porcentaje}%</span>
+            </div>
+            <div class="barra-progreso"><div class="progreso-relleno" style="width: ${porcentaje}%"></div></div>
+        `;
+    });
 });
 </script>
 </body>
