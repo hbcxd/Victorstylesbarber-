@@ -325,9 +325,10 @@
             .nav-rapida-movil { display: none; }
         }
 
-        /* GRID CONTABLE */
+        /* GRID CONTABLE RESPONSIVE AUTO-FIT */
         .grid-contable {
             display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 14px;
             margin-bottom: 24px;
         }
@@ -352,13 +353,13 @@
         }
 
         .tarjeta-contable h4 { font-size: 0.65rem; letter-spacing: 1.2px; text-transform: uppercase; color: var(--gris-secundario); margin-bottom: 6px; font-weight: 600; }
-        .tarjeta-contable .dato-principal { font-size: 1.5rem; font-weight: 800; color: #ffffff; letter-spacing: -0.5px; }
+        .tarjeta-contable .dato-principal { font-size: 1.4rem; font-weight: 800; color: #ffffff; letter-spacing: -0.5px; }
         .tarjeta-contable .monto-ingreso { font-size: 0.88rem; font-weight: 700; color: var(--verde-exito); margin-top: 4px; letter-spacing: -0.2px; }
 
         @media (min-width: 768px) {
             .tarjeta-contable { padding: 24px 20px; }
             .tarjeta-contable h4 { font-size: 0.7rem; letter-spacing: 1.5px; }
-            .tarjeta-contable .dato-principal { font-size: 1.9rem; }
+            .tarjeta-contable .dato-principal { font-size: 1.7rem; }
             .tarjeta-contable .monto-ingreso { font-size: 1rem; margin-top: 6px; }
         }
 
@@ -748,14 +749,18 @@
         </select>
     </div>
 
-    <div class="grid-contable" id="gridMetricasDinamicas" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="grid-contable" id="gridMetricasDinamicas">
         <div class="tarjeta-contable">
             <h4 id="tituloCortesGlobales">Cortes (Mes)</h4>
             <div class="dato-principal" id="cortesGlobales">0</div>
         </div>
         <div class="tarjeta-contable">
-            <h4 id="tituloIngresosGlobales">Ingresos (Mes)</h4>
-            <div class="dato-principal" style="color: var(--verde-exito);" id="ingresosGlobales">$0.00</div>
+            <h4 id="tituloIngresosBarberiaGlobales">Barbería (Mes)</h4>
+            <div class="dato-principal" style="color: var(--dorado-acento);" id="ingresosBarberiaGlobales">$0.00</div>
+        </div>
+        <div class="tarjeta-contable">
+            <h4 id="tituloIngresosBarberoGlobales">Tu Neto (Mes)</h4>
+            <div class="dato-principal" style="color: var(--verde-exito);" id="ingresosBarberoGlobales">$0.00</div>
         </div>
         <div class="tarjeta-contable">
             <h4 id="tituloPromedioGlobal">Promedio (Mes)</h4>
@@ -995,7 +1000,7 @@
     const campoClave = document.getElementById('campoClave');
     const btnIngresar = document.getElementById('btnIngresar');
     const mensajeError = document.getElementById('mensajeError');
-    let miGrafico = null; // Variable global para la gráfica
+    let miGrafico = null; 
 
     function verificarAcceso() {
         if (campoClave.value === CLAVE_ADMINISTRADOR) {
@@ -1111,23 +1116,22 @@
         return `${año}-${mes}-${dia}`;
     }
 
-    // LOGICA GLOBAL CON GRÁFICAS
+    // LOGICA GLOBAL CON MÉTRICAS DIVIDIDAS Y GRÁFICAS
     function procesarMetricasGlobales(periodo) {
         const hoy = new Date();
         const anioActual = hoy.getFullYear();
         const mesActual = hoy.getMonth();
 
-        // Configuración para la semana
         const diaSemana = hoy.getDay() === 0 ? 6 : hoy.getDay() - 1; 
         const lunesSemana = new Date(hoy);
         lunesSemana.setDate(hoy.getDate() - diaSemana);
         lunesSemana.setHours(0,0,0,0);
 
         let cGlobal = 0;
-        let iGlobal = 0;
+        let iBarberiaGlobal = 0;
+        let iBarberoGlobal = 0;
         let diasTranscurridos = 1;
 
-        // Variables para la Gráfica
         let etiquetasGrafica = [];
         let datosGrafica = [];
         const tituloSpan = document.getElementById('tituloGraficaSpan');
@@ -1135,7 +1139,8 @@
         if (periodo === 'semanal') {
             diasTranscurridos = diaSemana + 1; 
             document.getElementById('tituloCortesGlobales').textContent = 'Cortes (Semana)';
-            document.getElementById('tituloIngresosGlobales').textContent = 'Ingresos (Semana)';
+            document.getElementById('tituloIngresosBarberiaGlobales').textContent = 'Barbería (Semana)';
+            document.getElementById('tituloIngresosBarberoGlobales').textContent = 'Tu Neto (Semana)';
             document.getElementById('tituloPromedioGlobal').textContent = 'Promedio (Semana)';
             tituloSpan.textContent = '(Esta Semana)';
             
@@ -1144,7 +1149,8 @@
         } else if (periodo === 'mensual') {
             diasTranscurridos = hoy.getDate(); 
             document.getElementById('tituloCortesGlobales').textContent = 'Cortes (Mes)';
-            document.getElementById('tituloIngresosGlobales').textContent = 'Ingresos (Mes)';
+            document.getElementById('tituloIngresosBarberiaGlobales').textContent = 'Barbería (Mes)';
+            document.getElementById('tituloIngresosBarberoGlobales').textContent = 'Tu Neto (Mes)';
             document.getElementById('tituloPromedioGlobal').textContent = 'Promedio (Mes)';
             tituloSpan.textContent = '(Este Mes)';
             
@@ -1155,7 +1161,8 @@
             const inicioAnio = new Date(anioActual, 0, 1);
             diasTranscurridos = Math.ceil((hoy - inicioAnio) / (1000 * 60 * 60 * 24)); 
             document.getElementById('tituloCortesGlobales').textContent = 'Cortes (Año)';
-            document.getElementById('tituloIngresosGlobales').textContent = 'Ingresos (Año)';
+            document.getElementById('tituloIngresosBarberiaGlobales').textContent = 'Barbería (Año)';
+            document.getElementById('tituloIngresosBarberoGlobales').textContent = 'Tu Neto (Año)';
             document.getElementById('tituloPromedioGlobal').textContent = 'Promedio (Año)';
             tituloSpan.textContent = '(Este Año)';
             
@@ -1169,29 +1176,47 @@
             const partes = cita.cita_fecha.split('-');
             const fechaCita = new Date(partes[0], partes[1] - 1, partes[2]);
             const precio = extraerPrecio(cita.servicio);
+            
+            const deLaBarberia = precio * 0.40;
+            const deVictor = precio * 0.60;
+
+            let cumpleFiltro = false;
+            let idxGrafica = 0;
 
             if (periodo === 'semanal') {
                 if (fechaCita >= lunesSemana && fechaCita <= hoy) {
-                    cGlobal++; iGlobal += precio;
-                    let idxDia = fechaCita.getDay() === 0 ? 6 : fechaCita.getDay() - 1;
-                    datosGrafica[idxDia] += precio;
+                    cumpleFiltro = true;
+                    idxGrafica = fechaCita.getDay() === 0 ? 6 : fechaCita.getDay() - 1;
                 }
             } else if (periodo === 'mensual') {
                 if (fechaCita.getFullYear() === anioActual && fechaCita.getMonth() === mesActual) {
-                    cGlobal++; iGlobal += precio;
-                    datosGrafica[fechaCita.getDate() - 1] += precio;
+                    cumpleFiltro = true;
+                    idxGrafica = fechaCita.getDate() - 1;
                 }
             } else if (periodo === 'anual') {
                 if (fechaCita.getFullYear() === anioActual) {
-                    cGlobal++; iGlobal += precio;
-                    datosGrafica[fechaCita.getMonth()] += precio;
+                    cumpleFiltro = true;
+                    idxGrafica = fechaCita.getMonth();
+                }
+            }
+
+            if (cumpleFiltro) {
+                cGlobal++;
+                datosGrafica[idxGrafica] += precio; // La gráfica sigue la producción bruta total
+                
+                if (cita.patrocinado === true) {
+                    iBarberoGlobal += precio; // Patrocinio va neto completo al barbero
+                } else {
+                    iBarberiaGlobal += deLaBarberia;
+                    iBarberoGlobal += deVictor;
                 }
             }
         });
 
         const promedio = diasTranscurridos > 0 ? (cGlobal / diasTranscurridos).toFixed(1) : '0.0';
         document.getElementById('cortesGlobales').textContent = cGlobal;
-        document.getElementById('ingresosGlobales').textContent = `$${iGlobal.toFixed(2)}`;
+        document.getElementById('ingresosBarberiaGlobales').textContent = `$${iBarberiaGlobal.toFixed(2)}`;
+        document.getElementById('ingresosBarberoGlobales').textContent = `$${iBarberoGlobal.toFixed(2)}`;
         document.getElementById('promedioGlobal').textContent = promedio;
 
         renderizarGrafica(etiquetasGrafica, datosGrafica, periodo);
@@ -1199,21 +1224,17 @@
 
     function renderizarGrafica(etiquetas, datos, periodo) {
         const ctx = document.getElementById('graficaIngresos').getContext('2d');
-        
-        // Destruir la gráfica anterior si existe para evitar superposiciones
         if (miGrafico) { miGrafico.destroy(); }
 
-        let labelText = 'Ingresos Totales ($)';
-        
         miGrafico = new Chart(ctx, {
-            type: 'bar', // Formato barra, ideal para ingresos
+            type: 'bar', 
             data: {
                 labels: etiquetas,
                 datasets: [{
-                    label: labelText,
+                    label: 'Producción Total ($)',
                     data: datos,
-                    backgroundColor: 'rgba(212, 175, 55, 0.7)', // Dorado Acento semi-transparente
-                    borderColor: '#d4af37', // Dorado sólido
+                    backgroundColor: 'rgba(212, 175, 55, 0.7)', 
+                    borderColor: '#d4af37', 
                     borderWidth: 2,
                     borderRadius: 4,
                     hoverBackgroundColor: '#b58d22'
