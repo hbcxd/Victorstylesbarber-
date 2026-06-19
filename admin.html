@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración | Víctor Styles</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --fondo-oscuro: #0a0a0a;
@@ -19,7 +20,7 @@
             --verde-exito: #10b981;
             --azul-enlace: #3b82f6;
             --naranja-alerta: #f59e0b;
-            --rojo-alerta: #ef4444; /* Para botones de eliminar/peligro */
+            --rojo-alerta: #ef4444; 
             
             --borde-sutil: rgba(255, 255, 255, 0.05);
             --borde-enfoque: rgba(212, 175, 55, 0.4);
@@ -209,7 +210,7 @@
         .btn-login:active { transform: scale(0.98); }
         .error-login { color: var(--rojo-alerta); font-size: 0.8rem; margin-top: 14px; display: none; font-weight: 600; letter-spacing: 0.5px; }
 
-        /* NAVEGACIÓN (GLASSMORPHISM) */
+        /* NAVEGACIÓN */
         header {
             display: flex;
             justify-content: space-between;
@@ -327,13 +328,8 @@
         /* GRID CONTABLE */
         .grid-contable {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
             gap: 14px;
             margin-bottom: 24px;
-        }
-
-        @media (min-width: 768px) {
-            .grid-contable { grid-template-columns: repeat(4, 1fr); gap: 18px; }
         }
 
         .tarjeta-contable {
@@ -538,7 +534,7 @@
             -webkit-appearance: none;
         }
         
-        .form-grupo select, .calc-grid select {
+        .form-grupo select, .calc-grid select, .select-tabla {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23d4af37'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 16px center;
@@ -547,7 +543,7 @@
             cursor: pointer;
         }
 
-        .form-grupo input:focus, .form-grupo select:focus, .calc-grid input:focus, .calc-grid select:focus { 
+        .form-grupo input:focus, .form-grupo select:focus, .calc-grid input:focus, .calc-grid select:focus, .select-tabla:focus { 
             border-color: var(--dorado-acento);
             box-shadow: 0 0 0 3px var(--borde-enfoque);
         }
@@ -624,13 +620,8 @@
             cursor: pointer;
             appearance: none;
             -webkit-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23d4af37'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            background-size: 14px;
             transition: all 0.25s;
         }
-        .select-tabla:focus { border-color: var(--dorado-acento); }
 
         .btn-eliminar { 
             background-color: rgba(239, 68, 68, 0.06); 
@@ -649,6 +640,14 @@
         }
         .btn-eliminar:hover { background-color: var(--rojo-alerta); color: white; border-color: var(--rojo-alerta); }
         .sin-citas { text-align: center; padding: 45px; color: var(--gris-secundario); font-style: italic; font-size: 0.85rem; }
+
+        /* Contenedor de la Gráfica */
+        .grafica-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            margin-top: 20px;
+        }
 
         @media screen and (max-width: 767px) {
             .contenedor-tabla { background: transparent; border: none; margin-top: 14px; box-shadow: none; }
@@ -740,26 +739,35 @@
         <a href="#bloque-historial-turnos">Turnos</a>
     </div>
 
-    <div class="grid-contable">
+    <div class="barra-filtro-principal" style="margin-bottom: 15px; flex-direction: row; justify-content: space-between; align-items: center;">
+        <h3 style="border: none; padding: 0; margin: 0; font-size: 1.1rem;">Rendimiento Global</h3>
+        <select id="selectorPeriodoGlobal" class="select-tabla" style="max-width: 150px; border-color: var(--dorado-acento); background-position: right 8px center;">
+            <option value="semanal">Esta Semana</option>
+            <option value="mensual" selected>Este Mes</option>
+            <option value="anual">Este Año</option>
+        </select>
+    </div>
+
+    <div class="grid-contable" id="gridMetricasDinamicas" style="grid-template-columns: repeat(3, 1fr);">
         <div class="tarjeta-contable">
-            <h4>Hoy</h4>
-            <div class="dato-principal" id="cortesHoy">0</div>
-            <div class="monto-ingreso" id="ingresosHoy">$0.00</div>
+            <h4 id="tituloCortesGlobales">Cortes (Mes)</h4>
+            <div class="dato-principal" id="cortesGlobales">0</div>
         </div>
         <div class="tarjeta-contable">
-            <h4>Este Mes</h4>
-            <div class="dato-principal" id="cortesMes">0</div>
-            <div class="monto-ingreso" id="ingresosMes">$0.00</div>
+            <h4 id="tituloIngresosGlobales">Ingresos (Mes)</h4>
+            <div class="dato-principal" style="color: var(--verde-exito);" id="ingresosGlobales">$0.00</div>
         </div>
         <div class="tarjeta-contable">
-            <h4>Este Año</h4>
-            <div class="dato-principal" id="cortesAnio">0</div>
-            <div class="monto-ingreso" id="ingresosAnio">$0.00</div>
+            <h4 id="tituloPromedioGlobal">Promedio (Mes)</h4>
+            <div class="dato-principal" id="promedioGlobal">0.0</div>
+            <div class="monto-ingreso" style="color: var(--gris-secundario); font-size: 0.6rem; font-weight:600; text-transform:uppercase; margin-top:4px; letter-spacing: 0.5px;">Cortes / Día</div>
         </div>
-        <div class="tarjeta-contable">
-            <h4>Promedio Diario</h4>
-            <div class="dato-principal" id="promedioDiario">0.0</div>
-            <div class="monto-ingreso" style="color: var(--gris-secundario); font-size: 0.6rem; font-weight:600; text-transform:uppercase; margin-top:4px; letter-spacing: 0.5px;">Cortes/Día</div>
+    </div>
+
+    <div class="seccion-bloque" id="bloque-estadisticas">
+        <h3>Gráfica de Ingresos <span id="tituloGraficaSpan" style="color: var(--dorado-acento); font-weight:700; font-size:0.85rem; margin-left:6px; letter-spacing: 0.5px;">(Este Mes)</span></h3>
+        <div class="grafica-container">
+            <canvas id="graficaIngresos"></canvas>
         </div>
     </div>
 
@@ -987,6 +995,7 @@
     const campoClave = document.getElementById('campoClave');
     const btnIngresar = document.getElementById('btnIngresar');
     const mensajeError = document.getElementById('mensajeError');
+    let miGrafico = null; // Variable global para la gráfica
 
     function verificarAcceso() {
         if (campoClave.value === CLAVE_ADMINISTRADOR) {
@@ -1044,6 +1053,10 @@
             renderizarGastos('');
             procesarContabilidad('');
         });
+
+        document.getElementById('selectorPeriodoGlobal').addEventListener('change', function() {
+            procesarMetricasGlobales(this.value);
+        });
         
         document.getElementById('calcN1').addEventListener('input', ejecutarCalculoRapido);
         document.getElementById('calcN2').addEventListener('input', ejecutarCalculoRapido);
@@ -1076,6 +1089,7 @@
 
             const filtroActual = filtroFecha.value;
             procesarContabilidad(filtroActual);
+            procesarMetricasGlobales(document.getElementById('selectorPeriodoGlobal').value);
             renderizarTabla(filtroActual);
             renderizarGastos(filtroActual);
             calcularFrecuencias();
@@ -1097,23 +1111,150 @@
         return `${año}-${mes}-${dia}`;
     }
 
+    // LOGICA GLOBAL CON GRÁFICAS
+    function procesarMetricasGlobales(periodo) {
+        const hoy = new Date();
+        const anioActual = hoy.getFullYear();
+        const mesActual = hoy.getMonth();
+
+        // Configuración para la semana
+        const diaSemana = hoy.getDay() === 0 ? 6 : hoy.getDay() - 1; 
+        const lunesSemana = new Date(hoy);
+        lunesSemana.setDate(hoy.getDate() - diaSemana);
+        lunesSemana.setHours(0,0,0,0);
+
+        let cGlobal = 0;
+        let iGlobal = 0;
+        let diasTranscurridos = 1;
+
+        // Variables para la Gráfica
+        let etiquetasGrafica = [];
+        let datosGrafica = [];
+        const tituloSpan = document.getElementById('tituloGraficaSpan');
+
+        if (periodo === 'semanal') {
+            diasTranscurridos = diaSemana + 1; 
+            document.getElementById('tituloCortesGlobales').textContent = 'Cortes (Semana)';
+            document.getElementById('tituloIngresosGlobales').textContent = 'Ingresos (Semana)';
+            document.getElementById('tituloPromedioGlobal').textContent = 'Promedio (Semana)';
+            tituloSpan.textContent = '(Esta Semana)';
+            
+            etiquetasGrafica = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+            datosGrafica = [0, 0, 0, 0, 0, 0, 0];
+        } else if (periodo === 'mensual') {
+            diasTranscurridos = hoy.getDate(); 
+            document.getElementById('tituloCortesGlobales').textContent = 'Cortes (Mes)';
+            document.getElementById('tituloIngresosGlobales').textContent = 'Ingresos (Mes)';
+            document.getElementById('tituloPromedioGlobal').textContent = 'Promedio (Mes)';
+            tituloSpan.textContent = '(Este Mes)';
+            
+            const diasDelMes = new Date(anioActual, mesActual + 1, 0).getDate();
+            for(let i=1; i<=diasDelMes; i++) { etiquetasGrafica.push(i.toString()); }
+            datosGrafica = new Array(diasDelMes).fill(0);
+        } else if (periodo === 'anual') {
+            const inicioAnio = new Date(anioActual, 0, 1);
+            diasTranscurridos = Math.ceil((hoy - inicioAnio) / (1000 * 60 * 60 * 24)); 
+            document.getElementById('tituloCortesGlobales').textContent = 'Cortes (Año)';
+            document.getElementById('tituloIngresosGlobales').textContent = 'Ingresos (Año)';
+            document.getElementById('tituloPromedioGlobal').textContent = 'Promedio (Año)';
+            tituloSpan.textContent = '(Este Año)';
+            
+            etiquetasGrafica = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            datosGrafica = new Array(12).fill(0);
+        }
+
+        todasLasCitas.forEach(cita => {
+            if (!cita.cita_fecha || (cita.estado || 'Atendido') !== 'Atendido') return;
+
+            const partes = cita.cita_fecha.split('-');
+            const fechaCita = new Date(partes[0], partes[1] - 1, partes[2]);
+            const precio = extraerPrecio(cita.servicio);
+
+            if (periodo === 'semanal') {
+                if (fechaCita >= lunesSemana && fechaCita <= hoy) {
+                    cGlobal++; iGlobal += precio;
+                    let idxDia = fechaCita.getDay() === 0 ? 6 : fechaCita.getDay() - 1;
+                    datosGrafica[idxDia] += precio;
+                }
+            } else if (periodo === 'mensual') {
+                if (fechaCita.getFullYear() === anioActual && fechaCita.getMonth() === mesActual) {
+                    cGlobal++; iGlobal += precio;
+                    datosGrafica[fechaCita.getDate() - 1] += precio;
+                }
+            } else if (periodo === 'anual') {
+                if (fechaCita.getFullYear() === anioActual) {
+                    cGlobal++; iGlobal += precio;
+                    datosGrafica[fechaCita.getMonth()] += precio;
+                }
+            }
+        });
+
+        const promedio = diasTranscurridos > 0 ? (cGlobal / diasTranscurridos).toFixed(1) : '0.0';
+        document.getElementById('cortesGlobales').textContent = cGlobal;
+        document.getElementById('ingresosGlobales').textContent = `$${iGlobal.toFixed(2)}`;
+        document.getElementById('promedioGlobal').textContent = promedio;
+
+        renderizarGrafica(etiquetasGrafica, datosGrafica, periodo);
+    }
+
+    function renderizarGrafica(etiquetas, datos, periodo) {
+        const ctx = document.getElementById('graficaIngresos').getContext('2d');
+        
+        // Destruir la gráfica anterior si existe para evitar superposiciones
+        if (miGrafico) { miGrafico.destroy(); }
+
+        let labelText = 'Ingresos Totales ($)';
+        
+        miGrafico = new Chart(ctx, {
+            type: 'bar', // Formato barra, ideal para ingresos
+            data: {
+                labels: etiquetas,
+                datasets: [{
+                    label: labelText,
+                    data: datos,
+                    backgroundColor: 'rgba(212, 175, 55, 0.7)', // Dorado Acento semi-transparente
+                    borderColor: '#d4af37', // Dorado sólido
+                    borderWidth: 2,
+                    borderRadius: 4,
+                    hoverBackgroundColor: '#b58d22'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#161616',
+                        titleColor: '#d4af37',
+                        bodyColor: '#fff',
+                        borderColor: 'rgba(255,255,255,0.1)',
+                        borderWidth: 1,
+                        padding: 10,
+                        callbacks: {
+                            label: function(context) { return '$' + context.parsed.y.toFixed(2); }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(255, 255, 255, 0.05)', borderColor: 'transparent' },
+                        ticks: { color: '#a1a1aa', font: { size: 10 } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#a1a1aa', font: { size: 10 } }
+                    }
+                }
+            }
+        });
+    }
+
     function procesarContabilidad(fechaFiltroActivo) {
-        const hoyStr = obtenerFechaLocalVenezuela(); 
-        const d = new Date();
-        const mesActual = d.getMonth();
-        const anioActual = d.getFullYear();
-
-        let cHoy = 0, iHoy = 0;
-        let cMes = 0, iMes = 0;
-        let cAnio = 0, iAnio = 0;
-        const mapaFechasActivas = {};
-
-        let totalBarberiaCierre = 0;
-        let totalVictorCierre = 0;
-        let totalDeudaPatrocinioCierre = 0;
-        let totalGastosCierre = 0;
-
+        let totalBarberiaCierre = 0, totalVictorCierre = 0, totalDeudaPatrocinioCierre = 0, totalGastosCierre = 0;
         const tituloCierre = document.getElementById('fechaCierreTitulo');
+
         if(fechaFiltroActivo) {
             const p = fechaFiltroActivo.split('-');
             tituloCierre.textContent = `(${p[2]}/${p[1]}/${p[0]})`;
@@ -1123,24 +1264,11 @@
 
         todasLasCitas.forEach(cita => {
             if (!cita.cita_fecha || (cita.estado || 'Atendido') !== 'Atendido') return;
-
             const precio = extraerPrecio(cita.servicio);
-            const partes = cita.cita_fecha.split('-');
-            const cAnioObj = parseInt(partes[0], 10);
-            const cMesObj = parseInt(partes[1], 10) - 1;
-
-            mapaFechasActivas[cita.cita_fecha] = true;
-
-            if (cAnioObj === anioActual) {
-                cAnio++; iAnio += precio;
-                if (cMesObj === mesActual) { cMes++; iMes += precio; }
-            }
-            if (cita.cita_fecha === hoyStr) { cHoy++; iHoy += precio; }
 
             if (!fechaFiltroActivo || cita.cita_fecha === fechaFiltroActivo) {
                 const deLaBarberia = precio * 0.40;
                 const deVictor = precio * 0.60;
-
                 if (cita.patrocinado === true) {
                     totalDeudaPatrocinioCierre += deLaBarberia;
                     totalVictorCierre += precio; 
@@ -1156,17 +1284,6 @@
                 totalGastosCierre += parseFloat(gasto.monto || 0);
             }
         });
-
-        const totalDiasActivos = Object.keys(mapaFechasActivas).length;
-        const promedio = totalDiasActivos > 0 ? (cHoy / totalDiasActivos).toFixed(1) : '0.0';
-
-        document.getElementById('cortesHoy').textContent = cHoy;
-        document.getElementById('ingresosHoy').textContent = `$${iHoy}.00`;
-        document.getElementById('cortesMes').textContent = cMes;
-        document.getElementById('ingresosMes').textContent = `$${iMes}.00`;
-        document.getElementById('cortesAnio').textContent = cAnio;
-        document.getElementById('ingresosAnio').textContent = `$${iAnio}.00`;
-        document.getElementById('promedioDiario').textContent = promedio;
 
         document.getElementById('gananciaBarberia').textContent = `$${totalBarberiaCierre.toFixed(2)}`;
         document.getElementById('gananciaVictor').textContent = `$${totalVictorCierre.toFixed(2)}`;
