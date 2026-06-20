@@ -28,19 +28,16 @@
 
         h2 { font-size: 1.5rem; text-align: center; font-weight: 800; margin-bottom: 6px; background: linear-gradient(180deg, #ffffff 0%, #d4af37 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 2px;}
         h3 { font-size: 0.95rem; font-weight: 700; border-bottom: 1px solid var(--borde-sutil); padding-bottom: 14px; margin-bottom: 14px; color: rgba(255, 255, 255, 0.9); text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center;}
-        .subtitulo { text-align: center; color: var(--gris-secundario); margin-bottom: 20px; font-size: 0.8rem; letter-spacing: 0.8px; }
-
+        
         /* HEADER Y MENÚ */
         header { display: flex; justify-content: center; align-items: center; padding: 0 5%; background-color: rgba(10, 10, 10, 0.85); backdrop-filter: blur(20px); position: fixed; width: 100%; top: 0; left: 0; z-index: 1000; border-bottom: 1px solid var(--borde-sutil); height: 70px; }
         .logo img { height: 35px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)); }
         .btn-cerrar-sesion { position: absolute; right: 5%; background: transparent; border: 1px solid var(--dorado-acento); color: var(--dorado-acento); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
-        .btn-cerrar-sesion:hover { background: var(--dorado-acento); color: #000; }
-
+        
         /* SISTEMA DE PESTAÑAS (TABS) */
         .tabs-container { display: flex; gap: 10px; overflow-x: auto; padding: 0 5% 15px 5%; margin-bottom: 20px; border-bottom: 1px solid var(--borde-sutil); }
         .tabs-container::-webkit-scrollbar { display: none; }
         .tab-btn { background: transparent; color: var(--gris-secundario); border: none; padding: 10px 15px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; position: relative; white-space: nowrap; transition: color 0.3s; }
-        .tab-btn:hover { color: #fff; }
         .tab-btn.active { color: var(--dorado-acento); }
         .tab-btn.active::after { content: ''; position: absolute; bottom: -16px; left: 0; width: 100%; height: 3px; background: var(--dorado-acento); border-radius: 3px 3px 0 0; }
         
@@ -52,14 +49,12 @@
         .login-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(6, 6, 6, 0.98); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 24px; }
         .login-box { background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); padding: 40px 30px; border-radius: 16px; width: 100%; max-width: 380px; text-align: center; border-top: 3px solid var(--dorado-acento); box-shadow: var(--shadow-premium); }
         .login-box input { width: 100%; padding: 14px; background-color: var(--fondo-input); border: 1px solid var(--borde-sutil); color: #fff; border-radius: 8px; outline: none; margin-bottom: 16px; font-size: 0.9rem; text-align: center;}
-        .login-box input:focus { border-color: var(--dorado-acento); box-shadow: 0 0 0 3px var(--borde-enfoque); }
         .btn-login { width: 100%; padding: 14px; background-color: var(--dorado-acento); color: #000; border: none; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; border-radius: 8px; cursor: pointer; transition: background 0.25s; }
-        .btn-login:hover { background-color: var(--dorado-hover); }
         .error-login { color: var(--rojo-alerta); font-size: 0.8rem; margin-top: 14px; display: none; font-weight: 600; }
 
         /* ESTRUCTURAS GENERALES */
         .seccion-bloque { background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-radius: 16px; padding: 22px; margin-bottom: 24px; box-shadow: var(--shadow-premium); }
-        .grid-contable { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 24px; }
+        .grid-contable { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 14px; margin-bottom: 24px; }
         .tarjeta-contable { background-color: var(--fondo-input); border: 1px solid var(--borde-sutil); border-radius: 12px; padding: 18px 14px; text-align: center; position: relative; }
         .tarjeta-contable h4 { font-size: 0.65rem; text-transform: uppercase; color: var(--gris-secundario); margin-bottom: 6px; font-weight: 600; letter-spacing: 1px;}
         .tarjeta-contable .dato-principal { font-size: 1.5rem; font-weight: 800; color: #ffffff; }
@@ -70,31 +65,25 @@
         .form-grupo label { font-size: 0.7rem; color: var(--gris-secundario); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
         .form-grupo input, .form-grupo select { background-color: var(--fondo-input); border: 1px solid var(--borde-sutil); color: #fff; padding: 14px; border-radius: 10px; outline: none; width: 100%; font-size: 0.9rem; }
         .btn-guardar { background-color: var(--dorado-acento); color: #000; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-weight: 800; text-transform: uppercase; width: 100%; font-size: 0.8rem; letter-spacing: 1px; }
+        .btn-accion { background: transparent; border: 1px solid var(--dorado-acento); color: var(--dorado-acento); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
+        .btn-accion:hover { background: var(--dorado-acento); color: #000; }
         
         .contenedor-tabla { width: 100%; overflow-x: auto; margin-top: 10px; border: 1px solid var(--borde-sutil); border-radius: 12px; }
         table { width: 100%; border-collapse: collapse; text-align: left; background: var(--fondo-input); }
         th, td { padding: 14px; border-bottom: 1px solid var(--borde-sutil); font-size: 0.85rem; }
         th { background-color: #1a1a1a; color: var(--gris-secundario); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px; }
-        .btn-detalle { background: transparent; border: 1px solid var(--dorado-acento); color: var(--dorado-acento); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
-        .btn-detalle:hover { background: var(--dorado-acento); color: #000; }
 
-        /* MODAL DE DETALLES */
+        /* MODALES */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 3000; display: none; justify-content: center; align-items: center; padding: 20px; }
         .modal-box { background: var(--fondo-tarjeta); border: 1px solid var(--dorado-acento); border-radius: 16px; width: 100%; max-width: 400px; padding: 24px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.9); }
         .modal-cerrar { position: absolute; top: 15px; right: 20px; background: transparent; border: none; color: var(--gris-secundario); font-size: 1.5rem; cursor: pointer; }
-        .modal-cerrar:hover { color: #fff; }
         .modal-titulo { font-size: 1.2rem; color: #fff; border-bottom: 1px solid var(--borde-sutil); padding-bottom: 10px; margin-bottom: 15px; }
         .modal-dato { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 5px;}
         .modal-dato span:first-child { color: var(--gris-secundario); font-size: 0.8rem; text-transform: uppercase; font-weight: 600;}
         .modal-dato span:last-child { color: #fff; font-weight: bold;}
-
-        /* GRAFICA */
-        .grafica-container { position: relative; height: 250px; width: 100%; margin-top: 15px; }
         
-        .seccion-reparto-ganancias { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 18px; }
-        .tarjeta-ganancia { background-color: #161616; padding: 16px; border-radius: 8px; border-left: 4px solid var(--dorado-acento); }
-        .tarjeta-ganancia h5 { font-size: 0.65rem; text-transform: uppercase; color: var(--gris-secundario); margin-bottom: 6px; }
-        .tarjeta-ganancia .monto-calculado { font-size: 1.2rem; font-weight: 800; color: #fff; }
+        .filtros-rango { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; background: var(--fondo-input); padding: 15px; border-radius: 12px; border: 1px solid var(--borde-sutil); margin-bottom: 20px; }
+        .filtros-rango input { background: var(--fondo-tarjeta); color: #fff; border: 1px solid var(--borde-sutil); padding: 10px; border-radius: 6px; flex: 1; }
 
         @media (max-width: 768px) {
             table, thead, tbody, th, td, tr { display: block; width: 100%; border:none; }
@@ -107,6 +96,7 @@
 </head>
 <body>
 
+<!-- LOGIN SEGURO FIREBASE -->
 <div class="login-container" id="pantallaLogin">
     <div class="login-box">
         <h3 style="border:none; justify-content:center; margin-bottom:0;">Acceso Restringido</h3>
@@ -130,67 +120,78 @@
     <button class="tab-btn" onclick="cambiarTab('tab-clientes', this)">Clientes</button>
 </nav>
 
+<!-- MODAL DE DETALLES (VER) -->
 <div class="modal-overlay" id="modalDetalle">
     <div class="modal-box">
-        <button class="modal-cerrar" onclick="cerrarModal()">×</button>
+        <button class="modal-cerrar" onclick="cerrarModal('modalDetalle')">×</button>
         <div class="modal-titulo" id="modalNombreCliente">Nombre Cliente</div>
         <div class="modal-dato"><span>Teléfono</span><span id="modalTlf"></span></div>
-        <div class="modal-dato"><span>Último Servicio</span><span id="modalServicio"></span></div>
+        <div class="modal-dato"><span>Servicio</span><span id="modalServicio"></span></div>
         <div class="modal-dato"><span>Fecha</span><span id="modalFecha"></span></div>
         <div class="modal-dato"><span>Estado</span><span id="modalEstado"></span></div>
         <div class="modal-dato"><span>Patrocinado</span><span id="modalPatrocinio"></span></div>
+        <div style="margin-top: 20px; text-align: center;">
+            <button class="btn-accion" id="btnAbrirEdicion" style="width: 100%;">Editar Datos del Cliente</button>
+        </div>
     </div>
 </div>
 
+<!-- MODAL DE DETALLES (EDITAR) -->
+<div class="modal-overlay" id="modalEditar">
+    <div class="modal-box">
+        <button class="modal-cerrar" onclick="cerrarModal('modalEditar')">×</button>
+        <div class="modal-titulo">Editar Registro</div>
+        <form id="formEditar" onsubmit="guardarEdicion(event)">
+            <input type="hidden" id="editId">
+            <div class="form-grupo"><label>Nombre</label><input type="text" id="editNombre" required></div>
+            <div class="form-grupo"><label>Teléfono</label><input type="tel" id="editTelefono" required></div>
+            <div class="form-grupo">
+                <label>Servicio</label>
+                <select id="editServicio" required>
+                    <option value="Corte Sencillo (10$)">Corte Sencillo (10$)</option>
+                    <option value="Corte Premium (13$)">Corte Premium (13$)</option>
+                    <option value="Barba Sola (6$)">Barba Sola (6$)</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-guardar" style="margin-top: 15px;">Actualizar Cambios</button>
+        </form>
+    </div>
+</div>
+
+<!-- ================= PESTAÑA 1: RESUMEN (DASHBOARD) ================= -->
 <div id="tab-dashboard" class="modulo-admin active">
     <h2>Métricas Globales</h2>
-    <div class="form-grupo" style="margin-bottom: 20px;">
-        <select id="selectorPeriodoGlobal" style="border-color: var(--dorado-acento);">
-            <option value="semanal">Rendimiento: Esta Semana</option>
-            <option value="mensual" selected>Rendimiento: Este Mes</option>
-            <option value="anual">Rendimiento: Este Año</option>
-        </select>
+    
+    <div class="filtros-rango">
+        <span style="font-size: 0.8rem; color: var(--gris-secundario); font-weight: bold; text-transform: uppercase;">Desde:</span>
+        <input type="date" id="fechaInicioGlobal">
+        <span style="font-size: 0.8rem; color: var(--gris-secundario); font-weight: bold; text-transform: uppercase;">Hasta:</span>
+        <input type="date" id="fechaFinGlobal">
+        <button class="btn-accion" onclick="procesarMetricasGlobales()">Calcular</button>
+        <button class="btn-accion" onclick="limpiarMetricasGlobales()" style="border-color: var(--rojo-alerta); color: var(--rojo-alerta);">Limpiar</button>
     </div>
 
     <div class="grid-contable">
-        <div class="tarjeta-contable"><h4>Cortes</h4><div class="dato-principal" id="cortesGlobales">0</div></div>
-        <div class="tarjeta-contable"><h4>Barbería</h4><div class="dato-principal" style="color:var(--dorado-acento);" id="ingresosBarberiaGlobales">$0.00</div></div>
-        <div class="tarjeta-contable"><h4>Tu Neto</h4><div class="dato-principal" style="color:var(--verde-exito);" id="ingresosBarberoGlobales">$0.00</div></div>
-    </div>
-
-    <div class="seccion-bloque">
-        <h3>Gráfica de Producción</h3>
-        <div class="grafica-container"><canvas id="graficaIngresos"></canvas></div>
-    </div>
-
-    <div class="seccion-bloque">
-        <h3>Cierre de Caja (Hoy)</h3>
-        <div class="seccion-reparto-ganancias">
-            <div class="tarjeta-ganancia" style="border-left-color: var(--dorado-acento);">
-                <h5>Barbería (40%)</h5><div class="monto-calculado" id="gananciaBarberia">$0.00</div>
-            </div>
-            <div class="tarjeta-ganancia" style="border-left-color: var(--verde-exito);">
-                <h5>Tu Neto Inicial (60%)</h5><div class="monto-calculado" id="gananciaVictor">$0.00</div>
-            </div>
-            <div class="tarjeta-ganancia" style="border-left-color: var(--naranja-alerta);">
-                <h5>Gastos Hoy</h5><div class="monto-calculado" id="totalGastosCierre">$0.00</div>
-            </div>
-        </div>
-        <div style="margin-top: 20px; border-top: 1px solid var(--borde-sutil); padding-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-            <span style="color: var(--dorado-acento); font-size: 0.8rem; font-weight: bold; text-transform: uppercase;">Neto Real:</span>
-            <span id="netoRealCalculado" style="font-size: 1.8rem; font-weight: 900; color: #fff;">$0.00</span>
+        <div class="tarjeta-contable"><h4>Cortes</h4><div class="dato-principal" id="cortesTotales">0</div></div>
+        <div class="tarjeta-contable"><h4>Promedio Diario</h4><div class="dato-principal" id="promedioCortes" style="color:var(--naranja-alerta);">0</div></div>
+        <div class="tarjeta-contable"><h4>Barbería (40%)</h4><div class="dato-principal" id="totalBarberia">$0.00</div></div>
+        <div class="tarjeta-contable"><h4>Tu Neto Bruto</h4><div class="dato-principal" style="color:var(--verde-exito);" id="totalVictor">$0.00</div></div>
+        <div class="tarjeta-contable"><h4>Gastos Periodo</h4><div class="dato-principal" style="color:var(--rojo-alerta);" id="totalGastos">$0.00</div></div>
+        <div class="tarjeta-contable" style="border: 1px solid var(--dorado-acento); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);">
+            <h4 style="color: var(--dorado-acento);">Tu Neto Real</h4>
+            <div class="dato-principal" style="color:var(--dorado-acento);" id="netoRealTotal">$0.00</div>
         </div>
     </div>
 </div>
 
+<!-- ================= PESTAÑA 2: AGENDA ================= -->
 <div id="tab-agenda" class="modulo-admin">
-    <h2>Agenda de Turnos</h2>
-    
+    <h2>Agenda e Historial</h2>
     <div class="seccion-bloque">
-        <h3>Filtro de Fechas</h3>
+        <h3>Filtro por Día Específico</h3>
         <div style="display:flex; gap:10px;">
-            <input type="date" id="filtroFecha" style="background:var(--fondo-input); color:#fff; padding:12px; border:1px solid var(--borde-sutil); border-radius:8px; width:100%;">
-            <button id="btnVerTodo" style="background:#1a1a1a; color:#fff; border:1px solid var(--borde-sutil); border-radius:8px; padding:0 15px; cursor:pointer;">Limpiar</button>
+            <input type="date" id="filtroFechaAgenda" style="background:var(--fondo-input); color:#fff; padding:12px; border:1px solid var(--borde-sutil); border-radius:8px; width:100%;">
+            <button id="btnVerTodoAgenda" style="background:#1a1a1a; color:#fff; border:1px solid var(--borde-sutil); border-radius:8px; padding:0 15px; cursor:pointer;">Limpiar</button>
         </div>
     </div>
 
@@ -198,9 +199,7 @@
         <h3>Historial Operativo</h3>
         <div class="contenedor-tabla">
             <table>
-                <thead>
-                    <tr><th>Cliente</th><th>Servicio</th><th>Hora</th><th>Acción</th></tr>
-                </thead>
+                <thead><tr><th>Cliente</th><th>Servicio</th><th>Hora</th><th>Acción</th></tr></thead>
                 <tbody id="tabla-citas-cuerpo">
                     <tr><td colspan="4" style="text-align:center; padding:20px;">Cargando...</td></tr>
                 </tbody>
@@ -230,9 +229,9 @@
     </div>
 </div>
 
+<!-- ================= PESTAÑA 3: FINANZAS ================= -->
 <div id="tab-finanzas" class="modulo-admin">
     <h2>Gestión Financiera</h2>
-
     <div class="seccion-bloque">
         <h3>Registrar Gasto</h3>
         <form class="form-manual" id="formGastos" onsubmit="guardarGastoManual(event)">
@@ -242,29 +241,16 @@
             <button type="submit" class="btn-guardar" style="background:#333; color:#fff;">Registrar Gasto</button>
         </form>
     </div>
-
-    <div class="seccion-bloque">
-        <h3>Calculadora Rápida</h3>
-        <div style="display:flex; gap:10px; align-items:center;">
-            <input type="number" id="calcN1" placeholder="Val A" style="width:30%; padding:10px; background:var(--fondo-input); color:#fff; border:1px solid var(--borde-sutil); border-radius:6px;">
-            <select id="calcOperacion" style="padding:10px; background:var(--fondo-input); color:#fff; border:1px solid var(--borde-sutil); border-radius:6px;">
-                <option value="+">+</option><option value="-">-</option><option value="*">×</option><option value="/">÷</option>
-            </select>
-            <input type="number" id="calcN2" placeholder="Val B" style="width:30%; padding:10px; background:var(--fondo-input); color:#fff; border:1px solid var(--borde-sutil); border-radius:6px;">
-            <div id="calcResultado" style="font-weight:bold; color:var(--dorado-acento); font-size:1.2rem; margin-left:auto;">0.00</div>
-        </div>
-    </div>
 </div>
 
+<!-- ================= PESTAÑA 4: CLIENTES ================= -->
 <div id="tab-clientes" class="modulo-admin">
-    <h2>Fidelidad y Frecuencia</h2>
+    <h2>Fidelidad de Clientes</h2>
     <div class="seccion-bloque">
         <p class="subtitulo" style="text-align:left; margin-bottom:10px;">Clientes ordenados por número de visitas.</p>
         <div class="contenedor-tabla">
             <table>
-                <thead>
-                    <tr><th>Cliente</th><th>Visitas</th><th>Última Vez</th><th>Detalle</th></tr>
-                </thead>
+                <thead><tr><th>Cliente</th><th>Visitas</th><th>Última Vez</th><th>Detalle</th></tr></thead>
                 <tbody id="tabla-frecuencia-cuerpo">
                     <tr><td colspan="4" style="text-align:center; padding:20px;">Calculando...</td></tr>
                 </tbody>
@@ -277,7 +263,6 @@
     // --- VARIABLES GLOBALES ---
     const API_KEY_FIREBASE = 'AIzaSyBKrJD4VAzOkvbCay-C8Dxsg3gsUkAt4EA'; 
     const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
-    let miGrafico = null;
     let todasLasCitas = [];
     let todosLosGastos = [];
     let tokenAuth = sessionStorage.getItem('tokenAdminVictor');
@@ -290,8 +275,10 @@
         boton.classList.add('active');
     }
 
-    // --- LÓGICA DE MODAL ---
-    function abrirModal(idCita) {
+    // --- LÓGICA DE MODALES ---
+    function cerrarModal(idModal) { document.getElementById(idModal).style.display = 'none'; }
+
+    function abrirModalDetalle(idCita) {
         const cita = todasLasCitas.find(c => c.id === idCita);
         if(!cita) return;
         document.getElementById('modalNombreCliente').textContent = cita.cliente_nombre || 'Sin Nombre';
@@ -300,11 +287,24 @@
         document.getElementById('modalFecha').textContent = `${cita.cita_fecha} / ${cita.cita_hora || ''}`;
         document.getElementById('modalEstado').textContent = cita.estado || 'Atendido';
         document.getElementById('modalPatrocinio').textContent = cita.patrocinado ? 'Sí (Neto 100%)' : 'No (40/60)';
+        
+        // Preparar botón para abrir la edición
+        document.getElementById('btnAbrirEdicion').onclick = () => abrirModalEditar(idCita);
         document.getElementById('modalDetalle').style.display = 'flex';
     }
-    function cerrarModal() { document.getElementById('modalDetalle').style.display = 'none'; }
 
-    // --- AUTENTICACIÓN FIREBASE REST API ---
+    function abrirModalEditar(idCita) {
+        const cita = todasLasCitas.find(c => c.id === idCita);
+        if(!cita) return;
+        cerrarModal('modalDetalle');
+        document.getElementById('editId').value = cita.id;
+        document.getElementById('editNombre').value = cita.cliente_nombre || '';
+        document.getElementById('editTelefono').value = cita.cliente_telefono || '';
+        document.getElementById('editServicio').value = cita.servicio || '';
+        document.getElementById('modalEditar').style.display = 'flex';
+    }
+
+    // --- AUTENTICACIÓN FIREBASE ---
     const btnIngresar = document.getElementById('btnIngresar');
     btnIngresar.addEventListener('click', async () => {
         const email = document.getElementById('campoEmail').value;
@@ -338,37 +338,20 @@
         location.reload();
     });
 
-    // VERIFICAR SESIÓN ACTIVA AL CARGAR
-    window.onload = () => {
-        if(tokenAuth) { iniciarPanel(); }
-    };
+    window.onload = () => { if(tokenAuth) iniciarPanel(); };
 
     function iniciarPanel() {
         document.getElementById('pantallaLogin').style.display = 'none';
         document.getElementById('btnCerrarSesion').style.display = 'block';
         document.getElementById('navegacionTabs').style.display = 'flex';
         document.getElementById('gFecha').value = obtenerFechaHoy();
-        document.getElementById('filtroFecha').value = obtenerFechaHoy();
         
         cargarDatosDesdeServidor();
         
-        document.getElementById('filtroFecha').addEventListener('change', e => procesarVistas(e.target.value));
-        document.getElementById('btnVerTodo').addEventListener('click', () => {
-            document.getElementById('filtroFecha').value = '';
-            procesarVistas('');
-        });
-        document.getElementById('selectorPeriodoGlobal').addEventListener('change', e => procesarMetricasGlobales(e.target.value));
-        
-        // Calculadora
-        ['calcN1', 'calcN2', 'calcOperacion'].forEach(id => {
-            document.getElementById(id).addEventListener('input', () => {
-                const n1 = parseFloat(document.getElementById('calcN1').value) || 0;
-                const n2 = parseFloat(document.getElementById('calcN2').value) || 0;
-                const op = document.getElementById('calcOperacion').value;
-                let res = 0;
-                if(op==='+') res=n1+n2; else if(op==='-') res=n1-n2; else if(op==='*') res=n1*n2; else if(op==='/') res=n2!==0?n1/n2:0;
-                document.getElementById('calcResultado').textContent = res.toFixed(2);
-            });
+        document.getElementById('filtroFechaAgenda').addEventListener('change', e => renderizarTablaAgenda(e.target.value));
+        document.getElementById('btnVerTodoAgenda').addEventListener('click', () => {
+            document.getElementById('filtroFechaAgenda').value = '';
+            renderizarTablaAgenda('');
         });
     }
 
@@ -377,10 +360,9 @@
         return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     }
 
-    // --- CARGA DE DATOS SEGUROS (USANDO EL TOKEN) ---
+    // --- CARGA DE DATOS SEGUROS ---
     async function cargarDatosDesdeServidor() {
         try {
-            // Añadimos ?auth=TOKEN a cada petición para pasar las reglas de seguridad
             const resCitas = await fetch(`${FIREBASE_URL}citas.json?auth=${tokenAuth}`);
             const resGastos = await fetch(`${FIREBASE_URL}gastos.json?auth=${tokenAuth}`);
             
@@ -390,8 +372,8 @@
             todasLasCitas = citasData ? Object.keys(citasData).map(id => ({ id, ...citasData[id] })).sort((a,b)=>new Date(b.cita_fecha)-new Date(a.cita_fecha)) : [];
             todosLosGastos = gastosData ? Object.keys(gastosData).map(id => ({ id, ...gastosData[id] })) : [];
 
-            procesarVistas(document.getElementById('filtroFecha').value);
-            procesarMetricasGlobales(document.getElementById('selectorPeriodoGlobal').value);
+            renderizarTablaAgenda(document.getElementById('filtroFechaAgenda').value);
+            procesarMetricasGlobales(); // Calcula todo sin filtro la primera vez
             calcularFrecuencias();
         } catch (error) {
             console.error("Error cargando datos protegidos", error);
@@ -404,16 +386,61 @@
         return match ? parseInt(match[1], 10) : 0;
     }
 
-    function procesarVistas(fechaFiltro) {
-        renderizarTablaAgenda(fechaFiltro);
-        calcularCierreCaja(fechaFiltro || obtenerFechaHoy());
+    // --- CÁLCULO MÉTRICAS GLOBALES CON RANGO DE FECHAS ---
+    function limpiarMetricasGlobales() {
+        document.getElementById('fechaInicioGlobal').value = '';
+        document.getElementById('fechaFinGlobal').value = '';
+        procesarMetricasGlobales();
+    }
+
+    function procesarMetricasGlobales() {
+        const strInicio = document.getElementById('fechaInicioGlobal').value;
+        const strFin = document.getElementById('fechaFinGlobal').value;
+
+        // Si no hay filtro, tomamos desde el año 2000 hasta el 2100 para que muestre ABSOLUTAMENTE TODO
+        const fechaInicio = strInicio ? new Date(strInicio + 'T00:00:00') : new Date('2000-01-01T00:00:00');
+        const fechaFin = strFin ? new Date(strFin + 'T23:59:59') : new Date('2100-01-01T23:59:59');
+
+        let cTotal = 0, iBarberia = 0, iVictor = 0, gTotal = 0;
+        let fechasRegistradas = new Set(); // Para contar los días reales trabajados
+
+        todasLasCitas.forEach(cita => {
+            if((cita.estado||'Atendido') !== 'Atendido') return;
+            const fCita = new Date(cita.cita_fecha + 'T12:00:00'); // Mediodía para evitar problemas de zona horaria
+            
+            if(fCita >= fechaInicio && fCita <= fechaFin) {
+                cTotal++;
+                fechasRegistradas.add(cita.cita_fecha); // Añade la fecha al set
+                const precio = extraerPrecio(cita.servicio);
+                if(cita.patrocinado) iVictor += precio; 
+                else { iBarberia += precio * 0.40; iVictor += precio * 0.60; }
+            }
+        });
+
+        todosLosGastos.forEach(g => {
+            const fGasto = new Date(g.fecha + 'T12:00:00');
+            if(fGasto >= fechaInicio && fGasto <= fechaFin) {
+                gTotal += parseFloat(g.monto || 0);
+            }
+        });
+
+        // Calcular el promedio (Cortes totales / Días trabajados en ese rango)
+        let diasTrabajados = fechasRegistradas.size;
+        let promedio = diasTrabajados > 0 ? (cTotal / diasTrabajados) : 0;
+
+        document.getElementById('cortesTotales').textContent = cTotal;
+        document.getElementById('promedioCortes').textContent = promedio.toFixed(1);
+        document.getElementById('totalBarberia').textContent = `$${iBarberia.toFixed(2)}`;
+        document.getElementById('totalVictor').textContent = `$${iVictor.toFixed(2)}`;
+        document.getElementById('totalGastos').textContent = `$${gTotal.toFixed(2)}`;
+        document.getElementById('netoRealTotal').textContent = `$${(iVictor - gTotal).toFixed(2)}`;
     }
 
     // --- RENDERIZADO DE AGENDA ---
-    function renderizarTablaAgenda(fecha) {
+    function renderizarTablaAgenda(fechaFiltro) {
         const tbody = document.getElementById('tabla-citas-cuerpo');
         tbody.innerHTML = '';
-        const filtradas = fecha ? todasLasCitas.filter(c => c.cita_fecha === fecha) : todasLasCitas;
+        const filtradas = fechaFiltro ? todasLasCitas.filter(c => c.cita_fecha === fechaFiltro) : todasLasCitas;
 
         if(filtradas.length === 0) {
             tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px;">No hay registros.</td></tr>';
@@ -423,79 +450,13 @@
         filtradas.forEach(cita => {
             const tr = document.createElement('tr');
             let colorEstado = cita.estado === 'Cancelado' ? 'var(--rojo-alerta)' : (cita.estado === 'Pendiente' ? 'var(--naranja-alerta)' : 'var(--verde-exito)');
-            
             tr.innerHTML = `
                 <td data-label="Cliente"><strong>${cita.cliente_nombre || 'Sin nombre'}</strong><br><span style="color:${colorEstado}; font-size:0.7rem;">● ${cita.estado||'Atendido'}</span></td>
                 <td data-label="Servicio">${cita.servicio}</td>
                 <td data-label="Hora">${cita.cita_fecha.split('-').reverse().join('/')} <br> ${cita.cita_hora||''}</td>
-                <td data-label="Acción"><button class="btn-detalle" onclick="abrirModal('${cita.id}')">Ver Detalle</button></td>
+                <td data-label="Acción"><button class="btn-accion" onclick="abrirModalDetalle('${cita.id}')">Opciones</button></td>
             `;
             tbody.appendChild(tr);
-        });
-    }
-
-    // --- CÁLCULOS FINANCIEROS Y GRÁFICAS ---
-    function calcularCierreCaja(fecha) {
-        let tBarberia = 0, tVictor = 0, tGastos = 0;
-        
-        todasLasCitas.filter(c => c.cita_fecha === fecha && (c.estado||'Atendido') === 'Atendido').forEach(c => {
-            const precio = extraerPrecio(c.servicio);
-            if(c.patrocinado) { tVictor += precio; } 
-            else { tBarberia += precio * 0.40; tVictor += precio * 0.60; }
-        });
-
-        todosLosGastos.filter(g => g.fecha === fecha).forEach(g => tGastos += parseFloat(g.monto||0));
-
-        document.getElementById('gananciaBarberia').textContent = `$${tBarberia.toFixed(2)}`;
-        document.getElementById('gananciaVictor').textContent = `$${tVictor.toFixed(2)}`;
-        document.getElementById('totalGastosCierre').textContent = `$${tGastos.toFixed(2)}`;
-        document.getElementById('netoRealCalculado').textContent = `$${(tVictor - tGastos).toFixed(2)}`;
-    }
-
-    function procesarMetricasGlobales(periodo) {
-        const hoy = new Date();
-        let cGlobal = 0, iBarb = 0, iVict = 0;
-        let etiquetas = [], datos = [];
-
-        if(periodo === 'mensual') {
-            const diasMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate();
-            for(let i=1; i<=diasMes; i++) etiquetas.push(i.toString());
-            datos = new Array(diasMes).fill(0);
-        } else {
-            etiquetas = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
-            datos = new Array(7).fill(0);
-        }
-
-        todasLasCitas.forEach(cita => {
-            if(!cita.cita_fecha || (cita.estado||'Atendido') !== 'Atendido') return;
-            const fechaCita = new Date(cita.cita_fecha + 'T00:00:00'); // Evitar desfase horario
-            const precio = extraerPrecio(cita.servicio);
-
-            let aplica = false, idx = 0;
-            if(periodo === 'mensual' && fechaCita.getMonth() === hoy.getMonth() && fechaCita.getFullYear() === hoy.getFullYear()) {
-                aplica = true; idx = fechaCita.getDate() - 1;
-            } else if (periodo === 'semanal') {
-                // Logica simplificada semanal (asume semana actual)
-                const inicioSemana = new Date(hoy); inicioSemana.setDate(hoy.getDate() - hoy.getDay() + 1);
-                if(fechaCita >= inicioSemana) { aplica = true; idx = fechaCita.getDay()===0 ? 6 : fechaCita.getDay()-1; }
-            }
-
-            if(aplica) {
-                cGlobal++; datos[idx] += precio;
-                if(cita.patrocinado) iVict += precio; else { iBarb += precio*0.4; iVict += precio*0.6; }
-            }
-        });
-
-        document.getElementById('cortesGlobales').textContent = cGlobal;
-        document.getElementById('ingresosBarberiaGlobales').textContent = `$${iBarb.toFixed(2)}`;
-        document.getElementById('ingresosBarberoGlobales').textContent = `$${iVict.toFixed(2)}`;
-
-        // Render Gráfica
-        if(miGrafico) miGrafico.destroy();
-        miGrafico = new Chart(document.getElementById('graficaIngresos').getContext('2d'), {
-            type: 'bar',
-            data: { labels: etiquetas, datasets: [{ data: datos, backgroundColor: '#d4af37', borderRadius: 4 }] },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } } }
         });
     }
 
@@ -518,20 +479,15 @@
                 <td data-label="Cliente"><strong>${c.nombre}</strong> ${c.visitas>2?'<span style="color:var(--dorado-acento); font-size:0.7rem;">★</span>':''}</td>
                 <td data-label="Visitas" style="font-weight:bold;">${c.visitas}</td>
                 <td data-label="Última Vez">${c.ultima.split('-').reverse().join('/')}</td>
-                <td data-label="Detalle"><button class="btn-detalle" onclick="abrirModal('${c.id}')">Ver Último</button></td>
+                <td data-label="Detalle"><button class="btn-accion" onclick="abrirModalDetalle('${c.id}')">Ver/Editar</button></td>
             </tr>`;
         });
     }
 
-    // --- GUARDAR DATOS (ESCRITURA PROTEGIDA O PUBLICA DEPENDIENDO DE TUS REGLAS) ---
+    // --- GUARDAR Y ACTUALIZAR DATOS ---
     window.guardarGastoManual = async function(e) {
         e.preventDefault();
-        const obj = {
-            concepto: document.getElementById('gConcepto').value,
-            monto: parseFloat(document.getElementById('gMonto').value),
-            fecha: document.getElementById('gFecha').value
-        };
-        // Para gastos exigimos el auth token
+        const obj = { concepto: document.getElementById('gConcepto').value, monto: parseFloat(document.getElementById('gMonto').value), fecha: document.getElementById('gFecha').value };
         await fetch(`${FIREBASE_URL}gastos.json?auth=${tokenAuth}`, { method: 'POST', body: JSON.stringify(obj) });
         document.getElementById('formGastos').reset(); document.getElementById('gFecha').value = obtenerFechaHoy();
         cargarDatosDesdeServidor();
@@ -549,10 +505,32 @@
             patrocinado: document.getElementById('mPatrocinado').checked,
             estado: 'Atendido'
         };
-        // Las reglas de la DB permiten a cualquiera escribir en citas, pero por buena practica mandamos el token
         await fetch(`${FIREBASE_URL}citas.json?auth=${tokenAuth}`, { method: 'POST', body: JSON.stringify(obj) });
         document.getElementById('formManual').reset();
         cargarDatosDesdeServidor();
+    }
+
+    window.guardarEdicion = async function(e) {
+        e.preventDefault();
+        const idCita = document.getElementById('editId').value;
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.textContent = 'Actualizando...';
+        
+        const obj = {
+            cliente_nombre: document.getElementById('editNombre').value,
+            cliente_telefono: document.getElementById('editTelefono').value,
+            servicio: document.getElementById('editServicio').value
+        };
+
+        // Método PATCH para actualizar solo los campos enviados sin borrar el resto
+        await fetch(`${FIREBASE_URL}citas/${idCita}.json?auth=${tokenAuth}`, { 
+            method: 'PATCH', 
+            body: JSON.stringify(obj) 
+        });
+
+        cerrarModal('modalEditar');
+        btn.textContent = 'Actualizar Cambios';
+        cargarDatosDesdeServidor(); // Recarga la info para ver los cambios
     }
 </script>
 </body>
