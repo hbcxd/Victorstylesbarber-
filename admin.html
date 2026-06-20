@@ -12,688 +12,96 @@
             --fondo-input: #161616;
             --gris-texto: #f9fafb;
             --gris-secundario: #a1a1aa;
-            
-            /* Nueva Paleta Elegante: Dorado, Blanco y Negro */
             --dorado-acento: #d4af37;
             --dorado-hover: #b58d22;
-            
             --verde-exito: #10b981;
-            --azul-enlace: #3b82f6;
-            --naranja-alerta: #f59e0b;
             --rojo-alerta: #ef4444; 
-            
+            --naranja-alerta: #f59e0b;
             --borde-sutil: rgba(255, 255, 255, 0.05);
             --borde-enfoque: rgba(212, 175, 55, 0.4);
             --shadow-premium: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: '-apple-system', BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif; }
 
-        body {
-            background-color: var(--fondo-oscuro);
-            color: var(--gris-texto);
-            padding-top: 95px; 
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            scroll-behavior: smooth;
-        }
+        body { background-color: var(--fondo-oscuro); color: var(--gris-texto); padding-top: 85px; -webkit-font-smoothing: antialiased; }
 
-        h2, h3 {
-            color: #ffffff;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
+        h2 { font-size: 1.5rem; text-align: center; font-weight: 800; margin-bottom: 6px; background: linear-gradient(180deg, #ffffff 0%, #d4af37 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 2px;}
+        h3 { font-size: 0.95rem; font-weight: 700; border-bottom: 1px solid var(--borde-sutil); padding-bottom: 14px; margin-bottom: 14px; color: rgba(255, 255, 255, 0.9); text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center;}
+        .subtitulo { text-align: center; color: var(--gris-secundario); margin-bottom: 20px; font-size: 0.8rem; letter-spacing: 0.8px; }
 
-        h2 { 
-            font-size: 1.5rem; 
-            text-align: center;
-            font-weight: 800;
-            margin-bottom: 6px;
-            background: linear-gradient(180deg, #ffffff 0%, #d4af37 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        /* HEADER Y MENÚ */
+        header { display: flex; justify-content: center; align-items: center; padding: 0 5%; background-color: rgba(10, 10, 10, 0.85); backdrop-filter: blur(20px); position: fixed; width: 100%; top: 0; left: 0; z-index: 1000; border-bottom: 1px solid var(--borde-sutil); height: 70px; }
+        .logo img { height: 35px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)); }
+        .btn-cerrar-sesion { position: absolute; right: 5%; background: transparent; border: 1px solid var(--dorado-acento); color: var(--dorado-acento); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .btn-cerrar-sesion:hover { background: var(--dorado-acento); color: #000; }
+
+        /* SISTEMA DE PESTAÑAS (TABS) */
+        .tabs-container { display: flex; gap: 10px; overflow-x: auto; padding: 0 5% 15px 5%; margin-bottom: 20px; border-bottom: 1px solid var(--borde-sutil); }
+        .tabs-container::-webkit-scrollbar { display: none; }
+        .tab-btn { background: transparent; color: var(--gris-secundario); border: none; padding: 10px 15px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; position: relative; white-space: nowrap; transition: color 0.3s; }
+        .tab-btn:hover { color: #fff; }
+        .tab-btn.active { color: var(--dorado-acento); }
+        .tab-btn.active::after { content: ''; position: absolute; bottom: -16px; left: 0; width: 100%; height: 3px; background: var(--dorado-acento); border-radius: 3px 3px 0 0; }
         
-        h3 { 
-            font-size: 0.95rem; 
-            font-weight: 700;
-            text-align: left; 
-            border-bottom: 1px solid var(--borde-sutil); 
-            padding-bottom: 14px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            color: rgba(255, 255, 255, 0.9);
-        }
+        .modulo-admin { display: none; animation: fadeIn 0.4s ease; padding: 0 5%; max-width: 1150px; margin: 0 auto; }
+        .modulo-admin.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .subtitulo {
-            text-align: center;
-            color: var(--gris-secundario);
-            margin-bottom: 20px;
-            font-size: 0.8rem;
-            letter-spacing: 0.8px;
-            padding: 0 10px;
-            font-weight: 400;
-        }
-
-        /* BARRA DE NAVEGACIÓN RÁPIDA PARA MÓVILES */
-        .nav-rapida-movil {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding: 5px 5% 15px 5%;
-            margin-bottom: 15px;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
-        }
-        .nav-rapida-movil::-webkit-scrollbar { display: none; }
-        .nav-rapida-movil a {
-            background: #161616;
-            color: var(--gris-secundario);
-            padding: 8px 16px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border: 1px solid var(--borde-sutil);
-            white-space: nowrap;
-            transition: all 0.2s ease;
-        }
-        .nav-rapida-movil a:hover {
-            background: var(--dorado-acento);
-            color: #000;
-            border-color: var(--dorado-acento);
-        }
-
-        /* BOTONES DE MINIMIZAR SOFISTICADOS */
-        .btn-colapsar {
-            background: #1a1a1a;
-            border: 1px solid var(--borde-sutil);
-            color: var(--gris-secundario);
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.65rem;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .btn-colapsar:hover { 
-            color: #fff; 
-            border-color: rgba(212, 175, 55, 0.4);
-            background: #222;
-        }
-
-        .contenido-colapsable {
-            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
-            max-height: 3000px;
-            opacity: 1;
-            overflow: hidden;
-        }
-        .contenido-colapsable.minimizado {
-            max-height: 0 !important;
-            opacity: 0 !important;
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-
-        /* INICIO DE SESIÓN */
-        .login-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(6, 6, 6, 0.95);
-            backdrop-filter: blur(15px);
-            z-index: 2000; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 24px;
-        }
-
-        .login-box {
-            background-color: var(--fondo-tarjeta);
-            border: 1px solid var(--borde-sutil);
-            padding: 40px 30px;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 380px;
-            text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
-            border-top: 3px solid var(--dorado-acento);
-        }
-
-        .login-box input {
-            width: 100%;
-            padding: 16px;
-            background-color: var(--fondo-input);
-            border: 1px solid var(--borde-sutil);
-            color: #ffffff;
-            border-radius: 8px;
-            outline: none;
-            text-align: center;
-            font-size: 1.4rem;
-            letter-spacing: 6px;
-            margin-bottom: 24px;
-            transition: all 0.25s;
-        }
-        .login-box input:focus { 
-            border-color: var(--dorado-acento); 
-            box-shadow: 0 0 0 3px var(--borde-enfoque);
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 16px;
-            background-color: var(--dorado-acento);
-            color: #000;
-            border: none;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.25s, transform 0.2s;
-        }
+        /* LOGIN SEGURO */
+        .login-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(6, 6, 6, 0.98); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 24px; }
+        .login-box { background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); padding: 40px 30px; border-radius: 16px; width: 100%; max-width: 380px; text-align: center; border-top: 3px solid var(--dorado-acento); box-shadow: var(--shadow-premium); }
+        .login-box input { width: 100%; padding: 14px; background-color: var(--fondo-input); border: 1px solid var(--borde-sutil); color: #fff; border-radius: 8px; outline: none; margin-bottom: 16px; font-size: 0.9rem; text-align: center;}
+        .login-box input:focus { border-color: var(--dorado-acento); box-shadow: 0 0 0 3px var(--borde-enfoque); }
+        .btn-login { width: 100%; padding: 14px; background-color: var(--dorado-acento); color: #000; border: none; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; border-radius: 8px; cursor: pointer; transition: background 0.25s; }
         .btn-login:hover { background-color: var(--dorado-hover); }
-        .btn-login:active { transform: scale(0.98); }
-        .error-login { color: var(--rojo-alerta); font-size: 0.8rem; margin-top: 14px; display: none; font-weight: 600; letter-spacing: 0.5px; }
+        .error-login { color: var(--rojo-alerta); font-size: 0.8rem; margin-top: 14px; display: none; font-weight: 600; }
 
-        /* NAVEGACIÓN */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;        
-            padding: 0 5%;          
-            background-color: rgba(10, 10, 10, 0.75);  
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            position: fixed;            
-            width: 100%;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-            border-bottom: 1px solid var(--borde-sutil);
-            height: 75px;
-        }
+        /* ESTRUCTURAS GENERALES */
+        .seccion-bloque { background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-radius: 16px; padding: 22px; margin-bottom: 24px; box-shadow: var(--shadow-premium); }
+        .grid-contable { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 24px; }
+        .tarjeta-contable { background-color: var(--fondo-input); border: 1px solid var(--borde-sutil); border-radius: 12px; padding: 18px 14px; text-align: center; position: relative; }
+        .tarjeta-contable h4 { font-size: 0.65rem; text-transform: uppercase; color: var(--gris-secundario); margin-bottom: 6px; font-weight: 600; letter-spacing: 1px;}
+        .tarjeta-contable .dato-principal { font-size: 1.5rem; font-weight: 800; color: #ffffff; }
 
-        .menu-hamburguesa {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 24px;
-            height: 14px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            z-index: 1100;
-        }
-
-        .menu-hamburguesa span {
-            width: 100%;
-            height: 2px;
-            background-color: var(--dorado-acento);
-            border-radius: 2px;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-        }
-
-        .menu-hamburguesa.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
-        .menu-hamburguesa.open span:nth-child(2) { opacity: 0; }
-        .menu-hamburguesa.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
-
-        .menu-desplegable {
-            position: fixed;
-            top: 0;
-            left: -290px; 
-            width: 290px;
-            height: 100vh;
-            background-color: #0b0b0b;
-            border-right: 1px solid var(--borde-sutil);
-            box-shadow: 20px 0 40px rgba(0, 0, 0, 0.9);
-            z-index: 1050;
-            display: flex;
-            flex-direction: column;
-            padding: 100px 35px 40px 35px;
-            transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .menu-desplegable.open { left: 0; }
-        .menu-desplegable a {
-            color: var(--gris-secundario);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            padding: 18px 0;
-            border-bottom: 1px solid var(--borde-sutil);
-            transition: color 0.2s ease;
-        }
-        .menu-desplegable a:hover { color: var(--dorado-acento); }
-        .menu-desplegable .link-admin-menu { 
-            margin-top: auto; 
-            color: var(--dorado-acento); 
-            font-size: 0.8rem; 
-            border: 1px solid rgba(212, 175, 55, 0.3); 
-            border-radius: 8px; 
-            text-align: center; 
-            padding: 14px; 
-            background-color: rgba(212, 175, 55, 0.05); 
-            transition: all 0.25s; 
-        }
-        .menu-desplegable .link-admin-menu:hover { 
-            background-color: var(--dorado-acento); 
-            color: #000;
-        }
-        
-        .logo img { height: 40px; width: auto; display: block; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)); }
-        .menu-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.7); z-index: 1040; display: none; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
-        .menu-overlay.show { display: block; }
-
-        /* CONTENEDORES Y BLOQUES */
-        .admin-section {
-            padding: 10px 5% 20px 5%;
-            max-width: 1150px;
-            margin: 0 auto;
-        }
-
-        .seccion-bloque {
-            background-color: var(--fondo-tarjeta);
-            border: 1px solid var(--borde-sutil);
-            border-radius: 16px;
-            padding: 22px;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow-premium);
-        }
-
-        @media (min-width: 768px) {
-            .seccion-bloque { padding: 30px; margin-bottom: 30px; }
-            h2 { font-size: 1.8rem; }
-            h3 { font-size: 1rem; }
-            .subtitulo { font-size: 0.85rem; margin-bottom: 25px; }
-            .nav-rapida-movil { display: none; }
-        }
-
-        /* GRID CONTABLE RESPONSIVE AUTO-FIT */
-        .grid-contable {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 14px;
-            margin-bottom: 24px;
-        }
-
-        .tarjeta-contable {
-            background-color: var(--fondo-tarjeta);
-            border: 1px solid var(--borde-sutil);
-            border-radius: 16px;
-            padding: 18px 14px;
-            text-align: center;
-            box-shadow: var(--shadow-premium);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .tarjeta-contable::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--dorado-acento), transparent);
-            opacity: 0.5;
-        }
-
-        .tarjeta-contable h4 { font-size: 0.65rem; letter-spacing: 1.2px; text-transform: uppercase; color: var(--gris-secundario); margin-bottom: 6px; font-weight: 600; }
-        .tarjeta-contable .dato-principal { font-size: 1.4rem; font-weight: 800; color: #ffffff; letter-spacing: -0.5px; }
-        .tarjeta-contable .monto-ingreso { font-size: 0.88rem; font-weight: 700; color: var(--verde-exito); margin-top: 4px; letter-spacing: -0.2px; }
-
-        @media (min-width: 768px) {
-            .tarjeta-contable { padding: 24px 20px; }
-            .tarjeta-contable h4 { font-size: 0.7rem; letter-spacing: 1.5px; }
-            .tarjeta-contable .dato-principal { font-size: 1.7rem; }
-            .tarjeta-contable .monto-ingreso { font-size: 1rem; margin-top: 6px; }
-        }
-
-        /* BARRA DE FILTRO */
-        .barra-filtro-principal {
-            background-color: var(--fondo-tarjeta);
-            border: 1px solid var(--borde-sutil);
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 24px;
-            display: flex;
-            flex-direction: column; 
-            gap: 14px;
-            box-shadow: var(--shadow-premium);
-        }
-
-        .contenedor-input-fecha {
-            display: flex;
-            flex-direction: column; 
-            gap: 8px;
-            width: 100%;
-        }
-
-        .barra-filtro-principal label {
-            font-size: 0.7rem;
-            color: var(--gris-secundario);
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        .barra-filtro-principal input[type="date"] {
-            background: var(--fondo-input) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23d4af37'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'/%3E%3C/svg%3E") no-repeat right 16px center;
-            background-size: 18px;
-            border: 1px solid var(--borde-sutil);
-            color: #fff;
-            padding: 14px;
-            border-radius: 10px;
-            outline: none;
-            font-size: 0.95rem;
-            font-weight: 600;
-            transition: all 0.25s ease;
-            width: 100%; 
-            cursor: pointer;
-            -webkit-appearance: none; 
-        }
-        .barra-filtro-principal input[type="date"]:focus { 
-            border-color: var(--dorado-acento); 
-            box-shadow: 0 0 0 3px var(--borde-enfoque);
-        }
-
-        .btn-reiniciar-premium {
-            background: #1a1a1a;
-            color: #fff;
-            padding: 14px;
-            border: 1px solid var(--borde-sutil);
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.25s ease;
-            width: 100%; 
-            text-align: center;
-        }
-        .btn-reiniciar-premium:hover { background: #222; border-color: var(--dorado-acento); }
-        .btn-reiniciar-premium:active { transform: scale(0.99); }
-
-        @media (min-width: 600px) {
-            .barra-filtro-principal { flex-direction: row; align-items: center; justify-content: space-between; padding: 16px 24px; }
-            .contenedor-input-fecha { flex-direction: row; align-items: center; gap: 14px; width: auto; }
-            .barra-filtro-principal input[type="date"] { width: 200px; padding: 12px 16px; }
-            .btn-reiniciar-premium { width: auto; padding: 12px 22px; font-size: 0.8rem; }
-        }
-
-        /* REPARTO DE GANANCIAS */
-        .seccion-reparto-ganancias {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-            margin-top: 18px;
-        }
-
-        @media (min-width: 480px) { .seccion-reparto-ganancias { grid-template-columns: repeat(2, 1fr); } }
-        @media (min-width: 768px) { .seccion-reparto-ganancias { grid-template-columns: repeat(4, 1fr); gap: 14px; } }
-
-        .tarjeta-ganancia {
-            background-color: #161616;
-            padding: 16px;
-            border-radius: 4px 12px 12px 4px;
-            border: 1px solid var(--borde-sutil);
-            border-left: 4px solid var(--dorado-acento);
-            position: relative;
-        }
-
-        .tarjeta-ganancia.barberia { border-left-color: var(--dorado-acento); }
-        .tarjeta-ganancia.neto { border-left-color: var(--verde-exito); }
-        .tarjeta-ganancia.deuda { border-left-color: var(--rojo-alerta); }
-        .tarjeta-ganancia.gastos { border-left-color: var(--naranja-alerta); }
-
-        .tarjeta-ganancia h5 { font-size: 0.65rem; text-transform: uppercase; color: var(--gris-secundario); margin-bottom: 6px; font-weight: 600; letter-spacing: 0.8px; }
-        .tarjeta-ganancia .monto-calculado { font-size: 1.25rem; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
-
-        .cierre-footer {
-            margin-top: 24px; 
-            padding-top: 24px; 
-            border-top: 1px solid var(--borde-sutil); 
-            display: flex; 
-            flex-direction: column; 
-            gap: 10px;
-            align-items: flex-start;
-        }
-        .cierre-footer-label { font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; color: var(--dorado-acento); }
-        .cierre-footer-monto { font-size: 1.65rem; font-weight: 800; color: #ffffff; letter-spacing: -0.8px; }
-
-        @media (min-width: 480px) {
-            .cierre-footer { flex-direction: row; justify-content: space-between; align-items: center; }
-            .cierre-footer-label { font-size: 0.8rem; }
-            .cierre-footer-monto { font-size: 2rem; }
-        }
-
-        /* FORMULARIOS */
-        .form-manual {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-top: 18px;
-        }
-
-        .calc-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-            margin-top: 18px;
-        }
-
-        @media (min-width: 500px) {
-            .calc-grid { grid-template-columns: 2fr 1fr 2fr 1.5fr; align-items: center; gap: 12px; }
-        }
-
-        .calc-resultado {
-            background: #161616;
-            border: 1px solid var(--borde-sutil);
-            padding: 14px;
-            border-radius: 10px;
-            text-align: center;
-            font-weight: 800;
-            color: var(--dorado-acento);
-            font-size: 1.15rem;
-            letter-spacing: -0.2px;
-        }
-
-        .form-grupo {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            width: 100%;
-        }
-
-        .form-grupo input, .form-grupo select, .calc-grid input, .calc-grid select {
-            background-color: var(--fondo-input);
-            border: 1px solid var(--borde-sutil);
-            color: #fff;
-            padding: 14px 16px;
-            border-radius: 10px;
-            outline: none;
-            font-size: 0.92rem;
-            width: 100%;
-            font-weight: 500;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            appearance: none; 
-            -webkit-appearance: none;
-        }
-        
-        .form-grupo select, .calc-grid select, .select-tabla {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23d4af37'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-            background-size: 16px;
-            padding-right: 44px;
-            cursor: pointer;
-        }
-
-        .form-grupo input:focus, .form-grupo select:focus, .calc-grid input:focus, .calc-grid select:focus, .select-tabla:focus { 
-            border-color: var(--dorado-acento);
-            box-shadow: 0 0 0 3px var(--borde-enfoque);
-        }
-
+        /* FORMULARIOS Y TABLAS */
+        .form-manual { display: flex; flex-direction: column; gap: 16px; }
+        .form-grupo { display: flex; flex-direction: column; gap: 8px; }
         .form-grupo label { font-size: 0.7rem; color: var(--gris-secundario); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+        .form-grupo input, .form-grupo select { background-color: var(--fondo-input); border: 1px solid var(--borde-sutil); color: #fff; padding: 14px; border-radius: 10px; outline: none; width: 100%; font-size: 0.9rem; }
+        .btn-guardar { background-color: var(--dorado-acento); color: #000; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-weight: 800; text-transform: uppercase; width: 100%; font-size: 0.8rem; letter-spacing: 1px; }
+        
+        .contenedor-tabla { width: 100%; overflow-x: auto; margin-top: 10px; border: 1px solid var(--borde-sutil); border-radius: 12px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; background: var(--fondo-input); }
+        th, td { padding: 14px; border-bottom: 1px solid var(--borde-sutil); font-size: 0.85rem; }
+        th { background-color: #1a1a1a; color: var(--gris-secundario); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px; }
+        .btn-detalle { background: transparent; border: 1px solid var(--dorado-acento); color: var(--dorado-acento); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
+        .btn-detalle:hover { background: var(--dorado-acento); color: #000; }
 
-        .checkbox-patrocinio {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 6px;
-            font-size: 0.85rem;
-            color: var(--gris-secundario);
-            cursor: pointer;
-            user-select: none;
-            font-weight: 500;
-        }
+        /* MODAL DE DETALLES */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 3000; display: none; justify-content: center; align-items: center; padding: 20px; }
+        .modal-box { background: var(--fondo-tarjeta); border: 1px solid var(--dorado-acento); border-radius: 16px; width: 100%; max-width: 400px; padding: 24px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.9); }
+        .modal-cerrar { position: absolute; top: 15px; right: 20px; background: transparent; border: none; color: var(--gris-secundario); font-size: 1.5rem; cursor: pointer; }
+        .modal-cerrar:hover { color: #fff; }
+        .modal-titulo { font-size: 1.2rem; color: #fff; border-bottom: 1px solid var(--borde-sutil); padding-bottom: 10px; margin-bottom: 15px; }
+        .modal-dato { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 5px;}
+        .modal-dato span:first-child { color: var(--gris-secundario); font-size: 0.8rem; text-transform: uppercase; font-weight: 600;}
+        .modal-dato span:last-child { color: #fff; font-weight: bold;}
 
-        .checkbox-patrocinio input { 
-            width: 20px; 
-            height: 20px; 
-            accent-color: var(--dorado-acento); 
-            cursor: pointer;
-            border-radius: 6px;
-        }
+        /* GRAFICA */
+        .grafica-container { position: relative; height: 250px; width: 100%; margin-top: 15px; }
+        
+        .seccion-reparto-ganancias { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 18px; }
+        .tarjeta-ganancia { background-color: #161616; padding: 16px; border-radius: 8px; border-left: 4px solid var(--dorado-acento); }
+        .tarjeta-ganancia h5 { font-size: 0.65rem; text-transform: uppercase; color: var(--gris-secundario); margin-bottom: 6px; }
+        .tarjeta-ganancia .monto-calculado { font-size: 1.2rem; font-weight: 800; color: #fff; }
 
-        .btn-guardar-manual {
-            background-color: var(--dorado-acento);
-            color: #000;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 800;
-            text-transform: uppercase;
-            width: 100%;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-            transition: all 0.25s ease;
-            text-align: center;
-        }
-        .btn-guardar-manual:hover { background-color: var(--dorado-hover); }
-        .btn-guardar-manual:active { transform: scale(0.99); }
-
-        @media (min-width: 768px) { .btn-guardar-manual { width: auto; align-self: flex-start; } }
-
-        /* TABLAS (HIGH-UI) */
-        .contenedor-tabla {
-            width: 100%;
-            background-color: var(--fondo-tarjeta);
-            border: 1px solid var(--borde-sutil);
-            border-radius: 16px;
-            margin-top: 18px;
-            overflow: hidden;
-            box-shadow: var(--shadow-premium);
-        }
-
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th, td { padding: 16px 20px; border-bottom: 1px solid var(--borde-sutil); font-size: 0.9rem; }
-        th { background-color: #161616; color: #ffffff; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1.2px; font-weight: 700; }
-        tr:last-child td { border-bottom: none; }
-        tr:hover { background-color: #151515; }
-
-        .select-tabla {
-            background-color: var(--fondo-input);
-            border: 1px solid var(--borde-sutil);
-            color: #fff;
-            padding: 10px 32px 10px 14px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            outline: none;
-            width: 100%;
-            cursor: pointer;
-            appearance: none;
-            -webkit-appearance: none;
-            transition: all 0.25s;
-        }
-
-        .btn-eliminar { 
-            background-color: rgba(239, 68, 68, 0.06); 
-            color: var(--rojo-alerta); 
-            border: 1px solid rgba(239, 68, 68, 0.15); 
-            padding: 10px 16px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-weight: 700; 
-            font-size: 0.75rem; 
-            text-transform: uppercase; 
-            letter-spacing: 0.5px; 
-            transition: all 0.25s; 
-            width: 100%; 
-            text-align: center; 
-        }
-        .btn-eliminar:hover { background-color: var(--rojo-alerta); color: white; border-color: var(--rojo-alerta); }
-        .sin-citas { text-align: center; padding: 45px; color: var(--gris-secundario); font-style: italic; font-size: 0.85rem; }
-
-        /* Contenedor de la Gráfica */
-        .grafica-container {
-            position: relative;
-            height: 300px;
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        @media screen and (max-width: 767px) {
-            .contenedor-tabla { background: transparent; border: none; margin-top: 14px; box-shadow: none; }
-            table, thead, tbody, th, td, tr { display: block; width: 100%; }
-            thead { display: none; } 
-            
-            tr {
-                background-color: var(--fondo-tarjeta);
-                border: 1px solid var(--borde-sutil);
-                border-radius: 16px;
-                margin-bottom: 16px;
-                padding: 14px 20px;
-                box-shadow: var(--shadow-premium);
-            }
-            
-            td {
-                text-align: right;
-                padding: 12px 0;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-                position: relative;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                font-size: 0.88rem;
-            }
-            
-            td:last-child { border-bottom: none; padding-top: 14px; }
-            
-            td::before {
-                content: attr(data-label);
-                float: left;
-                font-weight: 700;
-                text-transform: uppercase;
-                font-size: 0.68rem;
-                color: var(--gris-secundario);
-                letter-spacing: 0.8px;
-            }
-            
-            .select-tabla { max-width: 170px; }
-            .btn-eliminar { max-width: 100%; }
-        }
-
-        @media (min-width: 768px) {
-            .select-tabla { max-width: 150px; }
-            .btn-eliminar { width: auto; }
+        @media (max-width: 768px) {
+            table, thead, tbody, th, td, tr { display: block; width: 100%; border:none; }
+            thead { display: none; }
+            tr { border-bottom: 1px solid var(--dorado-acento); margin-bottom: 10px; padding: 10px; background: var(--fondo-input); border-radius: 8px;}
+            td { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);}
+            td::before { content: attr(data-label); font-weight: 700; text-transform: uppercase; font-size: 0.7rem; color: var(--gris-secundario); }
         }
     </style>
 </head>
@@ -701,798 +109,450 @@
 
 <div class="login-container" id="pantallaLogin">
     <div class="login-box">
-        <h3>Acceso Restringido</h3>
-        <p style="color:var(--gris-secundario); font-size:0.8rem; margin-bottom:24px; margin-top: 6px;">Introduce tu clave de administrador para gestionar la agenda.</p>
+        <h3 style="border:none; justify-content:center; margin-bottom:0;">Acceso Restringido</h3>
+        <p style="color:var(--gris-secundario); font-size:0.8rem; margin-bottom:24px;">Autenticación con Firebase</p>
+        <input type="email" id="campoEmail" placeholder="correo@ejemplo.com" autocomplete="email">
         <input type="password" id="campoClave" placeholder="••••••••" autocomplete="current-password">
         <button class="btn-login" id="btnIngresar">Ingresar</button>
-        <div class="error-login" id="mensajeError">Contraseña incorrecta. Inténtalo de nuevo.</div>
+        <div class="error-login" id="mensajeError">Datos incorrectos. Inténtalo de nuevo.</div>
     </div>
 </div>
 
-<div class="menu-overlay" id="menuOverlay"></div>
-
 <header>
-    <button class="menu-hamburguesa" id="btnHamburguesa">
-        <span></span><span></span><span></span>
-    </button>
-    <div class="logo"><img src="LOGO.png" alt="Logo Víctor Styles"></div>
+    <div class="logo"><img src="LOGO.png" alt="Víctor Styles"></div>
+    <button class="btn-cerrar-sesion" id="btnCerrarSesion" style="display:none;">Salir</button>
 </header>
 
-<nav class="menu-desplegable" id="menuLateral">
-    <a href="index.html#inicio">Inicio</a>
-    <a href="index.html#galeria">Cortes</a>
-    <a href="index.html#precios">Servicios</a>
-    <a href="index.html#agenda">Agendar Cita</a>
-    <a href="admin.html" class="link-admin-menu">Panel Administrador</a>
+<nav class="tabs-container" id="navegacionTabs" style="display:none;">
+    <button class="tab-btn active" onclick="cambiarTab('tab-dashboard', this)">Resumen</button>
+    <button class="tab-btn" onclick="cambiarTab('tab-agenda', this)">Agenda</button>
+    <button class="tab-btn" onclick="cambiarTab('tab-finanzas', this)">Finanzas</button>
+    <button class="tab-btn" onclick="cambiarTab('tab-clientes', this)">Clientes</button>
 </nav>
 
-<section class="admin-section">
-    <h2>Panel de Control Contable</h2>
-    <p class="subtitulo">Métricas de rendimiento, ingresos y balances de tu marca personal.</p>
-
-    <div class="nav-rapida-movil">
-        <a href="#bloque-cierre">Cierre Caja</a>
-        <a href="#bloque-gastos">Registrar Gasto</a>
-        <a href="#bloque-historial-gastos">Lista Gastos</a>
-        <a href="#bloque-calc">Calculadora</a>
-        <a href="#bloque-puerta">Cliente Puerta</a>
-        <a href="#bloque-frecuencia">Fidelidad</a>
-        <a href="#bloque-historial-turnos">Turnos</a>
+<div class="modal-overlay" id="modalDetalle">
+    <div class="modal-box">
+        <button class="modal-cerrar" onclick="cerrarModal()">×</button>
+        <div class="modal-titulo" id="modalNombreCliente">Nombre Cliente</div>
+        <div class="modal-dato"><span>Teléfono</span><span id="modalTlf"></span></div>
+        <div class="modal-dato"><span>Último Servicio</span><span id="modalServicio"></span></div>
+        <div class="modal-dato"><span>Fecha</span><span id="modalFecha"></span></div>
+        <div class="modal-dato"><span>Estado</span><span id="modalEstado"></span></div>
+        <div class="modal-dato"><span>Patrocinado</span><span id="modalPatrocinio"></span></div>
     </div>
+</div>
 
-    <div class="barra-filtro-principal" style="margin-bottom: 15px; flex-direction: row; justify-content: space-between; align-items: center;">
-        <h3 style="border: none; padding: 0; margin: 0; font-size: 1.1rem;">Rendimiento Global</h3>
-        <select id="selectorPeriodoGlobal" class="select-tabla" style="max-width: 150px; border-color: var(--dorado-acento); background-position: right 8px center;">
-            <option value="semanal">Esta Semana</option>
-            <option value="mensual" selected>Este Mes</option>
-            <option value="anual">Este Año</option>
+<div id="tab-dashboard" class="modulo-admin active">
+    <h2>Métricas Globales</h2>
+    <div class="form-grupo" style="margin-bottom: 20px;">
+        <select id="selectorPeriodoGlobal" style="border-color: var(--dorado-acento);">
+            <option value="semanal">Rendimiento: Esta Semana</option>
+            <option value="mensual" selected>Rendimiento: Este Mes</option>
+            <option value="anual">Rendimiento: Este Año</option>
         </select>
     </div>
 
-    <div class="grid-contable" id="gridMetricasDinamicas">
-        <div class="tarjeta-contable">
-            <h4 id="tituloCortesGlobales">Cortes (Mes)</h4>
-            <div class="dato-principal" id="cortesGlobales">0</div>
-        </div>
-        <div class="tarjeta-contable">
-            <h4 id="tituloIngresosBarberiaGlobales">Barbería (Mes)</h4>
-            <div class="dato-principal" style="color: var(--dorado-acento);" id="ingresosBarberiaGlobales">$0.00</div>
-        </div>
-        <div class="tarjeta-contable">
-            <h4 id="tituloIngresosBarberoGlobales">Tu Neto (Mes)</h4>
-            <div class="dato-principal" style="color: var(--verde-exito);" id="ingresosBarberoGlobales">$0.00</div>
-        </div>
-        <div class="tarjeta-contable">
-            <h4 id="tituloPromedioGlobal">Promedio (Mes)</h4>
-            <div class="dato-principal" id="promedioGlobal">0.0</div>
-            <div class="monto-ingreso" style="color: var(--gris-secundario); font-size: 0.6rem; font-weight:600; text-transform:uppercase; margin-top:4px; letter-spacing: 0.5px;">Cortes / Día</div>
-        </div>
+    <div class="grid-contable">
+        <div class="tarjeta-contable"><h4>Cortes</h4><div class="dato-principal" id="cortesGlobales">0</div></div>
+        <div class="tarjeta-contable"><h4>Barbería</h4><div class="dato-principal" style="color:var(--dorado-acento);" id="ingresosBarberiaGlobales">$0.00</div></div>
+        <div class="tarjeta-contable"><h4>Tu Neto</h4><div class="dato-principal" style="color:var(--verde-exito);" id="ingresosBarberoGlobales">$0.00</div></div>
     </div>
 
-    <div class="seccion-bloque" id="bloque-estadisticas">
-        <h3>Gráfica de Ingresos <span id="tituloGraficaSpan" style="color: var(--dorado-acento); font-weight:700; font-size:0.85rem; margin-left:6px; letter-spacing: 0.5px;">(Este Mes)</span></h3>
-        <div class="grafica-container">
-            <canvas id="graficaIngresos"></canvas>
-        </div>
+    <div class="seccion-bloque">
+        <h3>Gráfica de Producción</h3>
+        <div class="grafica-container"><canvas id="graficaIngresos"></canvas></div>
     </div>
 
-    <div class="barra-filtro-principal">
-        <div class="contenedor-input-fecha">
-            <label for="filtroFecha">Cierre del Día</label>
-            <input type="date" id="filtroFecha">
-        </div>
-        <button class="btn-reiniciar-premium" id="btnVerTodo">Ver Todo</button>
-    </div>
-
-    <div class="seccion-bloque" id="bloque-cierre">
-        <h3>Cierre de Caja <span id="fechaCierreTitulo" style="color: var(--dorado-acento); font-weight:700; font-size:0.85rem; margin-left:6px; letter-spacing: 0.5px;">(Hoy)</span></h3>
-        <p style="color: var(--gris-secundario); font-size: 0.75rem; margin-top: 6px; margin-bottom: 18px;">Métricas calculadas exclusivamente con trabajos en estado "Atendido".</p>
-        
+    <div class="seccion-bloque">
+        <h3>Cierre de Caja (Hoy)</h3>
         <div class="seccion-reparto-ganancias">
-            <div class="tarjeta-ganancia barberia">
-                <h5>Barbería (40%)</h5>
-                <div class="monto-calculado" id="gananciaBarberia">$0.00</div>
+            <div class="tarjeta-ganancia" style="border-left-color: var(--dorado-acento);">
+                <h5>Barbería (40%)</h5><div class="monto-calculado" id="gananciaBarberia">$0.00</div>
             </div>
-            <div class="tarjeta-ganancia neto">
-                <h5>Tu Neto Inicial (60%)</h5>
-                <div class="monto-calculado" id="gananciaVictor">$0.00</div>
+            <div class="tarjeta-ganancia" style="border-left-color: var(--verde-exito);">
+                <h5>Tu Neto Inicial (60%)</h5><div class="monto-calculado" id="gananciaVictor">$0.00</div>
             </div>
-            <div class="tarjeta-ganancia deuda">
-                <h5>Deuda Local (Patrocinios)</h5>
-                <div class="monto-calculado" id="deudaPatrocinios">$0.00</div>
-            </div>
-            <div class="tarjeta-ganancia gastos">
-                <h5>Gastos Descontados</h5>
-                <div class="monto-calculado" id="totalGastosCierre">$0.00</div>
+            <div class="tarjeta-ganancia" style="border-left-color: var(--naranja-alerta);">
+                <h5>Gastos Hoy</h5><div class="monto-calculado" id="totalGastosCierre">$0.00</div>
             </div>
         </div>
-        <div class="cierre-footer">
-            <span class="cierre-footer-label">Tu Neto Real (Ganancia - Gastos):</span>
-            <span id="netoRealCalculado" class="cierre-footer-monto">$0.00</span>
+        <div style="margin-top: 20px; border-top: 1px solid var(--borde-sutil); padding-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: var(--dorado-acento); font-size: 0.8rem; font-weight: bold; text-transform: uppercase;">Neto Real:</span>
+            <span id="netoRealCalculado" style="font-size: 1.8rem; font-weight: 900; color: #fff;">$0.00</span>
         </div>
     </div>
+</div>
 
-    <div class="seccion-bloque" id="bloque-gastos">
-        <h3>Registrar Gasto o Egreso</h3>
-        <form class="form-manual" id="formGastos" onsubmit="guardarGastoManual(event)">
-            <div class="form-grupo">
-                <label for="gConcepto">Concepto / Producto</label>
-                <input type="text" id="gConcepto" placeholder="Ej. Cuchillas, Papel de cuello, Cera" required>
-            </div>
-            <div class="form-grupo">
-                <label for="gMonto">Monto gastado ($)</label>
-                <input type="number" id="gMonto" step="0.01" placeholder="Ej. 5.00" required>
-            </div>
-            <div class="form-grupo">
-                <label for="gFecha">Fecha del Gasto</label>
-                <input type="date" id="gFecha" required>
-            </div>
-            <button type="submit" class="btn-guardar-manual" style="background-color: var(--gris-secundario); color:#000;">Registrar Gasto</button>
-        </form>
-    </div>
-
-    <div class="seccion-bloque" id="bloque-historial-gastos">
-        <h3>
-            Historial de Egresos y Gastos
-            <button class="btn-colapsar" onclick="toggleSeccion('contenidoGastos', this)">▼</button>
-        </h3>
-        <div id="contenidoGastos" class="contenido-colapsable">
-            <p style="color: var(--gris-secundario); font-size: 0.75rem; margin-bottom: 6px; margin-top:14px;">Egresos registrados según el filtro de fecha seleccionado.</p>
-            <div class="contenedor-tabla">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Concepto</th>
-                            <th>Monto</th>
-                            <th>Fecha</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-gastos-cuerpo">
-                        <tr><td colspan="4" class="sin-citas">Cargando egresos...</td></tr>
-                    </tbody>
-                </table>
-            </div>
+<div id="tab-agenda" class="modulo-admin">
+    <h2>Agenda de Turnos</h2>
+    
+    <div class="seccion-bloque">
+        <h3>Filtro de Fechas</h3>
+        <div style="display:flex; gap:10px;">
+            <input type="date" id="filtroFecha" style="background:var(--fondo-input); color:#fff; padding:12px; border:1px solid var(--borde-sutil); border-radius:8px; width:100%;">
+            <button id="btnVerTodo" style="background:#1a1a1a; color:#fff; border:1px solid var(--borde-sutil); border-radius:8px; padding:0 15px; cursor:pointer;">Limpiar</button>
         </div>
     </div>
 
-    <div class="seccion-bloque" id="bloque-calc">
-        <h3>Calculadora Rápida</h3>
-        <div class="calc-grid">
-            <input type="number" id="calcN1" placeholder="Valor A">
-            <select id="calcOperacion">
-                <option value="+">+</option>
-                <option value="-">-</option>
-                <option value="*">×</option>
-                <option value="/">÷</option>
-            </select>
-            <input type="number" id="calcN2" placeholder="Valor B">
-            <div class="calc-resultado" id="calcResultado">0.00</div>
+    <div class="seccion-bloque">
+        <h3>Historial Operativo</h3>
+        <div class="contenedor-tabla">
+            <table>
+                <thead>
+                    <tr><th>Cliente</th><th>Servicio</th><th>Hora</th><th>Acción</th></tr>
+                </thead>
+                <tbody id="tabla-citas-cuerpo">
+                    <tr><td colspan="4" style="text-align:center; padding:20px;">Cargando...</td></tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <div class="seccion-bloque" id="bloque-puerta">
-        <h3>Registrar Cliente en Puerta</h3>
+    <div class="seccion-bloque">
+        <h3>Cliente en Puerta</h3>
         <form class="form-manual" id="formManual" onsubmit="guardarClienteManual(event)">
+            <div class="form-grupo"><label>Nombre</label><input type="text" id="mNombre" required></div>
+            <div class="form-grupo"><label>Teléfono</label><input type="tel" id="mTelefono" required></div>
             <div class="form-grupo">
-                <label for="mNombre">Nombre del Cliente</label>
-                <input type="text" id="mNombre" placeholder="Ej. Juan Pérez" required>
-            </div>
-            <div class="form-grupo">
-                <label for="mTelefono">Teléfono</label>
-                <input type="tel" id="mTelefono" placeholder="Ej. 04141234567" required>
-            </div>
-            <div class="form-grupo">
-                <label for="mServicio">Servicio Realizado</label>
+                <label>Servicio</label>
                 <select id="mServicio" required>
                     <option value="Corte Sencillo (10$)">Corte Sencillo (10$)</option>
                     <option value="Corte Premium (13$)">Corte Premium (13$)</option>
-                    <option value="Corte con Barba Sencillo (16$)">Corte con Barba Sencillo (16$)</option>
-                    <option value="Corte con Barba Premium (19$)">Corte con Barba Premium (19$)</option>
                     <option value="Barba Sola (6$)">Barba Sola (6$)</option>
-                    <option value="Cero con Barba Premium (13$)">Cero con Barba Premium (13$)</option>
                 </select>
-                <label class="checkbox-patrocinio">
-                    <input type="checkbox" id="mPatrocinado">
-                    ¿Trabajo patrocinado?
-                </label>
             </div>
-            <button type="submit" class="btn-guardar-manual">Agregar Trabajo</button>
+            <div style="display:flex; align-items:center; gap:10px; margin-top:5px;">
+                <input type="checkbox" id="mPatrocinado" style="width:18px; height:18px; accent-color:var(--dorado-acento);">
+                <label style="color:var(--gris-secundario); font-size:0.8rem;">¿Trabajo Patrocinado?</label>
+            </div>
+            <button type="submit" class="btn-guardar">Registrar</button>
+        </form>
+    </div>
+</div>
+
+<div id="tab-finanzas" class="modulo-admin">
+    <h2>Gestión Financiera</h2>
+
+    <div class="seccion-bloque">
+        <h3>Registrar Gasto</h3>
+        <form class="form-manual" id="formGastos" onsubmit="guardarGastoManual(event)">
+            <div class="form-grupo"><label>Concepto</label><input type="text" id="gConcepto" required></div>
+            <div class="form-grupo"><label>Monto ($)</label><input type="number" id="gMonto" step="0.01" required></div>
+            <div class="form-grupo"><label>Fecha</label><input type="date" id="gFecha" required></div>
+            <button type="submit" class="btn-guardar" style="background:#333; color:#fff;">Registrar Gasto</button>
         </form>
     </div>
 
-    <div class="seccion-bloque" id="bloque-frecuencia">
-        <h3>
-            Frecuencia y Fidelidad
-            <button class="btn-colapsar" onclick="toggleSeccion('contenidoFrecuencia', this)">▼</button>
-        </h3>
-        <div id="contenidoFrecuencia" class="contenido-colapsable">
-            <p style="color: var(--gris-secundario); font-size: 0.75rem; margin-bottom: 6px; margin-top:14px;">Clientes ordenados por nivel de asistencia repetida.</p>
-            <div class="contenedor-tabla">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Cliente</th>
-                            <th>Teléfono</th>
-                            <th style="text-align:center;">Visitas</th>
-                            <th>Última Vez</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-frecuencia-cuerpo">
-                        <tr><td colspan="4" class="sin-citas">Cargando métricas...</td></tr>
-                    </tbody>
-                </table>
-            </div>
+    <div class="seccion-bloque">
+        <h3>Calculadora Rápida</h3>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <input type="number" id="calcN1" placeholder="Val A" style="width:30%; padding:10px; background:var(--fondo-input); color:#fff; border:1px solid var(--borde-sutil); border-radius:6px;">
+            <select id="calcOperacion" style="padding:10px; background:var(--fondo-input); color:#fff; border:1px solid var(--borde-sutil); border-radius:6px;">
+                <option value="+">+</option><option value="-">-</option><option value="*">×</option><option value="/">÷</option>
+            </select>
+            <input type="number" id="calcN2" placeholder="Val B" style="width:30%; padding:10px; background:var(--fondo-input); color:#fff; border:1px solid var(--borde-sutil); border-radius:6px;">
+            <div id="calcResultado" style="font-weight:bold; color:var(--dorado-acento); font-size:1.2rem; margin-left:auto;">0.00</div>
         </div>
     </div>
+</div>
 
-    <div class="seccion-bloque" id="bloque-historial-turnos" style="background: transparent; border: none; padding: 0; margin-bottom: 24px;">
-        <h3 style="padding: 22px 0 14px 0;">
-            Historial y Agenda de Turnos
-            <button class="btn-colapsar" onclick="toggleSeccion('contenidoHistorial', this)">▼</button>
-        </h3>
-        
-        <div id="contenidoHistorial" class="contenido-colapsable">
-            <div class="contenedor-tabla" style="margin-top: 0;">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Cliente</th>
-                            <th>Servicio</th>
-                            <th>Fecha / Hora</th>
-                            <th>Estado</th>
-                            <th>Tipo Pago</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-citas-cuerpo">
-                        <tr><td colspan="6" class="sin-citas">Cargando historial...</td></tr>
-                    </tbody>
-                </table>
-            </div>
+<div id="tab-clientes" class="modulo-admin">
+    <h2>Fidelidad y Frecuencia</h2>
+    <div class="seccion-bloque">
+        <p class="subtitulo" style="text-align:left; margin-bottom:10px;">Clientes ordenados por número de visitas.</p>
+        <div class="contenedor-tabla">
+            <table>
+                <thead>
+                    <tr><th>Cliente</th><th>Visitas</th><th>Última Vez</th><th>Detalle</th></tr>
+                </thead>
+                <tbody id="tabla-frecuencia-cuerpo">
+                    <tr><td colspan="4" style="text-align:center; padding:20px;">Calculando...</td></tr>
+                </tbody>
+            </table>
         </div>
     </div>
-
-    <div class="seccion-bloque" id="bloque-configuracion">
-        <h3>
-            Configuración del Sistema
-            <button class="btn-colapsar" onclick="toggleSeccion('contenidoConfiguracion', this)">▼</button>
-        </h3>
-        <div id="contenidoConfiguracion" class="contenido-colapsable minimizado">
-            <p style="color: var(--gris-secundario); font-size: 0.75rem; margin-top: 14px; margin-bottom: 18px;">
-                Ajusta las variables maestras de tu negocio o exporta tus balances. (Visualmente preparadas para futura integración en tu Firebase).
-            </p>
-            
-            <div class="grid-contable" style="grid-template-columns: 1fr; gap: 20px;">
-                <div style="background: var(--fondo-input); padding: 20px; border-radius: 12px; border: 1px solid var(--borde-sutil);">
-                    <h4 style="color: var(--dorado-acento); margin-bottom: 15px; font-size: 0.85rem; text-transform: uppercase;">Distribución Automática (%)</h4>
-                    <form id="percentage-form" class="form-manual" style="margin-top: 0; flex-direction: row; flex-wrap: wrap; align-items: flex-end;">
-                        <div class="form-grupo" style="flex: 1; min-width: 120px;">
-                            <label>Barbería:</label>
-                            <input type="number" value="40" min="0" max="100">
-                        </div>
-                        <div class="form-grupo" style="flex: 1; min-width: 120px;">
-                            <label>Tu Neto (Víctor):</label>
-                            <input type="number" value="60" min="0" max="100">
-                        </div>
-                        <button type="button" class="btn-guardar-manual" style="flex: 1; min-width: 150px; padding: 14px;">Actualizar</button>
-                    </form>
-                </div>
-
-                <div style="background: var(--fondo-input); padding: 20px; border-radius: 12px; border: 1px solid var(--borde-sutil);">
-                    <h4 style="color: var(--dorado-acento); margin-bottom: 15px; font-size: 0.85rem; text-transform: uppercase;">Mantenimiento de Datos</h4>
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <button class="btn-guardar-manual" style="background-color: #333; color: #fff; flex: 1; min-width: 150px;">Exportar CSV</button>
-                        <button class="btn-guardar-manual" style="background-color: var(--rojo-alerta); color: #fff; flex: 1; min-width: 150px;">Reiniciar Todo</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <br><br>
-</section>
+</div>
 
 <script>
-    const CLAVE_ADMINISTRADOR = 'Ve-030699'; 
+    // --- VARIABLES GLOBALES ---
+    const API_KEY_FIREBASE = 'AIzaSyBKrJD4VAzOkvbCay-C8Dxsg3gsUkAt4EA'; 
     const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
-
-    const pantallaLogin = document.getElementById('pantallaLogin');
-    const campoClave = document.getElementById('campoClave');
-    const btnIngresar = document.getElementById('btnIngresar');
-    const mensajeError = document.getElementById('mensajeError');
-    let miGrafico = null; 
-
-    function verificarAcceso() {
-        if (campoClave.value === CLAVE_ADMINISTRADOR) {
-            pantallaLogin.style.display = 'none'; 
-            inicializarSistema(); 
-        } else {
-            mensajeError.style.display = 'block'; 
-            campoClave.value = '';
-        }
-    }
-    btnIngresar.addEventListener('click', verificarAcceso);
-    campoClave.addEventListener('keypress', function(e) { if (e.key === 'Enter') verificarAcceso(); });
-
-    // MENÚ DESPLEGABLE
-    const btnHamburguesa = document.getElementById('btnHamburguesa');
-    const menuLateral = document.getElementById('menuLateral');
-    const menuOverlay = document.getElementById('menuOverlay');
-    btnHamburguesa.addEventListener('click', toggleMenu);
-    menuOverlay.addEventListener('click', toggleMenu);
-    function toggleMenu() {
-        btnHamburguesa.classList.toggle('open');
-        menuLateral.classList.toggle('open');
-        menuOverlay.classList.toggle('show');
-    }
-
-    // MANEJO DE SECCIONES COLAPSABLES
-    window.toggleSeccion = function(idContenido, boton) {
-        const contenedor = document.getElementById(idContenido);
-        contenedor.classList.toggle('minimizado');
-        boton.textContent = contenedor.classList.contains('minimizado') ? '▲' : '▼';
-    }
-
-    // CORE DEL PANEL
-    const tablaCuerpo = document.getElementById('tabla-citas-cuerpo');
-    const tablaFrecuencia = document.getElementById('tabla-frecuencia-cuerpo');
-    const tablaGastosCuerpo = document.getElementById('tabla-gastos-cuerpo');
-    const filtroFecha = document.getElementById('filtroFecha');
-    const btnVerTodo = document.getElementById('btnVerTodo');
+    let miGrafico = null;
     let todasLasCitas = [];
     let todosLosGastos = [];
+    let tokenAuth = sessionStorage.getItem('tokenAdminVictor');
 
-    function inicializarSistema() {
-        document.getElementById('gFecha').value = obtenerFechaLocalVenezuela();
-        cargarDatosDesdeServidor();
-
-        filtroFecha.addEventListener('change', function() { 
-            renderizarTabla(this.value); 
-            renderizarGastos(this.value);
-            procesarContabilidad(this.value);
-        });
-        
-        btnVerTodo.addEventListener('click', function() { 
-            filtroFecha.value = ''; 
-            renderizarTabla(''); 
-            renderizarGastos('');
-            procesarContabilidad('');
-        });
-
-        document.getElementById('selectorPeriodoGlobal').addEventListener('change', function() {
-            procesarMetricasGlobales(this.value);
-        });
-        
-        document.getElementById('calcN1').addEventListener('input', ejecutarCalculoRapido);
-        document.getElementById('calcN2').addEventListener('input', ejecutarCalculoRapido);
-        document.getElementById('calcOperacion').addEventListener('change', ejecutarCalculoRapido);
+    // --- LÓGICA DE PESTAÑAS (TABS) ---
+    function cambiarTab(idTab, boton) {
+        document.querySelectorAll('.modulo-admin').forEach(mod => mod.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(idTab).classList.add('active');
+        boton.classList.add('active');
     }
 
-    function ejecutarCalculoRapido() {
-        const n1 = parseFloat(document.getElementById('calcN1').value) || 0;
-        const n2 = parseFloat(document.getElementById('calcN2').value) || 0;
-        const op = document.getElementById('calcOperacion').value;
-        let res = 0;
+    // --- LÓGICA DE MODAL ---
+    function abrirModal(idCita) {
+        const cita = todasLasCitas.find(c => c.id === idCita);
+        if(!cita) return;
+        document.getElementById('modalNombreCliente').textContent = cita.cliente_nombre || 'Sin Nombre';
+        document.getElementById('modalTlf').textContent = cita.cliente_telefono || 'N/A';
+        document.getElementById('modalServicio').textContent = cita.servicio || 'N/A';
+        document.getElementById('modalFecha').textContent = `${cita.cita_fecha} / ${cita.cita_hora || ''}`;
+        document.getElementById('modalEstado').textContent = cita.estado || 'Atendido';
+        document.getElementById('modalPatrocinio').textContent = cita.patrocinado ? 'Sí (Neto 100%)' : 'No (40/60)';
+        document.getElementById('modalDetalle').style.display = 'flex';
+    }
+    function cerrarModal() { document.getElementById('modalDetalle').style.display = 'none'; }
 
-        switch(op) {
-            case '+': res = n1 + n2; break;
-            case '-': res = n1 - n2; break;
-            case '*': res = n1 * n2; break;
-            case '/': res = n2 !== 0 ? n1 / n2 : 0; break;
+    // --- AUTENTICACIÓN FIREBASE REST API ---
+    const btnIngresar = document.getElementById('btnIngresar');
+    btnIngresar.addEventListener('click', async () => {
+        const email = document.getElementById('campoEmail').value;
+        const password = document.getElementById('campoClave').value;
+        btnIngresar.textContent = 'Verificando...';
+        
+        try {
+            const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY_FIREBASE}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password, returnSecureToken: true })
+            });
+            const data = await res.json();
+            
+            if(data.idToken) {
+                sessionStorage.setItem('tokenAdminVictor', data.idToken);
+                tokenAuth = data.idToken;
+                iniciarPanel();
+            } else {
+                document.getElementById('mensajeError').style.display = 'block';
+                btnIngresar.textContent = 'Ingresar';
+            }
+        } catch(err) {
+            document.getElementById('mensajeError').style.display = 'block';
+            btnIngresar.textContent = 'Ingresar';
         }
-        document.getElementById('calcResultado').textContent = res.toFixed(2);
-    }
+    });
 
-    function cargarDatosDesdeServidor() {
-        Promise.all([
-            fetch(`${FIREBASE_URL}citas.json`).then(r => r.json()),
-            fetch(`${FIREBASE_URL}gastos.json`).then(r => r.json())
-        ])
-        .then(([citasData, gastosData]) => {
-            todasLasCitas = citasData ? Object.keys(citasData).map(id => ({ id, ...citasData[id] })).sort((a, b) => new Date(a.cita_fecha) - new Date(b.cita_fecha)) : [];
-            todosLosGastos = gastosData ? Object.keys(gastosData).map(id => ({ id, ...gastosData[id] })).sort((a, b) => new Date(a.fecha) - new Date(b.fecha)) : [];
+    document.getElementById('btnCerrarSesion').addEventListener('click', () => {
+        sessionStorage.removeItem('tokenAdminVictor');
+        location.reload();
+    });
 
-            const filtroActual = filtroFecha.value;
-            procesarContabilidad(filtroActual);
-            procesarMetricasGlobales(document.getElementById('selectorPeriodoGlobal').value);
-            renderizarTabla(filtroActual);
-            renderizarGastos(filtroActual);
-            calcularFrecuencias();
+    // VERIFICAR SESIÓN ACTIVA AL CARGAR
+    window.onload = () => {
+        if(tokenAuth) { iniciarPanel(); }
+    };
+
+    function iniciarPanel() {
+        document.getElementById('pantallaLogin').style.display = 'none';
+        document.getElementById('btnCerrarSesion').style.display = 'block';
+        document.getElementById('navegacionTabs').style.display = 'flex';
+        document.getElementById('gFecha').value = obtenerFechaHoy();
+        document.getElementById('filtroFecha').value = obtenerFechaHoy();
+        
+        cargarDatosDesdeServidor();
+        
+        document.getElementById('filtroFecha').addEventListener('change', e => procesarVistas(e.target.value));
+        document.getElementById('btnVerTodo').addEventListener('click', () => {
+            document.getElementById('filtroFecha').value = '';
+            procesarVistas('');
+        });
+        document.getElementById('selectorPeriodoGlobal').addEventListener('change', e => procesarMetricasGlobales(e.target.value));
+        
+        // Calculadora
+        ['calcN1', 'calcN2', 'calcOperacion'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => {
+                const n1 = parseFloat(document.getElementById('calcN1').value) || 0;
+                const n2 = parseFloat(document.getElementById('calcN2').value) || 0;
+                const op = document.getElementById('calcOperacion').value;
+                let res = 0;
+                if(op==='+') res=n1+n2; else if(op==='-') res=n1-n2; else if(op==='*') res=n1*n2; else if(op==='/') res=n2!==0?n1/n2:0;
+                document.getElementById('calcResultado').textContent = res.toFixed(2);
+            });
         });
     }
 
-    function extraerPrecio(servicioTexto) {
-        if (!servicioTexto) return 0;
-        const coincidencia = servicioTexto.match(/\((\d+)\$\)/) || servicioTexto.match(/\((\d+)€\)/);
-        return coincidencia ? parseInt(coincidencia[1], 10) : 0;
+    function obtenerFechaHoy() {
+        const d = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Caracas"}));
+        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     }
 
-    function obtenerFechaLocalVenezuela() {
-        const cadenaCaracas = new Date().toLocaleString("en-US", { timeZone: "America/Caracas" });
-        const d = new Date(cadenaCaracas);
-        const año = d.getFullYear();
-        const mes = String(d.getMonth() + 1).padStart(2, '0');
-        const dia = String(d.getDate()).padStart(2, '0');
-        return `${año}-${mes}-${dia}`;
+    // --- CARGA DE DATOS SEGUROS (USANDO EL TOKEN) ---
+    async function cargarDatosDesdeServidor() {
+        try {
+            // Añadimos ?auth=TOKEN a cada petición para pasar las reglas de seguridad
+            const resCitas = await fetch(`${FIREBASE_URL}citas.json?auth=${tokenAuth}`);
+            const resGastos = await fetch(`${FIREBASE_URL}gastos.json?auth=${tokenAuth}`);
+            
+            const citasData = await resCitas.json();
+            const gastosData = await resGastos.json();
+
+            todasLasCitas = citasData ? Object.keys(citasData).map(id => ({ id, ...citasData[id] })).sort((a,b)=>new Date(b.cita_fecha)-new Date(a.cita_fecha)) : [];
+            todosLosGastos = gastosData ? Object.keys(gastosData).map(id => ({ id, ...gastosData[id] })) : [];
+
+            procesarVistas(document.getElementById('filtroFecha').value);
+            procesarMetricasGlobales(document.getElementById('selectorPeriodoGlobal').value);
+            calcularFrecuencias();
+        } catch (error) {
+            console.error("Error cargando datos protegidos", error);
+        }
     }
 
-    // LOGICA GLOBAL CON MÉTRICAS DIVIDIDAS Y GRÁFICAS
+    function extraerPrecio(str) {
+        if(!str) return 0;
+        const match = str.match(/\((\d+)\$\)/);
+        return match ? parseInt(match[1], 10) : 0;
+    }
+
+    function procesarVistas(fechaFiltro) {
+        renderizarTablaAgenda(fechaFiltro);
+        calcularCierreCaja(fechaFiltro || obtenerFechaHoy());
+    }
+
+    // --- RENDERIZADO DE AGENDA ---
+    function renderizarTablaAgenda(fecha) {
+        const tbody = document.getElementById('tabla-citas-cuerpo');
+        tbody.innerHTML = '';
+        const filtradas = fecha ? todasLasCitas.filter(c => c.cita_fecha === fecha) : todasLasCitas;
+
+        if(filtradas.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px;">No hay registros.</td></tr>';
+            return;
+        }
+
+        filtradas.forEach(cita => {
+            const tr = document.createElement('tr');
+            let colorEstado = cita.estado === 'Cancelado' ? 'var(--rojo-alerta)' : (cita.estado === 'Pendiente' ? 'var(--naranja-alerta)' : 'var(--verde-exito)');
+            
+            tr.innerHTML = `
+                <td data-label="Cliente"><strong>${cita.cliente_nombre || 'Sin nombre'}</strong><br><span style="color:${colorEstado}; font-size:0.7rem;">● ${cita.estado||'Atendido'}</span></td>
+                <td data-label="Servicio">${cita.servicio}</td>
+                <td data-label="Hora">${cita.cita_fecha.split('-').reverse().join('/')} <br> ${cita.cita_hora||''}</td>
+                <td data-label="Acción"><button class="btn-detalle" onclick="abrirModal('${cita.id}')">Ver Detalle</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // --- CÁLCULOS FINANCIEROS Y GRÁFICAS ---
+    function calcularCierreCaja(fecha) {
+        let tBarberia = 0, tVictor = 0, tGastos = 0;
+        
+        todasLasCitas.filter(c => c.cita_fecha === fecha && (c.estado||'Atendido') === 'Atendido').forEach(c => {
+            const precio = extraerPrecio(c.servicio);
+            if(c.patrocinado) { tVictor += precio; } 
+            else { tBarberia += precio * 0.40; tVictor += precio * 0.60; }
+        });
+
+        todosLosGastos.filter(g => g.fecha === fecha).forEach(g => tGastos += parseFloat(g.monto||0));
+
+        document.getElementById('gananciaBarberia').textContent = `$${tBarberia.toFixed(2)}`;
+        document.getElementById('gananciaVictor').textContent = `$${tVictor.toFixed(2)}`;
+        document.getElementById('totalGastosCierre').textContent = `$${tGastos.toFixed(2)}`;
+        document.getElementById('netoRealCalculado').textContent = `$${(tVictor - tGastos).toFixed(2)}`;
+    }
+
     function procesarMetricasGlobales(periodo) {
         const hoy = new Date();
-        const anioActual = hoy.getFullYear();
-        const mesActual = hoy.getMonth();
+        let cGlobal = 0, iBarb = 0, iVict = 0;
+        let etiquetas = [], datos = [];
 
-        const diaSemana = hoy.getDay() === 0 ? 6 : hoy.getDay() - 1; 
-        const lunesSemana = new Date(hoy);
-        lunesSemana.setDate(hoy.getDate() - diaSemana);
-        lunesSemana.setHours(0,0,0,0);
-
-        let cGlobal = 0;
-        let iBarberiaGlobal = 0;
-        let iBarberoGlobal = 0;
-        let diasTranscurridos = 1;
-
-        let etiquetasGrafica = [];
-        let datosGrafica = [];
-        const tituloSpan = document.getElementById('tituloGraficaSpan');
-
-        if (periodo === 'semanal') {
-            diasTranscurridos = diaSemana + 1; 
-            document.getElementById('tituloCortesGlobales').textContent = 'Cortes (Semana)';
-            document.getElementById('tituloIngresosBarberiaGlobales').textContent = 'Barbería (Semana)';
-            document.getElementById('tituloIngresosBarberoGlobales').textContent = 'Tu Neto (Semana)';
-            document.getElementById('tituloPromedioGlobal').textContent = 'Promedio (Semana)';
-            tituloSpan.textContent = '(Esta Semana)';
-            
-            etiquetasGrafica = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
-            datosGrafica = [0, 0, 0, 0, 0, 0, 0];
-        } else if (periodo === 'mensual') {
-            diasTranscurridos = hoy.getDate(); 
-            document.getElementById('tituloCortesGlobales').textContent = 'Cortes (Mes)';
-            document.getElementById('tituloIngresosBarberiaGlobales').textContent = 'Barbería (Mes)';
-            document.getElementById('tituloIngresosBarberoGlobales').textContent = 'Tu Neto (Mes)';
-            document.getElementById('tituloPromedioGlobal').textContent = 'Promedio (Mes)';
-            tituloSpan.textContent = '(Este Mes)';
-            
-            const diasDelMes = new Date(anioActual, mesActual + 1, 0).getDate();
-            for(let i=1; i<=diasDelMes; i++) { etiquetasGrafica.push(i.toString()); }
-            datosGrafica = new Array(diasDelMes).fill(0);
-        } else if (periodo === 'anual') {
-            const inicioAnio = new Date(anioActual, 0, 1);
-            diasTranscurridos = Math.ceil((hoy - inicioAnio) / (1000 * 60 * 60 * 24)); 
-            document.getElementById('tituloCortesGlobales').textContent = 'Cortes (Año)';
-            document.getElementById('tituloIngresosBarberiaGlobales').textContent = 'Barbería (Año)';
-            document.getElementById('tituloIngresosBarberoGlobales').textContent = 'Tu Neto (Año)';
-            document.getElementById('tituloPromedioGlobal').textContent = 'Promedio (Año)';
-            tituloSpan.textContent = '(Este Año)';
-            
-            etiquetasGrafica = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-            datosGrafica = new Array(12).fill(0);
-        }
-
-        todasLasCitas.forEach(cita => {
-            if (!cita.cita_fecha || (cita.estado || 'Atendido') !== 'Atendido') return;
-
-            const partes = cita.cita_fecha.split('-');
-            const fechaCita = new Date(partes[0], partes[1] - 1, partes[2]);
-            const precio = extraerPrecio(cita.servicio);
-            
-            const deLaBarberia = precio * 0.40;
-            const deVictor = precio * 0.60;
-
-            let cumpleFiltro = false;
-            let idxGrafica = 0;
-
-            if (periodo === 'semanal') {
-                if (fechaCita >= lunesSemana && fechaCita <= hoy) {
-                    cumpleFiltro = true;
-                    idxGrafica = fechaCita.getDay() === 0 ? 6 : fechaCita.getDay() - 1;
-                }
-            } else if (periodo === 'mensual') {
-                if (fechaCita.getFullYear() === anioActual && fechaCita.getMonth() === mesActual) {
-                    cumpleFiltro = true;
-                    idxGrafica = fechaCita.getDate() - 1;
-                }
-            } else if (periodo === 'anual') {
-                if (fechaCita.getFullYear() === anioActual) {
-                    cumpleFiltro = true;
-                    idxGrafica = fechaCita.getMonth();
-                }
-            }
-
-            if (cumpleFiltro) {
-                cGlobal++;
-                datosGrafica[idxGrafica] += precio; // La gráfica sigue la producción bruta total
-                
-                if (cita.patrocinado === true) {
-                    iBarberoGlobal += precio; // Patrocinio va neto completo al barbero
-                } else {
-                    iBarberiaGlobal += deLaBarberia;
-                    iBarberoGlobal += deVictor;
-                }
-            }
-        });
-
-        const promedio = diasTranscurridos > 0 ? (cGlobal / diasTranscurridos).toFixed(1) : '0.0';
-        document.getElementById('cortesGlobales').textContent = cGlobal;
-        document.getElementById('ingresosBarberiaGlobales').textContent = `$${iBarberiaGlobal.toFixed(2)}`;
-        document.getElementById('ingresosBarberoGlobales').textContent = `$${iBarberoGlobal.toFixed(2)}`;
-        document.getElementById('promedioGlobal').textContent = promedio;
-
-        renderizarGrafica(etiquetasGrafica, datosGrafica, periodo);
-    }
-
-    function renderizarGrafica(etiquetas, datos, periodo) {
-        const ctx = document.getElementById('graficaIngresos').getContext('2d');
-        if (miGrafico) { miGrafico.destroy(); }
-
-        miGrafico = new Chart(ctx, {
-            type: 'bar', 
-            data: {
-                labels: etiquetas,
-                datasets: [{
-                    label: 'Producción Total ($)',
-                    data: datos,
-                    backgroundColor: 'rgba(212, 175, 55, 0.7)', 
-                    borderColor: '#d4af37', 
-                    borderWidth: 2,
-                    borderRadius: 4,
-                    hoverBackgroundColor: '#b58d22'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: '#161616',
-                        titleColor: '#d4af37',
-                        bodyColor: '#fff',
-                        borderColor: 'rgba(255,255,255,0.1)',
-                        borderWidth: 1,
-                        padding: 10,
-                        callbacks: {
-                            label: function(context) { return '$' + context.parsed.y.toFixed(2); }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: 'rgba(255, 255, 255, 0.05)', borderColor: 'transparent' },
-                        ticks: { color: '#a1a1aa', font: { size: 10 } }
-                    },
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#a1a1aa', font: { size: 10 } }
-                    }
-                }
-            }
-        });
-    }
-
-    function procesarContabilidad(fechaFiltroActivo) {
-        let totalBarberiaCierre = 0, totalVictorCierre = 0, totalDeudaPatrocinioCierre = 0, totalGastosCierre = 0;
-        const tituloCierre = document.getElementById('fechaCierreTitulo');
-
-        if(fechaFiltroActivo) {
-            const p = fechaFiltroActivo.split('-');
-            tituloCierre.textContent = `(${p[2]}/${p[1]}/${p[0]})`;
+        if(periodo === 'mensual') {
+            const diasMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate();
+            for(let i=1; i<=diasMes; i++) etiquetas.push(i.toString());
+            datos = new Array(diasMes).fill(0);
         } else {
-            tituloCierre.textContent = "(Acumulado Histórico)";
+            etiquetas = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+            datos = new Array(7).fill(0);
         }
 
         todasLasCitas.forEach(cita => {
-            if (!cita.cita_fecha || (cita.estado || 'Atendido') !== 'Atendido') return;
+            if(!cita.cita_fecha || (cita.estado||'Atendido') !== 'Atendido') return;
+            const fechaCita = new Date(cita.cita_fecha + 'T00:00:00'); // Evitar desfase horario
             const precio = extraerPrecio(cita.servicio);
 
-            if (!fechaFiltroActivo || cita.cita_fecha === fechaFiltroActivo) {
-                const deLaBarberia = precio * 0.40;
-                const deVictor = precio * 0.60;
-                if (cita.patrocinado === true) {
-                    totalDeudaPatrocinioCierre += deLaBarberia;
-                    totalVictorCierre += precio; 
-                } else {
-                    totalBarberiaCierre += deLaBarberia;
-                    totalVictorCierre += deVictor;
-                }
+            let aplica = false, idx = 0;
+            if(periodo === 'mensual' && fechaCita.getMonth() === hoy.getMonth() && fechaCita.getFullYear() === hoy.getFullYear()) {
+                aplica = true; idx = fechaCita.getDate() - 1;
+            } else if (periodo === 'semanal') {
+                // Logica simplificada semanal (asume semana actual)
+                const inicioSemana = new Date(hoy); inicioSemana.setDate(hoy.getDate() - hoy.getDay() + 1);
+                if(fechaCita >= inicioSemana) { aplica = true; idx = fechaCita.getDay()===0 ? 6 : fechaCita.getDay()-1; }
+            }
+
+            if(aplica) {
+                cGlobal++; datos[idx] += precio;
+                if(cita.patrocinado) iVict += precio; else { iBarb += precio*0.4; iVict += precio*0.6; }
             }
         });
 
-        todosLosGastos.forEach(gasto => {
-            if (!fechaFiltroActivo || gasto.fecha === fechaFiltroActivo) {
-                totalGastosCierre += parseFloat(gasto.monto || 0);
-            }
+        document.getElementById('cortesGlobales').textContent = cGlobal;
+        document.getElementById('ingresosBarberiaGlobales').textContent = `$${iBarb.toFixed(2)}`;
+        document.getElementById('ingresosBarberoGlobales').textContent = `$${iVict.toFixed(2)}`;
+
+        // Render Gráfica
+        if(miGrafico) miGrafico.destroy();
+        miGrafico = new Chart(document.getElementById('graficaIngresos').getContext('2d'), {
+            type: 'bar',
+            data: { labels: etiquetas, datasets: [{ data: datos, backgroundColor: '#d4af37', borderRadius: 4 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } } }
         });
-
-        document.getElementById('gananciaBarberia').textContent = `$${totalBarberiaCierre.toFixed(2)}`;
-        document.getElementById('gananciaVictor').textContent = `$${totalVictorCierre.toFixed(2)}`;
-        document.getElementById('deudaPatrocinios').textContent = `$${totalDeudaPatrocinioCierre.toFixed(2)}`;
-        document.getElementById('totalGastosCierre').textContent = `$${totalGastosCierre.toFixed(2)}`;
-
-        const netoReal = totalVictorCierre - totalGastosCierre;
-        document.getElementById('netoRealCalculado').textContent = `$${netoReal.toFixed(2)}`;
     }
 
+    // --- FIDELIDAD DE CLIENTES ---
     function calcularFrecuencias() {
-        tablaFrecuencia.innerHTML = '';
-        if (todasLasCitas.length === 0) {
-            tablaFrecuencia.innerHTML = '<tr><td colspan="4" class="sin-citas">No hay registros suficientes.</td></tr>';
-            return;
-        }
-
-        const clientesMap = {};
-        todasLasCitas.forEach(cita => {
-            const tlf = cita.cliente_telefono ? cita.cliente_telefono.trim() : 'Sin Teléfono';
-            if (!clientesMap[tlf]) {
-                clientesMap[tlf] = { nombre: cita.cliente_nombre || 'Desconocido', telefono: tlf, totalVisitas: 0, ultimaFecha: cita.cita_fecha };
-            }
-            if ((cita.estado || 'Atendido') === 'Atendido') {
-                clientesMap[tlf].totalVisitas++;
-                if (new Date(cita.cita_fecha) > new Date(clientesMap[tlf].ultimaFecha)) {
-                    clientesMap[tlf].ultimaFecha = cita.cita_fecha;
-                }
-            }
+        const map = {};
+        todasLasCitas.forEach(c => {
+            if((c.estado||'Atendido')!=='Atendido') return;
+            const tlf = c.cliente_telefono || 'S/N';
+            if(!map[tlf]) map[tlf] = { nombre: c.cliente_nombre, visitas: 0, ultima: c.cita_fecha, id: c.id };
+            map[tlf].visitas++;
+            if(new Date(c.cita_fecha) > new Date(map[tlf].ultima)) { map[tlf].ultima = c.cita_fecha; map[tlf].id = c.id; }
         });
 
-        const listaFrecuencia = Object.values(clientesMap).filter(c => c.totalVisitas > 0).sort((a, b) => b.totalVisitas - a.totalVisitas);
-
-        if (listaFrecuencia.length === 0) {
-            tablaFrecuencia.innerHTML = '<tr><td colspan="4" class="sin-citas">No hay clientes atendidos todavía.</td></tr>';
-            return;
-        }
-
-        listaFrecuencia.forEach(c => {
-            const fila = document.createElement('tr');
-            let fFmt = c.ultimaFecha;
-            if(c.ultimaFecha) {
-                const p = c.ultimaFecha.split('-');
-                if(p.length === 3) fFmt = `${p[2]}/${p[1]}/${p[0]}`;
-            }
-            const medalla = c.totalVisitas > 2 ? ` <span style="color:var(--dorado-acento); font-size:0.7rem; font-weight:700; margin-left:5px; letter-spacing:0.5px;">★ FIEL</span>` : '';
-
-            fila.innerHTML = `
-                <td data-label="Cliente"><strong>${c.nombre}</strong>${medalla}</td>
-                <td data-label="Teléfono" style="color: var(--gris-secundario); font-weight: 500;">${c.telefono}</td>
-                <td data-label="Visitas" style="text-align:center; font-weight:700; color:#fff;">${c.totalVisitas}</td>
-                <td data-label="Última vez">${fFmt}</td>
-            `;
-            tablaFrecuencia.appendChild(fila);
+        const arr = Object.values(map).sort((a,b) => b.visitas - a.visitas);
+        const tbody = document.getElementById('tabla-frecuencia-cuerpo');
+        tbody.innerHTML = '';
+        arr.forEach(c => {
+            tbody.innerHTML += `<tr>
+                <td data-label="Cliente"><strong>${c.nombre}</strong> ${c.visitas>2?'<span style="color:var(--dorado-acento); font-size:0.7rem;">★</span>':''}</td>
+                <td data-label="Visitas" style="font-weight:bold;">${c.visitas}</td>
+                <td data-label="Última Vez">${c.ultima.split('-').reverse().join('/')}</td>
+                <td data-label="Detalle"><button class="btn-detalle" onclick="abrirModal('${c.id}')">Ver Último</button></td>
+            </tr>`;
         });
     }
 
-    window.guardarGastoManual = function(e) {
+    // --- GUARDAR DATOS (ESCRITURA PROTEGIDA O PUBLICA DEPENDIENDO DE TUS REGLAS) ---
+    window.guardarGastoManual = async function(e) {
         e.preventDefault();
-        const concepto = document.getElementById('gConcepto').value;
-        const monto = parseFloat(document.getElementById('gMonto').value);
-        const fecha = document.getElementById('gFecha').value;
-
-        fetch(`${FIREBASE_URL}gastos.json`, { method: 'POST', body: JSON.stringify({ concepto, monto, fecha }) })
-        .then(() => {
-            alert("¡Gasto registrado con éxito!");
-            document.getElementById('formGastos').reset();
-            document.getElementById('gFecha').value = obtenerFechaLocalVenezuela();
-            cargarDatosDesdeServidor(); 
-        });
+        const obj = {
+            concepto: document.getElementById('gConcepto').value,
+            monto: parseFloat(document.getElementById('gMonto').value),
+            fecha: document.getElementById('gFecha').value
+        };
+        // Para gastos exigimos el auth token
+        await fetch(`${FIREBASE_URL}gastos.json?auth=${tokenAuth}`, { method: 'POST', body: JSON.stringify(obj) });
+        document.getElementById('formGastos').reset(); document.getElementById('gFecha').value = obtenerFechaHoy();
+        cargarDatosDesdeServidor();
     }
 
-    window.guardarClienteManual = function(e) {
+    window.guardarClienteManual = async function(e) {
         e.preventDefault();
-        const nombre = document.getElementById('mNombre').value;
-        const telefono = document.getElementById('mTelefono').value;
-        const servicio = document.getElementById('mServicio').value;
-        const esPatrocinado = document.getElementById('mPatrocinado').checked;
-        const fechaHoy = obtenerFechaLocalVenezuela();
-
-        const ahora = new Date();
-        const horaFmt = `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')} (Puerta)`;
-
-        const nuevaCitaManual = { cliente_nombre: nombre, cliente_telefono: telefono, servicio, cita_fecha: fechaHoy, cita_hora: horaFmt, patrocinado: esPatrocinado, estado: 'Atendido' };
-
-        fetch(`${FIREBASE_URL}citas.json`, { method: 'POST', body: JSON.stringify(nuevaCitaManual) })
-        .then(() => {
-            alert("¡Cliente en puerta registrado!");
-            document.getElementById('formManual').reset();
-            cargarDatosDesdeServidor(); 
-        });
-    }
-
-    window.cambiarEstadoRemoto = function(idCita, nuevoEstado) {
-        fetch(`${FIREBASE_URL}citas/${idCita}/estado.json`, { method: 'PUT', body: JSON.stringify(nuevoEstado) }).then(() => cargarDatosDesdeServidor());
-    }
-
-    window.cambiarPatrocinioRemoto = function(idCita, esPatrocinado) {
-        fetch(`${FIREBASE_URL}citas/${idCita}/patrocinado.json`, { method: 'PUT', body: JSON.stringify(esPatrocinado === 'true') }).then(() => cargarDatosDesdeServidor());
-    }
-
-    function renderizarTabla(fechaFiltroStr) {
-        tablaCuerpo.innerHTML = '';
-        const citasFiltradas = fechaFiltroStr ? todasLasCitas.filter(c => c.cita_fecha === fechaFiltroStr) : todasLasCitas;
-
-        if (citasFiltradas.length === 0) {
-            tablaCuerpo.innerHTML = '<tr><td colspan="6" class="sin-citas">No hay turnos para esta fecha.</td></tr>';
-            return;
-        }
-
-        citasFiltradas.forEach(cita => {
-            const fila = document.createElement('tr');
-            let fFmt = cita.cita_fecha;
-            if(cita.cita_fecha) {
-                const partes = cita.cita_fecha.split('-');
-                if(partes.length === 3) fFmt = `${partes[2]}/${partes[1]}/${partes[0]}`;
-            }
-
-            const estadoActual = cita.estado || 'Atendido';
-            const esPatrocinado = cita.patrocinado === true;
-
-            fila.innerHTML = `
-                <td data-label="Cliente">
-                    <strong>${cita.cliente_nombre || 'Sin nombre'}</strong><br>
-                    <span style="font-size:0.75rem; color:var(--gris-secundario); font-weight:500;">${cita.cliente_telefono || ''}</span>
-                </td>
-                <td data-label="Servicio" style="font-weight: 600;">${cita.servicio || 'No especificado'}</td>
-                <td data-label="Fecha / Hora">${fFmt} <span style="color:var(--gris-secundario); font-size:0.8rem; margin-left:2px;">a las</span> <span style="color:#fff; font-weight:700;">${cita.cita_hora || '---'}</span></td>
-                <td data-label="Estado">
-                    <select class="select-tabla" onchange="cambiarEstadoRemoto('${cita.id}', this.value)">
-                        <option value="Pendiente" ${estadoActual === 'Pendiente' ? 'selected' : ''}>⏳ Pendiente</option>
-                        <option value="Atendido" ${estadoActual === 'Atendido' ? 'selected' : ''}>✅ Atendido</option>
-                        <option value="Cancelado" ${estadoActual === 'Cancelado' ? 'selected' : ''}>❌ Cancelado</option>
-                    </select>
-                </td>
-                <td data-label="Tipo Pago">
-                    <select class="select-tabla" onchange="cambiarPatrocinioRemoto('${cita.id}', this.value)">
-                        <option value="false" ${!esPatrocinado ? 'selected' : ''}>💼 Normal (40/60)</option>
-                        <option value="true" ${esPatrocinado ? 'selected' : ''}>⭐ Patrocinado</option>
-                    </select>
-                </td>
-                <td data-label="Acción">
-                    <button class="btn-eliminar" onclick="eliminarCita('${cita.id}')">Eliminar</button>
-                </td>
-            `;
-            tablaCuerpo.appendChild(fila);
-        });
-    }
-
-    function renderizarGastos(fechaFiltroStr) {
-        tablaGastosCuerpo.innerHTML = '';
-        const gastosFiltrados = fechaFiltroStr ? todosLosGastos.filter(g => g.fecha === fechaFiltroStr) : todosLosGastos;
-
-        if (gastosFiltrados.length === 0) {
-            tablaGastosCuerpo.innerHTML = '<tr><td colspan="4" class="sin-citas">No hay egresos registrados para esta fecha.</td></tr>';
-            return;
-        }
-
-        gastosFiltrados.forEach(gasto => {
-            const fila = document.createElement('tr');
-            let fFmt = gasto.fecha;
-            if(gasto.fecha) {
-                const partes = gasto.fecha.split('-');
-                if(partes.length === 3) fFmt = `${partes[2]}/${partes[1]}/${partes[0]}`;
-            }
-
-            fila.innerHTML = `
-                <td data-label="Concepto"><strong>${gasto.concepto || 'Sin concepto'}</strong></td>
-                <td data-label="Monto" style="font-weight: 700; color: #f87171;">$${parseFloat(gasto.monto).toFixed(2)}</td>
-                <td data-label="Fecha">${fFmt}</td>
-                <td data-label="Acción">
-                    <button class="btn-eliminar" onclick="eliminarGasto('${gasto.id}')">Eliminar</button>
-                </td>
-            `;
-            tablaGastosCuerpo.appendChild(fila);
-        });
-    }
-
-    window.eliminarCita = function(idCita) {
-        if (confirm("¿Estás seguro de eliminar este registro? Los balances se recalcularán.")) {
-            fetch(`${FIREBASE_URL}citas/${idCita}.json`, { method: 'DELETE' }).then(() => cargarDatosDesdeServidor());
-        }
-    }
-
-    window.eliminarGasto = function(idGasto) {
-        if (confirm("¿Estás seguro de eliminar este gasto? El Neto Real de la caja se recalculará.")) {
-            fetch(`${FIREBASE_URL}gastos/${idGasto}.json`, { method: 'DELETE' }).then(() => cargarDatosDesdeServidor());
-        }
+        const d = new Date();
+        const obj = {
+            cliente_nombre: document.getElementById('mNombre').value,
+            cliente_telefono: document.getElementById('mTelefono').value,
+            servicio: document.getElementById('mServicio').value,
+            cita_fecha: obtenerFechaHoy(),
+            cita_hora: `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} (Puerta)`,
+            patrocinado: document.getElementById('mPatrocinado').checked,
+            estado: 'Atendido'
+        };
+        // Las reglas de la DB permiten a cualquiera escribir en citas, pero por buena practica mandamos el token
+        await fetch(`${FIREBASE_URL}citas.json?auth=${tokenAuth}`, { method: 'POST', body: JSON.stringify(obj) });
+        document.getElementById('formManual').reset();
+        cargarDatosDesdeServidor();
     }
 </script>
 </body>
