@@ -162,6 +162,14 @@
                     <option value="Barba Sola (6$)">Barba Sola (6$)</option>
                 </select>
             </div>
+            <div class="form-grupo">
+                <label>Estado de la Cita</label>
+                <select id="editEstado" required>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Atendido">Atendido</option>
+                    <option value="Cancelado">Cancelado</option>
+                </select>
+            </div>
             <button type="submit" class="btn-guardar" style="margin-top: 15px;">Actualizar Cambios</button>
         </form>
     </div>
@@ -330,6 +338,7 @@
         document.getElementById('editNombre').value = cita.cliente_nombre || '';
         document.getElementById('editTelefono').value = cita.cliente_telefono || '';
         document.getElementById('editServicio').value = cita.servicio || '';
+        document.getElementById('editEstado').value = cita.estado || 'Atendido';
         document.getElementById('modalEditar').style.display = 'flex';
     }
 
@@ -629,7 +638,8 @@
         const obj = {
             cliente_nombre: document.getElementById('editNombre').value,
             cliente_telefono: document.getElementById('editTelefono').value,
-            servicio: document.getElementById('editServicio').value
+            servicio: document.getElementById('editServicio').value,
+            estado: document.getElementById('editEstado').value
         };
 
         await fetch(`${FIREBASE_URL}citas/${idCita}.json?auth=${tokenAuth}`, { 
