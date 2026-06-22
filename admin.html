@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración | Víctor Styles</title>
-    <!-- Librería para Gráficos Profesionales -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -72,6 +71,7 @@
         .form-grupo label { font-size: 0.7rem; color: var(--gris-secundario); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
         .form-grupo input, .form-grupo select { background-color: var(--fondo-input); border: 1px solid var(--borde-sutil); color: #fff; padding: 14px; border-radius: 10px; outline: none; width: 100%; font-size: 0.9rem; }
         .btn-guardar { background-color: var(--dorado-acento); color: #000; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-weight: 800; text-transform: uppercase; width: 100%; font-size: 0.8rem; letter-spacing: 1px; }
+        .btn-guardar:disabled { background-color: var(--gris-secundario); cursor: not-allowed; }
         .btn-accion { background: transparent; border: 1px solid var(--dorado-acento); color: var(--dorado-acento); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
         .btn-accion:hover { background: var(--dorado-acento); color: #000; }
         
@@ -103,7 +103,6 @@
 </head>
 <body>
 
-<!-- LOGIN SEGURO FIREBASE -->
 <div class="login-container" id="pantallaLogin">
     <div class="login-box">
         <h3 style="border:none; justify-content:center; margin-bottom:0;">Acceso Restringido</h3>
@@ -127,7 +126,6 @@
     <button class="tab-btn" onclick="cambiarTab('tab-clientes', this)">Clientes</button>
 </nav>
 
-<!-- MODAL DE DETALLES (VER) -->
 <div class="modal-overlay" id="modalDetalle">
     <div class="modal-box">
         <button class="modal-cerrar" onclick="cerrarModal('modalDetalle')">×</button>
@@ -143,7 +141,6 @@
     </div>
 </div>
 
-<!-- MODAL DE DETALLES (EDITAR) -->
 <div class="modal-overlay" id="modalEditar">
     <div class="modal-box">
         <button class="modal-cerrar" onclick="cerrarModal('modalEditar')">×</button>
@@ -175,7 +172,6 @@
     </div>
 </div>
 
-<!-- ================= PESTAÑA 1: RESUMEN (DASHBOARD) ================= -->
 <div id="tab-dashboard" class="modulo-admin active">
     <h2>Panel de Rendimiento</h2>
     
@@ -188,7 +184,6 @@
         <button class="btn-accion" onclick="limpiarMetricasGlobales()" style="border-color: var(--rojo-alerta); color: var(--rojo-alerta);">Ver Todo</button>
     </div>
 
-    <!-- TARJETAS SUPERIORES -->
     <div class="grid-contable">
         <div class="tarjeta-contable"><h4>Total Cortes</h4><div class="dato-principal" id="cortesTotales">0</div></div>
         <div class="tarjeta-contable"><h4>Promedio Diario</h4><div class="dato-principal" id="promedioCortes" style="color:var(--naranja-alerta);">0</div></div>
@@ -199,7 +194,6 @@
         </div>
     </div>
 
-    <!-- SECCIÓN DE GRÁFICOS -->
     <div class="contenedor-graficos">
         <div class="tarjeta-grafico">
             <h4>Distribución de Servicios</h4>
@@ -216,7 +210,6 @@
     </div>
 </div>
 
-<!-- ================= PESTAÑA 2: AGENDA ================= -->
 <div id="tab-agenda" class="modulo-admin">
     <h2>Agenda e Historial</h2>
     <div class="seccion-bloque">
@@ -240,10 +233,27 @@
     </div>
 
     <div class="seccion-bloque">
-        <h3>Cliente en Puerta</h3>
+        <h3>Cliente en Puerta (Sin Agenda)</h3>
         <form class="form-manual" id="formManual" onsubmit="guardarClienteManual(event)">
-            <div class="form-grupo"><label>Nombre</label><input type="text" id="mNombre" required></div>
-            <div class="form-grupo"><label>Teléfono</label><input type="tel" id="mTelefono" required></div>
+            <div class="form-grupo">
+                <label>Nombre y Apellido</label>
+                <input type="text" id="mNombre" placeholder="Ej: Juan Pérez" required>
+            </div>
+            
+            <div style="display: flex; gap: 10px;">
+                <div class="form-grupo" style="flex: 1;">
+                    <label>Teléfono</label>
+                    <input type="tel" id="mTelefono" placeholder="0414..." required>
+                </div>
+                <div class="form-grupo" style="flex: 1;">
+                    <label>Estado</label>
+                    <select id="mEstado" required>
+                        <option value="Atendido">Atendido</option>
+                        <option value="Pendiente">Pendiente</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="form-grupo">
                 <label>Servicio</label>
                 <select id="mServicio" required>
@@ -254,16 +264,28 @@
                     <option value="Barba Sola (6$)">Barba Sola (6$)</option>
                 </select>
             </div>
+
+            <div style="display: flex; gap: 10px;">
+                <div class="form-grupo" style="flex: 1;">
+                    <label>Fecha</label>
+                    <input type="date" id="mFecha" required>
+                </div>
+                <div class="form-grupo" style="flex: 1;">
+                    <label>Hora</label>
+                    <input type="time" id="mHora" required>
+                </div>
+            </div>
+
             <div style="display:flex; align-items:center; gap:10px; margin-top:5px;">
                 <input type="checkbox" id="mPatrocinado" style="width:18px; height:18px; accent-color:var(--dorado-acento);">
                 <label style="color:var(--gris-secundario); font-size:0.8rem;">¿Trabajo Patrocinado?</label>
             </div>
-            <button type="submit" class="btn-guardar">Registrar</button>
+            
+            <button type="submit" class="btn-guardar">Registrar y Bloquear Horario</button>
         </form>
     </div>
 </div>
 
-<!-- ================= PESTAÑA 3: FINANZAS ================= -->
 <div id="tab-finanzas" class="modulo-admin">
     <h2>Gestión Financiera</h2>
     <div class="seccion-bloque">
@@ -277,7 +299,6 @@
     </div>
 </div>
 
-<!-- ================= PESTAÑA 4: CLIENTES ================= -->
 <div id="tab-clientes" class="modulo-admin">
     <h2>Fidelidad de Clientes</h2>
     <div class="seccion-bloque">
@@ -387,6 +408,11 @@
         document.getElementById('btnCerrarSesion').style.display = 'block';
         document.getElementById('navegacionTabs').style.display = 'flex';
         document.getElementById('gFecha').value = obtenerFechaHoy();
+        
+        // Autocompletar fecha y hora para clientes en puerta
+        document.getElementById('mFecha').value = obtenerFechaHoy();
+        const ahora = new Date();
+        document.getElementById('mHora').value = `${String(ahora.getHours()).padStart(2,'0')}:${String(ahora.getMinutes()).padStart(2,'0')}`;
         
         cargarDatosDesdeServidor();
         
@@ -614,19 +640,44 @@
 
     window.guardarClienteManual = async function(e) {
         e.preventDefault();
-        const d = new Date();
+        
+        // Cambiar texto del botón para feedback visual
+        const btn = e.target.querySelector('button[type="submit"]');
+        const textoOriginal = btn.textContent;
+        btn.textContent = 'Registrando...';
+        btn.disabled = true;
+
         const obj = {
             cliente_nombre: document.getElementById('mNombre').value,
             cliente_telefono: document.getElementById('mTelefono').value,
             servicio: document.getElementById('mServicio').value,
-            cita_fecha: obtenerFechaHoy(),
-            cita_hora: `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} (Puerta)`,
-            patrocinado: document.getElementById('mPatrocinado').checked,
-            estado: 'Atendido'
+            cita_fecha: document.getElementById('mFecha').value,
+            cita_hora: document.getElementById('mHora').value,
+            estado: document.getElementById('mEstado').value,
+            patrocinado: document.getElementById('mPatrocinado').checked
         };
-        await fetch(`${FIREBASE_URL}citas.json?auth=${tokenAuth}`, { method: 'POST', body: JSON.stringify(obj) });
-        document.getElementById('formManual').reset();
-        cargarDatosDesdeServidor();
+
+        try {
+            await fetch(`${FIREBASE_URL}citas.json?auth=${tokenAuth}`, { 
+                method: 'POST', 
+                body: JSON.stringify(obj) 
+            });
+            
+            document.getElementById('formManual').reset();
+            
+            // Volver a colocar la fecha y hora actuales por si se va a registrar a otro de inmediato
+            document.getElementById('mFecha').value = obtenerFechaHoy();
+            const ahora = new Date();
+            document.getElementById('mHora').value = `${String(ahora.getHours()).padStart(2,'0')}:${String(ahora.getMinutes()).padStart(2,'0')}`;
+            
+            cargarDatosDesdeServidor();
+        } catch (error) {
+            console.error("Error al registrar cliente manual:", error);
+            alert("Hubo un error al registrar el cliente.");
+        } finally {
+            btn.textContent = textoOriginal;
+            btn.disabled = false;
+        }
     }
 
     window.guardarEdicion = async function(e) {
