@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Víctor Styles | Barbería Mundialista</title>
     <link rel="manifest" href="manifest.json">
-    <!-- Scripts necesarios para EmailJS y Firebase (Votación) -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -73,303 +72,143 @@
         }
 
         /* ==========================================================================
-           BARRA DE NAVEGACIÓN Y MENÚ DESPLEGABLE (GLASSMORPHISM)
+           BARRA DE NAVEGACIÓN Y MENÚ
            ========================================================================== */
         header {
-            display: flex;
-            flex-direction: row; 
-            justify-content: space-between;
-            align-items: center;        
-            padding: 0 5%;          
-            background-color: rgba(10, 10, 10, 0.85);  
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            position: fixed;            
-            width: 100%;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-            border-bottom: 1px solid var(--borde-sutil);
-            height: 75px;
+            display: flex; flex-direction: row; justify-content: space-between; align-items: center;        
+            padding: 0 5%; background-color: rgba(10, 10, 10, 0.85); backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px); position: fixed; width: 100%; top: 0; left: 0;
+            z-index: 1000; border-bottom: 1px solid var(--borde-sutil); height: 75px;
         }
-
-        .header-decoracion-mundial {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, #006847 0%, #CE1126 50%, #0033A0 100%);
-            z-index: 1001;
-        }
-
-        .header-badge {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.7rem;
-            font-weight: 800;
-            color: var(--dorado-brillante);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border: 1px solid rgba(184, 146, 78, 0.3);
-            padding: 4px 10px;
-            border-radius: 20px;
-            background: rgba(184, 146, 78, 0.05);
-        }
-
-        .menu-hamburguesa {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 24px;
-            height: 15px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            z-index: 1100;
-        }
-
-        .menu-hamburguesa span {
-            width: 100%;
-            height: 2px;
-            background-color: #ffffff;
-            border-radius: 2px;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-        }
-
+        .header-decoracion-mundial { position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, #006847 0%, #CE1126 50%, #0033A0 100%); z-index: 1001; }
+        .header-badge { display: flex; align-items: center; gap: 5px; font-size: 0.7rem; font-weight: 800; color: var(--dorado-brillante); text-transform: uppercase; letter-spacing: 1px; border: 1px solid rgba(184, 146, 78, 0.3); padding: 4px 10px; border-radius: 20px; background: rgba(184, 146, 78, 0.05); }
+        .menu-hamburguesa { display: flex; flex-direction: column; justify-content: space-between; width: 24px; height: 15px; background: transparent; border: none; cursor: pointer; z-index: 1100; }
+        .menu-hamburguesa span { width: 100%; height: 2px; background-color: #ffffff; border-radius: 2px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; }
         .menu-hamburguesa.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); background-color: var(--dorado-brillante); }
         .menu-hamburguesa.open span:nth-child(2) { opacity: 0; }
         .menu-hamburguesa.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); background-color: var(--dorado-brillante); }
-
-        .menu-desplegable {
-            position: fixed;
-            top: 0;
-            left: -290px; 
-            width: 290px;
-            height: 100vh;
-            background-color: #0e0e0e;
-            background-image: url("data:image/svg+xml,%3Csvg width='40' height='69' viewBox='0 0 40 69' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0L40 11.5v23L20 46 0 34.5v-23L20 0zm0 13L6.928 20.5v15L20 43l13.072-7.5v-15L20 13z' fill='%23b8924e' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
-            border-right: 1px solid var(--borde-sutil);
-            box-shadow: 20px 0 40px rgba(0, 0, 0, 0.9);
-            z-index: 1050;
-            display: flex;
-            flex-direction: column;
-            padding: 100px 35px 40px 35px;
-            transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .menu-desplegable.open {
-            left: 0; 
-        }
-
-        .menu-desplegable a {
-            color: var(--gris-texto);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            padding: 18px 0;
-            border-bottom: 1px solid rgba(184, 146, 78, 0.05);
-            transition: color 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .menu-desplegable a:active, .menu-desplegable a:hover {
-            color: var(--dorado-brillante);
-            padding-left: 5px;
-        }
-
-        .menu-desplegable .link-admin-menu {
-            margin-top: auto; 
-            color: var(--dorado-acento);
-            font-size: 0.8rem;
-            border: 1px solid rgba(184, 146, 78, 0.2);
-            border-radius: 8px;
-            text-align: center;
-            padding: 14px;
-            background-color: rgba(184, 146, 78, 0.02);
-            transition: all 0.25s ease;
-            display: block;
-        }
-
+        .menu-desplegable { position: fixed; top: 0; left: -290px; width: 290px; height: 100vh; background-color: #0e0e0e; background-image: url("data:image/svg+xml,%3Csvg width='40' height='69' viewBox='0 0 40 69' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0L40 11.5v23L20 46 0 34.5v-23L20 0zm0 13L6.928 20.5v15L20 43l13.072-7.5v-15L20 13z' fill='%23b8924e' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E"); border-right: 1px solid var(--borde-sutil); box-shadow: 20px 0 40px rgba(0, 0, 0, 0.9); z-index: 1050; display: flex; flex-direction: column; padding: 100px 35px 40px 35px; transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+        .menu-desplegable.open { left: 0; }
+        .menu-desplegable a { color: var(--gris-texto); text-decoration: none; font-size: 0.9rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 18px 0; border-bottom: 1px solid rgba(184, 146, 78, 0.05); transition: color 0.2s ease; display: flex; align-items: center; gap: 12px; }
+        .menu-desplegable a:active, .menu-desplegable a:hover { color: var(--dorado-brillante); padding-left: 5px; }
+        .menu-desplegable .link-admin-menu { margin-top: auto; color: var(--dorado-acento); font-size: 0.8rem; border: 1px solid rgba(184, 146, 78, 0.2); border-radius: 8px; text-align: center; padding: 14px; background-color: rgba(184, 146, 78, 0.02); transition: all 0.25s ease; display: block; }
         .logo { display: flex; align-items: center; flex-shrink: 0; }
         .logo img { height: 55px; width: auto; display: block; filter: drop-shadow(0 2px 10px rgba(0,0,0,0.6)); }
-
         .menu-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.8); z-index: 1040; display: none; backdrop-filter: blur(4px); }
         .menu-overlay.show { display: block; }
 
-        /* ==========================================================================
-           BANDERINES DEL MUNDIAL 2026
-           ========================================================================== */
-        .banderines-top {
-            position: absolute;
-            top: 75px; 
-            width: 100%;
-            display: flex;
-            justify-content: space-around;
-            z-index: 500;
-            pointer-events: none;
-        }
-
-        .banderines-top span {
-            width: 20px;
-            height: 30px;
-            clip-path: polygon(50% 100%, 0 0, 100% 0);
-            opacity: 0.85;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.5);
-        }
-
-        /* Colores de los anfitriones y la marca */
-        .banderines-top span:nth-child(4n+1) { background: #006847; margin-top: -5px; } /* Verde México */
-        .banderines-top span:nth-child(4n+2) { background: var(--dorado-acento); } /* Dorado Víctor Styles */
-        .banderines-top span:nth-child(4n+3) { background: #CE1126; margin-top: -8px; } /* Rojo Canadá/USA/Mex */
-        .banderines-top span:nth-child(4n+4) { background: #0033A0; margin-top: -2px; } /* Azul USA */
+        .banderines-top { position: absolute; top: 75px; width: 100%; display: flex; justify-content: space-around; z-index: 500; pointer-events: none; }
+        .banderines-top span { width: 20px; height: 30px; clip-path: polygon(50% 100%, 0 0, 100% 0); opacity: 0.85; box-shadow: 0 4px 6px rgba(0,0,0,0.5); }
+        .banderines-top span:nth-child(4n+1) { background: #006847; margin-top: -5px; } 
+        .banderines-top span:nth-child(4n+2) { background: var(--dorado-acento); } 
+        .banderines-top span:nth-child(4n+3) { background: #CE1126; margin-top: -8px; } 
+        .banderines-top span:nth-child(4n+4) { background: #0033A0; margin-top: -2px; } 
 
         /* ==========================================================================
-           SECCIÓN DE BIENVENIDA (HERO PANEL)
+           SECCIÓN DE BIENVENIDA 
            ========================================================================== */
-        .hero-container {
-            position: relative;
-            width: 100%;
-            height: 85vh; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            background-color: #000000; 
-            margin-top: 75px;
-        }
-
+        .hero-container { position: relative; width: 100%; height: 85vh; display: flex; align-items: center; justify-content: center; overflow: hidden; background-color: #000000; margin-top: 75px; }
         .hero-media { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
         .hero-img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
         .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(10, 10, 10, 0.4) 0%, rgba(10, 10, 10, 0.98) 100%); }
-
-        .hero-content {
-            position: relative;
-            z-index: 2; 
-            text-align: center;
-            padding: 0 24px;
-            max-width: 700px;
-        }
-
-        .hero-title {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: #ffffff;
-            letter-spacing: 5px; 
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            background: linear-gradient(180deg, #ffffff 40%, var(--dorado-acento) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.6));
-        }
-
-        .badge-mundial {
-            display: inline-block;
-            padding: 6px 14px;
-            background: linear-gradient(90deg, #0a0a0a, #1a1a1a);
-            border: 1px solid var(--dorado-acento);
-            color: var(--dorado-brillante);
-            font-size: 0.7rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(184, 146, 78, 0.3);
-        }
-
-        .hero-subtitle {
-            font-size: 1rem;
-            color: #d1d1d6;
-            margin-bottom: 25px;
-            font-weight: 300;
-            letter-spacing: 1.2px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-        }
+        .hero-content { position: relative; z-index: 2; text-align: center; padding: 0 24px; max-width: 700px; }
+        .hero-title { font-size: 2.5rem; font-weight: 900; color: #ffffff; letter-spacing: 5px; margin-bottom: 8px; text-transform: uppercase; background: linear-gradient(180deg, #ffffff 40%, var(--dorado-acento) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.6)); }
+        .badge-mundial { display: inline-block; padding: 6px 14px; background: linear-gradient(90deg, #0a0a0a, #1a1a1a); border: 1px solid var(--dorado-acento); color: var(--dorado-brillante); font-size: 0.7rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; border-radius: 6px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(184, 146, 78, 0.3); }
+        .hero-subtitle { font-size: 1rem; color: #d1d1d6; margin-bottom: 25px; font-weight: 300; letter-spacing: 1.2px; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6); }
 
         /* ==========================================================================
-           BANNER PROMOCIONAL BARAJITAS (PREMIUM & NO INVASIVO)
+           NUEVO BANNER BARAJITAS (Más dinámico)
            ========================================================================== */
         .banner-mundial {
-            background: linear-gradient(135deg, rgba(18, 18, 18, 0.8) 0%, rgba(184, 146, 78, 0.15) 100%);
-            border: 1px solid rgba(184, 146, 78, 0.3);
-            border-left: 4px solid var(--dorado-brillante);
-            border-radius: 12px;
-            padding: 15px 20px;
+            position: relative;
+            background: linear-gradient(135deg, rgba(15, 15, 15, 0.9) 0%, rgba(184, 146, 78, 0.1) 100%);
+            border: 1px solid rgba(223, 186, 107, 0.4);
+            border-radius: 16px;
+            padding: 16px 20px;
             margin: 0 auto 35px auto;
             display: flex;
             align-items: center;
             gap: 16px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 15px rgba(223, 186, 107, 0.1);
             text-align: left;
             max-width: 450px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: default;
         }
 
-        .banner-mundial:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(184, 146, 78, 0.2);
+        .banner-mundial::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(223, 186, 107, 0.15), transparent);
+            transform: skewX(-20deg);
+            animation: shineBanner 4s infinite;
         }
 
-        .banner-mundial-icon {
-            font-size: 2.2rem;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        @keyframes shineBanner {
+            0% { left: -100%; }
+            20% { left: 200%; }
+            100% { left: 200%; }
         }
 
-        .banner-mundial-text h4 {
-            color: var(--dorado-brillante);
-            font-size: 0.95rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
+        .banner-mundial:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 15px 45px rgba(184, 146, 78, 0.25); border-color: var(--dorado-brillante); }
+        .banner-mundial-icon { font-size: 2.4rem; filter: drop-shadow(0 2px 8px rgba(223, 186, 107, 0.4)); animation: float 3s ease-in-out infinite; }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
         }
 
-        .banner-mundial-text p {
-            color: #e5e5e5;
-            font-size: 0.8rem;
-            line-height: 1.4;
-            font-weight: 400;
-        }
+        .banner-mundial-text h4 { color: var(--dorado-brillante); font-size: 1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        .banner-mundial-text p { color: #f0f0f0; font-size: 0.82rem; line-height: 1.5; font-weight: 400; }
+        .banner-mundial-text strong { color: #ffffff; font-weight: 800; background: var(--gradiente-metal); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .banner-mundial-text strong {
-            color: #ffffff;
-            font-weight: 700;
-        }
-
-        .hero-btn {
-            display: inline-block;
-            padding: 16px 36px;
-            background: var(--gradiente-metal);
-            color: #0a0a0a;
-            text-decoration: none;
-            font-weight: 800;
-            font-size: 0.85rem;
-            letter-spacing: 2px;
-            border-radius: 8px;
-            text-transform: uppercase;
-            box-shadow: 0 8px 30px rgba(184, 146, 78, 0.25);
-            transition: transform 0.2s ease, box-shadow 0.25s ease;
-        }
-
+        .hero-btn { display: inline-block; padding: 16px 36px; background: var(--gradiente-metal); color: #0a0a0a; text-decoration: none; font-weight: 800; font-size: 0.85rem; letter-spacing: 2px; border-radius: 8px; text-transform: uppercase; box-shadow: 0 8px 30px rgba(184, 146, 78, 0.25); transition: transform 0.2s ease, box-shadow 0.25s ease; }
         .hero-btn:active { transform: scale(0.97); box-shadow: 0 4px 12px rgba(184, 146, 78, 0.15); }
 
         /* ==========================================================================
-           SECCIONES RESTANTES
+           NUEVA SECCIÓN ENCUESTA (Tarjetas en lugar de botones simples)
            ========================================================================== */
-        .encuesta-section { padding: 40px 5%; text-align: center; background-color: #0e0e0e; border-top: 1px solid var(--borde-sutil); }
-        .btn-equipo { background: #181818; border: 1px solid var(--dorado-acento); color: #ffffff; padding: 12px 5px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.8rem; transition: all 0.3s ease; }
-        .btn-equipo:hover { background: var(--dorado-acento); color: #0a0a0a; }
-        .barra-progreso { height: 6px; background: #181818; border-radius: 4px; margin-bottom: 12px; overflow: hidden; border: 1px solid rgba(184, 146, 78, 0.1); }
-        .progreso-relleno { height: 100%; background: var(--gradiente-metal); width: 0%; transition: width 1s ease-in-out; }
+        .encuesta-section { padding: 50px 5%; text-align: center; background-color: #0e0e0e; border-top: 1px solid var(--borde-sutil); }
+        
+        #contenedor-votos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            max-width: 550px;
+            margin: 20px auto 0 auto;
+        }
+
+        .btn-equipo {
+            background: linear-gradient(145deg, #181818, #101010);
+            border: 1px solid rgba(184, 146, 78, 0.2);
+            color: #ffffff;
+            padding: 18px 10px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        .btn-equipo .bandera { font-size: 2rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); transition: transform 0.3s; }
+        .btn-equipo:hover { background: #1a1a1a; border-color: var(--dorado-brillante); transform: translateY(-5px); box-shadow: 0 10px 25px rgba(184, 146, 78, 0.2); color: var(--dorado-brillante); }
+        .btn-equipo:hover .bandera { transform: scale(1.15); }
+        .btn-equipo:active { transform: translateY(0); }
+
+        .barra-progreso { height: 8px; background: #121212; border-radius: 6px; margin-bottom: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+        .progreso-relleno { height: 100%; background: var(--gradiente-metal); width: 0%; transition: width 1s ease-in-out; border-radius: 6px; }
 
         .galeria-section { padding: 70px 5%; max-width: 1150px; margin: 0 auto; }
         .grid-galeria { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
@@ -388,20 +227,76 @@
         .servicio-costo { font-size: 1.25rem; font-weight: 800; color: #ffffff; background-color: #1e1e1e; padding: 8px 16px; border-radius: 8px; min-width: 68px; text-align: center; border: 1px solid var(--borde-sutil); }
         .precio-tarjeta.destacado .servicio-costo { background: var(--gradiente-metal); color: #0a0a0a; border-color: transparent; }
 
+        /* ==========================================================================
+           NUEVA SECCIÓN DE AGENDA (Flujo por Pasos + Cartelera Visual)
+           ========================================================================== */
         .agenda-section { padding: 70px 5%; background-color: #0e0e0e; }
-        .form-agenda { max-width: 520px; margin: 0 auto; background-color: var(--fondo-tarjeta); padding: 32px 26px; border-radius: 16px; border: 1px solid var(--borde-sutil); box-shadow: var(--shadow-premium); }
-        .grupo-input { margin-bottom: 22px; display: flex; flex-direction: column; gap: 8px; }
-        .grupo-input label { color: var(--dorado-acento); font-size: 0.72rem; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
-        .grupo-input input, .grupo-input select, .select-servicio { width: 100%; padding: 14px 16px; background-color: var(--fondo-input); border: 1px solid rgba(255, 255, 255, 0.05); color: #ffffff; border-radius: 10px; outline: none; font-size: 0.92rem; font-weight: 500; appearance: none; -webkit-appearance: none; }
-        .grupo-input input:focus, .grupo-input select:focus { border-color: var(--dorado-acento); box-shadow: 0 0 0 3px var(--borde-enfoque); }
+        .form-agenda { max-width: 550px; margin: 0 auto; background-color: var(--fondo-tarjeta); padding: 32px 26px; border-radius: 16px; border: 1px solid var(--borde-sutil); box-shadow: var(--shadow-premium); }
         
-        /* Modales, botones y utilidades que tenías antes... (Se mantienen iguales) */
-        .btn-submit { width: 100%; padding: 15px; background: var(--gradiente-metal); color: #0a0a0a; border: none; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; border-radius: 10px; cursor: pointer; box-shadow: 0 6px 20px rgba(184, 146, 78, 0.2); }
-        .contenedor-reagendar { margin-top: 30px; padding-top: 25px; border-top: 1px dashed rgba(184, 146, 78, 0.15); }
+        .paso-titulo {
+            font-size: 1.1rem;
+            color: var(--dorado-brillante);
+            margin-bottom: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center; gap: 10px;
+            border-bottom: 1px solid rgba(184, 146, 78, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .paso-titulo span {
+            background: var(--dorado-acento); color: #000;
+            border-radius: 50%; width: 24px; height: 24px;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 900;
+        }
+
+        .grupo-input { margin-bottom: 22px; display: flex; flex-direction: column; gap: 8px; }
+        .grupo-input label { color: var(--gris-texto); font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+        
+        /* Inputs modernos */
+        .grupo-input input, .grupo-input select, .select-servicio { 
+            width: 100%; padding: 16px; background-color: var(--fondo-input); 
+            border: 1px solid rgba(255, 255, 255, 0.08); color: #ffffff; 
+            border-radius: 12px; outline: none; font-size: 0.95rem; font-weight: 500; 
+            transition: all 0.3s ease;
+        }
+        .grupo-input input[type="date"] { color-scheme: dark; }
+        .grupo-input input:focus, .grupo-input select:focus { border-color: var(--dorado-acento); box-shadow: 0 0 0 3px var(--borde-enfoque); background-color: #1a1a1a; }
+        
+        /* Cartelera Visual de Horas (Grid de Botones) */
+        .cartelera-horas {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+            gap: 12px; margin-bottom: 25px; margin-top: 5px;
+        }
+
+        .msj-informativo { color: var(--gris-secundario); font-size: 0.85rem; font-style: italic; text-align: center; padding: 20px 0; grid-column: 1 / -1; }
+
+        .pill-hora {
+            background-color: var(--fondo-input); border: 1px solid rgba(184, 146, 78, 0.3);
+            color: #fff; padding: 12px 5px; border-radius: 10px; font-size: 0.85rem;
+            font-weight: 600; cursor: pointer; transition: all 0.2s ease; text-align: center;
+        }
+        
+        .pill-hora:hover { border-color: var(--dorado-brillante); background-color: rgba(184, 146, 78, 0.1); transform: translateY(-2px); }
+        .pill-hora.activa { background: var(--gradiente-metal); color: #0a0a0a; border-color: transparent; box-shadow: 0 5px 15px rgba(184, 146, 78, 0.4); transform: scale(1.05); }
+
+        /* Sección de datos personales inhabilitada hasta elegir hora */
+        #seccion-datos-personales { opacity: 0.4; pointer-events: none; transition: opacity 0.4s ease; margin-top: 30px; }
+        #seccion-datos-personales.habilitado { opacity: 1; pointer-events: auto; }
+
+        .btn-submit { width: 100%; padding: 18px; background: var(--gradiente-metal); color: #0a0a0a; border: none; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem; border-radius: 12px; cursor: pointer; box-shadow: 0 8px 25px rgba(184, 146, 78, 0.3); transition: transform 0.2s ease; margin-top: 10px; }
+        .btn-submit:hover { transform: translateY(-2px); }
+
+        .contenedor-reagendar { margin-top: 35px; padding-top: 25px; border-top: 1px dashed rgba(184, 146, 78, 0.15); }
         .titulo-reagendar { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #ffffff; margin-bottom: 12px; text-align: center; }
         .fila-reagendar { display: flex; gap: 10px; }
-        .input-codigo { flex: 1; text-transform: uppercase; letter-spacing: 2px; text-align: center; }
-        .btn-reagendar { padding: 0 20px; background-color: #1e1e1e; color: #ffffff; border: 1px solid var(--borde-sutil); border-radius: 10px; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; cursor: pointer; }
+        .input-codigo { flex: 1; text-transform: uppercase; letter-spacing: 2px; text-align: center; padding: 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: #1a1a1a; color: #fff;}
+        .btn-reagendar { padding: 0 20px; background-color: #2a2a2a; color: #ffffff; border: 1px solid var(--borde-sutil); border-radius: 10px; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; cursor: pointer; transition: background 0.3s; }
+        .btn-reagendar:hover { background-color: var(--dorado-acento); color: #000; }
         
         .ubicacion-section { padding: 60px 5%; background-color: #060606; border-top: 1px solid var(--borde-sutil); text-align: center; }
         .contenedor-direccion { max-width: 550px; margin: 0 auto; background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-radius: 14px; padding: 24px; box-shadow: var(--shadow-premium); }
@@ -483,12 +378,11 @@
         <div class="badge-mundial">Edición Mundialista 26</div>
         <p class="hero-subtitle">Estilo, precisión y elegancia en cada corte.</p>
         
-        <!-- Nuevo Banner de Barajitas Mundial -->
         <div class="banner-mundial">
-            <div class="banner-mundial-icon">⚽🎫</div>
+            <div class="banner-mundial-icon">🎫</div>
             <div class="banner-mundial-text">
                 <h4>¡Fiebre Mundialista!</h4>
-                <p>Por cada servicio te llevas una <strong>barajita sorpresa</strong> oficial. ¡Empieza a llenar tu álbum!</p>
+                <p>Con cada servicio te llevas una <strong>barajita oficial</strong> de cortesía. ¡Llena tu álbum con nosotros!</p>
             </div>
         </div>
 
@@ -497,19 +391,32 @@
 </section>
 
 <section id="encuesta" class="encuesta-section bg-mundial-hex">
-    <h2 style="font-size: 1.2rem; color: #ffffff; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;">¿Quién es tu favorito al título?</h2>
+    <h2 style="font-size: 1.4rem; color: #ffffff; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 2px;">Rumbo al Título</h2>
+    <p class="subtitulo">¿Quién se coronará campeón en 2026? ¡Vota por tu favorito!</p>
     
-    <div id="contenedor-votos" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 400px; margin: 0 auto;">
-        <button class="btn-equipo" onclick="votar('Brasil')">🇧🇷 Brasil</button>
-        <button class="btn-equipo" onclick="votar('España')">🇪🇸 España</button>
-        <button class="btn-equipo" onclick="votar('Francia')">🇫🇷 Francia</button>
-        <button class="btn-equipo" onclick="votar('Portugal')">🇵🇹 Portugal</button>
-        <button class="btn-equipo" onclick="votar('Argentina')">🇦🇷 Argentina</button>
-        <button class="btn-equipo" onclick="votar('Otro')">🌍 Otro</button>
+    <div id="contenedor-votos">
+        <button class="btn-equipo" onclick="votar('Brasil')">
+            <span class="bandera">🇧🇷</span> Brasil
+        </button>
+        <button class="btn-equipo" onclick="votar('España')">
+            <span class="bandera">🇪🇸</span> España
+        </button>
+        <button class="btn-equipo" onclick="votar('Francia')">
+            <span class="bandera">🇫🇷</span> Francia
+        </button>
+        <button class="btn-equipo" onclick="votar('Portugal')">
+            <span class="bandera">🇵🇹</span> Portugal
+        </button>
+        <button class="btn-equipo" onclick="votar('Argentina')">
+            <span class="bandera">🇦🇷</span> Argentina
+        </button>
+        <button class="btn-equipo" onclick="votar('Otro')">
+            <span class="bandera">🌍</span> Otro
+        </button>
     </div>
 
-    <div id="resultados-encuesta" style="margin-top: 20px; display: none; max-width: 400px; margin-left: auto; margin-right: auto;">
-        <p style="color: var(--gris-secundario); font-size: 0.8rem; margin-bottom: 15px;">Resultados en tiempo real:</p>
+    <div id="resultados-encuesta" style="margin-top: 30px; display: none; max-width: 500px; margin-left: auto; margin-right: auto; text-align: left;">
+        <p style="color: var(--dorado-brillante); font-size: 0.9rem; font-weight: bold; margin-bottom: 20px; text-align: center; text-transform: uppercase;">Resultados en tiempo real</p>
         <div id="barras-resultados"></div>
     </div>
 </section>
@@ -517,10 +424,10 @@
 <section id="galeria" class="galeria-section">
     <h2>Mi Trabajo</h2>
     <p class="subtitulo">Una muestra de los cortes y estilos recientes.</p>
-    <div class="grid-galeria">
-        <div class="tarjeta-galeria"><img src="corte1.png" alt="Corte de cabello 1"><p>Hair Fade</p></div>
-        <div class="tarjeta-galeria"><img src="corte2.jpg" alt="Corte de cabello 2"><p>Fade con linea</p></div>
-        <div class="tarjeta-galeria"><img src="corte3.jpg" alt="Corte de cabello 3"><p>Mid Fade</p></div>
+    <div class="grid-galeria" id="grid-galeria-dinamica">
+        <div class="tarjeta-galeria" style="grid-column: 1/-1; background: transparent; border: none; box-shadow: none;">
+            <p style="color: var(--dorado-brillante); padding: 30px; font-size: 0.85rem;">Cargando cortes en tendencia...</p>
+        </div>
     </div>
 </section>
 
@@ -532,50 +439,27 @@
 
     <div class="precios-grid">
         <div class="precio-tarjeta">
-            <div class="servicio-info">
-                <h3>Corte Sencillo</h3>
-                <p>Corte clásico o moderno con acabado limpio.</p>
-            </div>
+            <div class="servicio-info"><h3>Corte Sencillo</h3><p>Corte clásico o moderno con acabado limpio.</p></div>
             <div class="servicio-costo">10$</div>
         </div>
-
         <div class="precio-tarjeta destacado">
-            <div class="servicio-info">
-                <h3>Corte Premium</h3>
-                <p>Corte estilizado, lavado, peinado y producto premium.</p>
-            </div>
+            <div class="servicio-info"><h3>Corte Premium</h3><p>Corte estilizado, lavado, peinado y producto premium.</p></div>
             <div class="servicio-costo">13$</div>
         </div>
-
         <div class="precio-tarjeta">
-            <div class="servicio-info">
-                <h3>Corte con Barba Sencillo</h3>
-                <p>Arreglo de cabello y perfilado de barba básico.</p>
-            </div>
+            <div class="servicio-info"><h3>Corte con Barba Sencillo</h3><p>Arreglo de cabello y perfilado de barba básico.</p></div>
             <div class="servicio-costo">16$</div>
         </div>
-
         <div class="precio-tarjeta destacado">
-            <div class="servicio-info">
-                <h3>Corte con Barba Premium</h3>
-                <p>Servicio completo, ritual de toalla caliente y navaja.</p>
-            </div>
+            <div class="servicio-info"><h3>Corte con Barba Premium</h3><p>Servicio completo, ritual de toalla caliente y navaja.</p></div>
             <div class="servicio-costo">19$</div>
         </div>
-
         <div class="precio-tarjeta">
-            <div class="servicio-info">
-                <h3>Barba Sola</h3>
-                <p>Perfilado, hidratación y cuidado de tu barba.</p>
-            </div>
+            <div class="servicio-info"><h3>Barba Sola</h3><p>Perfilado, hidratación y cuidado de tu barba.</p></div>
             <div class="servicio-costo">6$</div>
         </div>
-
         <div class="precio-tarjeta">
-            <div class="servicio-info">
-                <h3>Cero con Barba Premium</h3>
-                <p>Rasurado al ras (cero) combinado con arreglo premium de barba.</p>
-            </div>
+            <div class="servicio-info"><h3>Cero con Barba Premium</h3><p>Rasurado al ras (cero) combinado con arreglo premium.</p></div>
             <div class="servicio-costo">13$</div>
         </div>
     </div>
@@ -586,42 +470,54 @@
     <p class="subtitulo">Asegura tu puesto antes de que empiece el partido.</p>
     
     <form id="formulario-cita" class="form-agenda">
-        <div class="grupo-input">
-            <label for="nombre">Nombre Completo</label>
-            <input type="text" id="nombre" required placeholder="Ej. Juan Pérez">
-        </div>
+        
+        <div class="paso-titulo"><span>1</span> Elige tu espacio</div>
         
         <div class="grupo-input">
-            <label for="telefono">Teléfono de Contacto</label>
-            <input type="tel" id="telefono" required placeholder="Ej. 04121234567">
-        </div>
-
-        <div class="grupo-input">
-            <label for="servicio">Selecciona el Servicio</label>
-            <select id="servicio" required class="select-servicio">
-                <option value="" disabled selected>-- Elige un servicio --</option>
-                <option value="Corte Sencillo (10$)">Corte Sencillo - 10$</option>
-                <option value="Corte Premium (13$)">Corte Premium - 13$</option>
-                <option value="Corte con Barba Sencillo (16$)">Corte con Barba Sencillo - 16$</option>
-                <option value="Corte con Barba Premium (19$)">Corte con Barba Premium - 19$</option>
-                <option value="Barba Sola (6$)">Barba Sola - 6$</option>
-                <option value="Cero con Barba Premium (13$)">Cero con Barba Premium - 13$</option>
-            </select>
-        </div>
-        
-        <div class="grupo-input">
-            <label for="fecha">Fecha de tu Cita</label>
+            <label for="fecha">Selecciona la Fecha de tu Cita</label>
             <input type="date" id="fecha" required>
         </div>
         
         <div class="grupo-input">
-            <label for="hora">Hora Disponible para ese día</label>
-            <select id="hora" required disabled>
+            <label>Horarios Disponibles</label>
+            
+            <div id="cartelera-horas-contenedor" class="cartelera-horas">
+                <div class="msj-informativo">Primero selecciona una fecha en el calendario.</div>
+            </div>
+
+            <select id="hora" style="display: none;">
                 <option value="" disabled selected>Primero selecciona un día</option>
             </select>
         </div>
         
-        <button type="submit" class="btn-submit">Confirmar Reserva</button>
+        <div id="seccion-datos-personales">
+            <div class="paso-titulo"><span>2</span> Completa tu reserva</div>
+
+            <div class="grupo-input">
+                <label for="nombre">Nombre Completo</label>
+                <input type="text" id="nombre" required placeholder="Ej. Juan Pérez">
+            </div>
+            
+            <div class="grupo-input">
+                <label for="telefono">Teléfono de Contacto</label>
+                <input type="tel" id="telefono" required placeholder="Ej. 04121234567">
+            </div>
+
+            <div class="grupo-input">
+                <label for="servicio">Selecciona el Servicio</label>
+                <select id="servicio" required class="select-servicio">
+                    <option value="" disabled selected>-- Elige un servicio --</option>
+                    <option value="Corte Sencillo (10$)">Corte Sencillo - 10$</option>
+                    <option value="Corte Premium (13$)">Corte Premium - 13$</option>
+                    <option value="Corte con Barba Sencillo (16$)">Corte con Barba Sencillo - 16$</option>
+                    <option value="Corte con Barba Premium (19$)">Corte con Barba Premium - 19$</option>
+                    <option value="Barba Sola (6$)">Barba Sola - 6$</option>
+                    <option value="Cero con Barba Premium (13$)">Cero con Barba Premium - 13$</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn-submit">Confirmar Reserva</button>
+        </div>
 
         <div class="contenedor-reagendar">
             <div class="titulo-reagendar">¿Necesitas gestionar o reagendar tu cita?</div>
@@ -721,18 +617,21 @@
     const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
     emailjs.init('qVvgWBz_cfropwyVU');
 
+    // Mantenemos esto para verificar si la barbería abre o cierra un día en específico
     const horariosBarberia = {
-        1: { inicio: "09:00", fin: "16:00" }, // Lunes
-        2: { inicio: "09:00", fin: "16:00" }, // Martes
-        3: { inicio: "09:00", fin: "14:30" }, // Miércoles
-        4: { inicio: "09:00", fin: "20:30" }, // Jueves
-        5: { inicio: "09:00", fin: "20:30" }, // Viernes
-        6: { inicio: "09:00", fin: "20:30" }, // Sábado
-        0: { inicio: "14:00", fin: "18:00" }  // Domingo
+        1: { activo: true }, // Lunes
+        2: { activo: true }, // Martes
+        3: { activo: true }, // Miércoles
+        4: { activo: true }, // Jueves
+        5: { activo: true }, // Viernes
+        6: { activo: true }, // Sábado
+        0: { activo: true }  // Domingo (Puedes cambiar a false si cierras los domingos)
     };
 
     const inputFecha = document.getElementById('fecha');
-    const selectHora = document.getElementById('hora');
+    const selectHora = document.getElementById('hora'); 
+    const carteleraHoras = document.getElementById('cartelera-horas-contenedor');
+    const seccionDatos = document.getElementById('seccion-datos-personales');
 
     const modalCita = document.getElementById('modalCita');
     const lblTicketCliente = document.getElementById('lblTicketCliente');
@@ -769,6 +668,34 @@
         return resultado;
     }
 
+    // === NUEVA FUNCIÓN: CARGAR GALERÍA DESDE FIREBASE ===
+    function cargarGaleriaDinamica() {
+        fetch(`${FIREBASE_URL}galeria.json`)
+            .then(response => response.json())
+            .then(data => {
+                const gridGaleria = document.getElementById('grid-galeria-dinamica');
+                gridGaleria.innerHTML = '';
+                
+                if (data && Object.keys(data).length > 0) {
+                    Object.keys(data).forEach(key => {
+                        const img = data[key];
+                        gridGaleria.innerHTML += `
+                            <div class="tarjeta-galeria">
+                                <img src="${img.url}" alt="${img.titulo || 'Corte de cabello'}">
+                                <p>${img.titulo || 'Estilo Premium'}</p>
+                            </div>
+                        `;
+                    });
+                } else {
+                    gridGaleria.innerHTML = '<p style="color: var(--gris-secundario); grid-column: 1/-1; text-align:center; padding: 20px;">Próximamente nuevos estilos en nuestra galería.</p>';
+                }
+            })
+            .catch(error => {
+                console.error("Error cargando galería dinámica:", error);
+                document.getElementById('grid-galeria-dinamica').innerHTML = '<p style="color: var(--gris-secundario); grid-column: 1/-1; text-align:center; padding: 20px;">No se pudo cargar la galería.</p>';
+            });
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const hoyVzlaStr = obtenerFechaVenezuelaStr();
         inputFecha.min = hoyVzlaStr;
@@ -779,105 +706,122 @@
             document.getElementById('nombre').value = nombreGuardado;
             document.getElementById('telefono').value = telefonoGuardado;
         }
+
+        // Llamamos a la galería al cargar la web
+        cargarGaleriaDinamica();
     });
 
+    // === MODIFICADO: LECTURA DE HORARIOS DESDE FIREBASE ===
     inputFecha.addEventListener('change', function() {
         const fechaSeleccionadaStr = this.value; 
         const fechaSeleccionada = new Date(fechaSeleccionadaStr + 'T00:00:00');
         const diaSemana = fechaSeleccionada.getDay(); 
 
-        selectHora.innerHTML = '<option value="" disabled selected>Cargando horas disponibles...</option>';
-        selectHora.disabled = true;
+        selectHora.innerHTML = '<option value="" disabled selected>Cargando horas...</option>';
+        carteleraHoras.innerHTML = '<div class="msj-informativo">Consultando disponibilidad en tiempo real...</div>';
         
-        fetch(`${FIREBASE_URL}citas.json`)
-            .then(response => response.json())
-            .then(citasEnLaNube => {
-                selectHora.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
-                const horario = horariosBarberia[diaSemana];
-                const citasOcupadas = citasEnLaNube ? Object.values(citasEnLaNube) : [];
+        seccionDatos.classList.remove('habilitado');
+        
+        // Consultamos citas ocupadas Y la lista de horas del Admin simultáneamente
+        Promise.all([
+            fetch(`${FIREBASE_URL}citas.json`).then(res => res.json()),
+            fetch(`${FIREBASE_URL}configuracion/horarios.json`).then(res => res.json())
+        ])
+        .then(([citasEnLaNube, horasDesdeAdmin]) => {
+            selectHora.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
+            carteleraHoras.innerHTML = ''; 
+            
+            const horarioActivo = horariosBarberia[diaSemana];
+            const citasOcupadas = citasEnLaNube ? Object.values(citasEnLaNube) : [];
+            
+            // Usamos las horas guardadas por el admin, o un arreglo por defecto si está vacío
+            const listadoHoras = (horasDesdeAdmin && horasDesdeAdmin.length > 0) 
+                ? horasDesdeAdmin 
+                : ["09:00", "09:45", "10:30", "11:15", "12:00", "14:00", "14:45", "15:30", "16:15", "17:00"];
 
-                if (horario) {
-                    selectHora.disabled = false;
+            if (horarioActivo && horarioActivo.activo) {
+                const ahoraVzla = obtenerFechaVenezuelaObj();
+                const hoyVzlaStr = obtenerFechaVenezuelaStr(ahoraVzla);
+                const esHoy = (fechaSeleccionadaStr === hoyVzlaStr);
+                const minutosTranscurridosHoy = ahoraVzla.getHours() * 60 + ahoraVzla.getMinutes();
+
+                let banderaOpcionesDisponibles = false;
+
+                listadoHoras.forEach(horaFormato24 => {
+                    let [horasStr, minutosStr] = horaFormato24.split(':');
+                    let horas = parseInt(horasStr);
+                    let minutos = parseInt(minutosStr || "0");
+                    let tiempoSlot = horas * 60 + minutos;
                     
-                    let [hInicio, mInicio] = horario.inicio.split(':').map(Number);
-                    let [hFin, mFin] = horario.fin.split(':').map(Number);
-                    
-                    let tiempoActual = hInicio * 60 + mInicio;
-                    const tiempoFin = hFin * 60 + mFin;
-
-                    const ahoraVzla = obtenerFechaVenezuelaObj();
-                    const hoyVzlaStr = obtenerFechaVenezuelaStr(ahoraVzla);
-                    const esHoy = (fechaSeleccionadaStr === hoyVzlaStr);
-                    const minutosTranscurridosHoy = ahoraVzla.getHours() * 60 + ahoraVzla.getMinutes();
-
-                    let banderaOpcionesDisponibles = false;
-
-                    while (tiempoActual <= tiempoFin) {
-                        let horas = Math.floor(tiempoActual / 60);
-                        let minutos = tiempoActual % 60;
-                        
-                        let horasStr = horas.toString().padStart(2, '0');
-                        let minutosStr = minutos.toString().padStart(2, '0');
-                        let horaFormato24 = `${horasStr}:${minutosStr}`;
-                        
-                        if (esHoy && tiempoActual <= minutosTranscurridosHoy) {
-                            tiempoActual += 30;
-                            continue;
-                        }
-
-                        let ampmComp = horas >= 12 ? 'PM' : 'AM';
-                        let horas12Comp = horas % 12 || 12;
-                        let textoHoraDeComparacion = `${horas12Comp}:${minutosStr} ${ampmComp}`;
-
-                        let tiempoHace30 = tiempoActual - 30;
-                        let horasHace30 = Math.floor(tiempoHace30 / 60);
-                        let minutesHace30 = tiempoHace30 % 60;
-                        let ampmHace30 = horasHace30 >= 12 ? 'PM' : 'AM';
-                        let horas12Hace30 = horasHace30 % 12 || 12;
-                        let minutosHace30Str = minutesHace30.toString().padStart(2, '0');
-                        let textoHoraHace30DeComparacion = `${horas12Hace30}:${minutosHace30Str} ${ampmHace30}`;
-
-                        const estaOcupadaAhora = citasOcupadas.some(cita => 
-                            cita.cita_fecha === fechaSeleccionadaStr && cita.cita_hora === textoHoraDeComparacion
-                        );
-                        const estaOcupadaAntes = citasOcupadas.some(cita => 
-                            cita.cita_fecha === fechaSeleccionadaStr && cita.cita_hora === textoHoraHace30DeComparacion
-                        );
-
-                        if (estaOcupadaAhora || estaOcupadaAntes) {
-                            tiempoActual += 30;
-                            continue; 
-                        }
-                        
-                        let ampm = horas >= 12 ? 'PM' : 'AM';
-                        let horas12 = horas % 12 || 12;
-                        let textoHora = `${horas12}:${minutosStr} ${ampm}`;
-
-                        let nuevaOpcion = document.createElement('option');
-                        nuevaOpcion.value = horaFormato24;
-                        nuevaOpcion.textContent = textoHora;
-                        selectHora.appendChild(nuevaOpcion);
-
-                        banderaOpcionesDisponibles = true;
-                        tiempoActual += 30;
+                    // Validar si la hora ya pasó (si es el día de hoy)
+                    if (esHoy && tiempoSlot <= minutosTranscurridosHoy) {
+                        return; // Omitir e ir a la siguiente hora
                     }
 
-                    if (!banderaOpcionesDisponibles) {
-                        selectHora.innerHTML = '<option value="" disabled selected>No quedan horas libres para hoy</option>';
-                        selectHora.disabled = true;
-                    }
-                } else {
-                    selectHora.innerHTML = '<option value="" disabled selected>Barbería cerrada este día</option>';
+                    // Formatear para base de datos
+                    let ampm = horas >= 12 ? 'PM' : 'AM';
+                    let horas12 = horas % 12 || 12;
+                    let mStr = minutos.toString().padStart(2, '0');
+                    let textoHora = `${horas12}:${mStr} ${ampm}`;
+
+                    // Validar si ya hay una cita registrada exactamente a esa hora
+                    const estaOcupada = citasOcupadas.some(cita => 
+                        cita.cita_fecha === fechaSeleccionadaStr && cita.cita_hora === textoHora
+                    );
+
+                    if (estaOcupada) return; // Omitir e ir a la siguiente hora
+                    
+                    // 1. Agregar al Select Oculto (para la lógica original)
+                    let nuevaOpcion = document.createElement('option');
+                    nuevaOpcion.value = horaFormato24;
+                    nuevaOpcion.textContent = textoHora;
+                    selectHora.appendChild(nuevaOpcion);
+
+                    // 2. Agregar a la Cartelera Visual de Botones
+                    let btnHora = document.createElement('button');
+                    btnHora.type = 'button';
+                    btnHora.className = 'pill-hora';
+                    btnHora.textContent = textoHora;
+                    
+                    btnHora.addEventListener('click', function() {
+                        document.querySelectorAll('.pill-hora').forEach(p => p.classList.remove('activa'));
+                        this.classList.add('activa');
+                        selectHora.value = horaFormato24;
+                        seccionDatos.classList.add('habilitado');
+                        
+                        setTimeout(() => {
+                            document.getElementById('nombre').focus();
+                        }, 300);
+                    });
+
+                    carteleraHoras.appendChild(btnHora);
+                    banderaOpcionesDisponibles = true;
+                });
+
+                if (!banderaOpcionesDisponibles) {
+                    selectHora.innerHTML = '<option value="" disabled selected>No quedan horas libres para hoy</option>';
+                    carteleraHoras.innerHTML = '<div class="msj-informativo">Agotado por hoy. Por favor, selecciona otro día.</div>';
                 }
-            })
-            .catch(error => {
-                console.error("Error al consultar la nube:", error);
-                selectHora.innerHTML = '<option value="" disabled selected>Error de conexión</option>';
-            });
+            } else {
+                selectHora.innerHTML = '<option value="" disabled selected>Barbería cerrada este día</option>';
+                carteleraHoras.innerHTML = '<div class="msj-informativo">La barbería se encuentra cerrada este día.</div>';
+            }
+        })
+        .catch(error => {
+            console.error("Error al consultar Firebase (Horarios/Citas):", error);
+            selectHora.innerHTML = '<option value="" disabled selected>Error de conexión</option>';
+            carteleraHoras.innerHTML = '<div class="msj-informativo" style="color:#d9534f">Error de conexión al buscar horas. Intenta recargar la página.</div>';
+        });
     });
 
+    // Envío del Formulario (se mantiene intacto)
     document.getElementById('formulario-cita').addEventListener('submit', function(event) {
         event.preventDefault();
+        
+        if(selectHora.selectedIndex <= 0) {
+            alert("Por favor, selecciona una hora de la cartelera.");
+            return;
+        }
 
         const fechaValue = inputFecha.value;
         const horaTexto = selectHora.options[selectHora.selectedIndex].text;
@@ -897,6 +841,9 @@
         localStorage.setItem('barberia_nombre', nombreInput);
         localStorage.setItem('barberia_telefono', telefonoInput);
 
+        const btnSubmitOriginal = document.querySelector('.btn-submit').textContent;
+        document.querySelector('.btn-submit').textContent = "Procesando Reserva...";
+
         fetch(`${FIREBASE_URL}citas.json`, {
             method: 'POST',
             body: JSON.stringify(datosCita)
@@ -913,15 +860,18 @@
             textoCitaGlobalParaCopiar = `💈 VÍCTOR STYLES BARBERÍA 💈\n\nPase de Cita Confirmada\n\n👤 Cliente: ${datosCita.cliente_nombre}\n✂️ Servicio: ${datosCita.servicio}\n📅 Fecha: ${datosCita.cita_fecha}\n⏰ Hora: ${datosCita.cita_hora}\n🔑 Código de Gestión: ${datosCita.codigo_gestion}\n\n📍 Ubicación: Víctor Styles Barbería, Urb. La Gaviota, San Diego, Carabobo.\n\n*Usa tu código para reagendar si lo necesitas.`;
 
             modalCita.classList.add('show');
+            document.querySelector('.btn-submit').textContent = btnSubmitOriginal;
         })
         .catch(error => {
             console.error('Error en el flujo de automatización:', error);
             alert('Hubo un problema al guardar tu turno en internet.');
+            document.querySelector('.btn-submit').textContent = btnSubmitOriginal;
         });
 
         this.reset();
-        selectHora.disabled = true;
         selectHora.innerHTML = '<option value="" disabled selected>Primero selecciona un día</option>';
+        carteleraHoras.innerHTML = '<div class="msj-informativo">Selecciona una fecha en el calendario.</div>';
+        seccionDatos.classList.remove('habilitado');
         
         document.getElementById('nombre').value = nombreInput;
         document.getElementById('telefono').value = telefonoInput;
@@ -989,7 +939,8 @@
                                 document.getElementById('nombre').value = citaDatos.cliente_nombre;
                                 document.getElementById('telefono').value = citaDatos.cliente_telefono;
                                 document.getElementById('servicio').value = citaDatos.servicio;
-                                document.getElementById('nombre').scrollIntoView({ behavior: 'smooth' });
+                                document.getElementById('fecha').scrollIntoView({ behavior: 'smooth' });
+                                document.getElementById('fecha').focus();
                                 inputCodigoGestion.value = "";
                             });
                     }
@@ -1028,9 +979,9 @@
             const porcentaje = total > 0 ? Math.round((votos / total) * 100) : 0;
             
             barras.innerHTML += `
-                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 4px; color: #ffffff;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; color: #ffffff;">
                     <span>${equipo}</span>
-                    <span>${porcentaje}%</span>
+                    <span style="color: var(--dorado-brillante)">${porcentaje}%</span>
                 </div>
                 <div class="barra-progreso"><div class="progreso-relleno" style="width: ${porcentaje}%"></div></div>
             `;
