@@ -326,16 +326,32 @@
     <h2>Ajustes de la Web</h2>
 
     <div class="seccion-bloque">
-        <h3>Horarios de Cita Disponibles</h3>
+        <h3>Horarios de Cita (Por Día Específico)</h3>
         <p style="font-size: 0.8rem; color: var(--gris-secundario); margin-bottom: 15px;">
-            Define las horas base que los clientes verán en la web pública. Sepáralas por comas (,).
+            Selecciona la fecha y tu rango de trabajo para ese día. El sistema calculará los turnos automáticamente.
         </p>
         <form class="form-manual" id="formHorarios" onsubmit="guardarHorariosWeb(event)">
             <div class="form-grupo">
-                <label>Listado de Horas</label>
-                <textarea id="hListado" rows="3" placeholder="Ej: 09:00, 09:45, 10:30, 11:15, 12:00, 14:00" required></textarea>
+                <label>Fecha a configurar</label>
+                <input type="date" id="hFecha" required>
             </div>
-            <button type="submit" class="btn-guardar">Actualizar Horarios Web</button>
+            
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <div class="form-grupo" style="flex: 1; min-width: 100px;">
+                    <label>Hora Inicio</label>
+                    <input type="time" id="hInicio" value="09:00" required>
+                </div>
+                <div class="form-grupo" style="flex: 1; min-width: 100px;">
+                    <label>Hora Fin</label>
+                    <input type="time" id="hFin" value="18:00" required>
+                </div>
+                <div class="form-grupo" style="flex: 1; min-width: 100px;">
+                    <label>Intervalo (Minutos)</label>
+                    <input type="number" id="hIntervalo" value="45" min="15" required>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-guardar">Generar y Actualizar Horarios del Día</button>
         </form>
     </div>
 
@@ -470,8 +486,11 @@
         document.getElementById('btnCerrarSesion').style.display = 'block';
         document.getElementById('navegacionTabs').style.display = 'flex';
         
-        document.getElementById('gFecha').value = obtenerFechaHoy();
-        document.getElementById('mFecha').value = obtenerFechaHoy();
+        // Auto rellenar fechas
+        const hoy = obtenerFechaHoy();
+        document.getElementById('gFecha').value = hoy;
+        document.getElementById('mFecha').value = hoy;
+        if(document.getElementById('hFecha')) document.getElementById('hFecha').value = hoy;
         
         const ahora = new Date();
         document.getElementById('mHora').value = `${String(ahora.getHours()).padStart(2,'0')}:${String(ahora.getMinutes()).padStart(2,'0')}`;
@@ -491,7 +510,7 @@
     }
 
     // =====================================================================
-    // CARGA DE DATOS CENTRALIZADA (Soporta estructura anidada FECHA/HORA)
+    // CARGA DE DATOS CENTRALIZADA
     // =====================================================================
     async function cargarDatosDesdeServidor() {
         try {
@@ -503,14 +522,12 @@
 
             todasLasCitas = [];
             if(citasData) {
-                // Iterar sobre estructura anidada: citas -> 2026-06-24 -> 09-00
                 for (const fecha in citasData) {
                     if(fecha.match(/^\d{4}-\d{2}-\d{2}$/)) { 
                         for (const horaKey in citasData[fecha]) {
                             todasLasCitas.push({ id_ruta: `${fecha}/${horaKey}`, ...citasData[fecha][horaKey] });
                         }
                     } else {
-                        // Compatibilidad si tienes registros antiguos sueltos
                         todasLasCitas.push({ id_ruta: fecha, ...citasData[fecha] });
                     }
                 }
@@ -629,7 +646,7 @@
 
         const fecha = document.getElementById('mFecha').value;
         const horaOriginal = document.getElementById('mHora').value;
-        const horaKey = horaOriginal.replace(':', '-'); // Crea el formato 09-00
+        const horaKey = horaOriginal.replace(':', '-'); 
 
         const payloadCita = {
             cliente_nombre: document.getElementById('mNombre').value,
@@ -643,7 +660,6 @@
         };
 
         try {
-            // Guarda en la estructura estructurada por fechas para bloquear la web
             await fetch(`${FIREBASE_URL}citas/${fecha}/${horaKey}.json?auth=${tokenAuth}`, { 
                 method: 'PUT', 
                 body: JSON.stringify(payloadCita) 
@@ -662,7 +678,7 @@
 
     window.guardarEdicion = async function(e) {
         e.preventDefault();
-        const idRuta = document.getElementById('editIdRuta').value; // Ej: "2026-06-24/09-00"
+        const idRuta = document.getElementById('editIdRuta').value; 
         const btn = e.target.querySelector('button[type="submit"]');
         btn.textContent = 'Actualizando...';
         
@@ -740,14 +756,10 @@
     }
 
     // =====================================================================
-    // MÓDULO: AJUSTES WEB (Horarios y Galería Supabase)
+    // MÓDULO: AJUSTES WEB (Horarios Generados por Día y Galería Supabase)
     // =====================================================================
     async function cargarAjustesWeb() {
         try {
-            const resHorarios = await fetch(`${FIREBASE_URL}configuracion/horarios.json?auth=${tokenAuth}`);
-            const horarios = await resHorarios.json();
-            if(horarios) document.getElementById('hListado').value = horarios.join(', ');
-
             const resGaleria = await fetch(`${FIREBASE_URL}galeria.json?auth=${tokenAuth}`);
             const galeriaData = await resGaleria.json();
             
@@ -771,13 +783,44 @@
 
     window.guardarHorariosWeb = async function(e) {
         e.preventDefault();
-        const btn = e.target.querySelector('button'); btn.textContent = 'Guardando...';
-        const arrayHoras = document.getElementById('hListado').value.split(',').map(h => h.trim()).filter(h => h !== '');
+        const btn = e.target.querySelector('button'); 
+        btn.textContent = 'Guardando...'; btn.disabled = true;
+
+        const fecha = document.getElementById('hFecha').value;
+        const inicio = document.getElementById('hInicio').value;
+        const fin = document.getElementById('hFin').value;
+        const intervalo = parseInt(document.getElementById('hIntervalo').value, 10);
+
+        let horarios = [];
+        let [horaInf, minInf] = inicio.split(':').map(Number);
+        let [horaSup, minSup] = fin.split(':').map(Number);
+        
+        let tiempoActual = new Date();
+        tiempoActual.setHours(horaInf, minInf, 0, 0);
+        
+        let tiempoFin = new Date();
+        tiempoFin.setHours(horaSup, minSup, 0, 0);
+        
+        while (tiempoActual <= tiempoFin) {
+            let hh = String(tiempoActual.getHours()).padStart(2, '0');
+            let mm = String(tiempoActual.getMinutes()).padStart(2, '0');
+            horarios.push(`${hh}:${mm}`);
+            tiempoActual.setMinutes(tiempoActual.getMinutes() + intervalo);
+        }
 
         try {
-            await fetch(`${FIREBASE_URL}configuracion/horarios.json?auth=${tokenAuth}`, { method: 'PUT', body: JSON.stringify(arrayHoras) });
-            alert('Horarios actualizados.');
-        } catch(e) { alert('Error guardando horarios.'); } finally { btn.textContent = 'Actualizar Horarios Web'; }
+            // Guarda los horarios en un nodo específico para ese día
+            await fetch(`${FIREBASE_URL}horarios_por_fecha/${fecha}.json?auth=${tokenAuth}`, { 
+                method: 'PUT', 
+                body: JSON.stringify(horarios) 
+            });
+            alert(`Turnos generados correctamente para el ${fecha}:\n\n${horarios.join(', ')}`);
+        } catch(e) { 
+            alert('Error guardando horarios.'); 
+        } finally { 
+            btn.textContent = 'Generar y Actualizar Horarios del Día'; 
+            btn.disabled = false;
+        }
     }
 
     window.subirImagenGaleria = async function(e) {
@@ -790,11 +833,22 @@
 
         try {
             const fileName = `${Date.now()}_victor.${file.name.split('.').pop()}`;
+            
+            // LA CORRECCIÓN CLAVE DE SUPABASE: AGREGAR EL HEADER 'apikey'
             const uploadRes = await fetch(`${SUPABASE_URL}/storage/v1/object/galeria/${fileName}`, {
-                method: 'POST', headers: { 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': file.type }, body: file
+                method: 'POST', 
+                headers: { 
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Content-Type': file.type 
+                }, 
+                body: file
             });
 
-            if(!uploadRes.ok) throw new Error("Error Supabase");
+            if(!uploadRes.ok) {
+                const errDetail = await uploadRes.json();
+                throw new Error(errDetail.message || "Error Supabase");
+            }
 
             const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/galeria/${fileName}`;
             await fetch(`${FIREBASE_URL}galeria.json?auth=${tokenAuth}`, { 
@@ -803,14 +857,25 @@
             });
 
             document.getElementById('formGaleria').reset(); cargarAjustesWeb();
-        } catch (error) { alert("Error al subir la imagen."); } finally { btn.textContent = 'Subir Imagen'; btn.disabled = false; }
+        } catch (error) { 
+            alert(`Error al subir: ${error.message}`); 
+        } finally { 
+            btn.textContent = 'Subir Imagen'; btn.disabled = false; 
+        }
     }
 
     window.eliminarDeGaleria = async function(idFirebase, nombreArchivo) {
         if(!confirm("¿Seguro que deseas eliminar esta imagen?")) return;
         try {
             await fetch(`${FIREBASE_URL}galeria/${idFirebase}.json?auth=${tokenAuth}`, { method: 'DELETE' });
-            await fetch(`${SUPABASE_URL}/storage/v1/object/galeria/${nombreArchivo}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } });
+            // TAMBIÉN SE AGREGA EL APIKEY AL ELIMINAR
+            await fetch(`${SUPABASE_URL}/storage/v1/object/galeria/${nombreArchivo}`, { 
+                method: 'DELETE', 
+                headers: { 
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                    'apikey': SUPABASE_ANON_KEY 
+                } 
+            });
             cargarAjustesWeb();
         } catch (error) { alert("Error eliminando imagen."); }
     }
