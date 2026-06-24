@@ -721,7 +721,7 @@
         
         Promise.all([
             fetch(`${FIREBASE_URL}citas.json`).then(res => res.json()),
-            fetch(`${FIREBASE_URL}configuracion/horarios.json`).then(res => res.json())
+            fetch(`${FIREBASE_URL}horarios_por_fecha/${fechaSeleccionadaStr}.json`).then(res => res.json())
         ])
         .then(([citasEnLaNube, horasDesdeAdmin]) => {
             selectHora.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
