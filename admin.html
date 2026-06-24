@@ -357,6 +357,9 @@
 
     <div class="seccion-bloque">
         <h3>Subir Nueva Foto a Galería</h3>
+        <p style="font-size: 0.8rem; color: var(--gris-secundario); margin-bottom: 15px;">
+            Las imágenes se optimizarán y guardarán directamente en tu Firebase.
+        </p>
         <form class="form-manual" id="formGaleria" onsubmit="subirImagenGaleria(event)">
             <div class="form-grupo">
                 <label>Título / Estilo (Opcional)</label>
@@ -385,12 +388,10 @@
 
 <script>
     // =====================================================================
-    // VARIABLES GLOBALES (Ajusta los credenciales de Supabase)
+    // VARIABLES GLOBALES 
     // =====================================================================
     const API_KEY_FIREBASE = 'AIzaSyBKrJD4VAzOkvbCay-C8Dxsg3gsUkAt4EA'; 
     const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
-    const SUPABASE_URL = 'https://TU-PROYECTO.supabase.co'; 
-    const SUPABASE_ANON_KEY = 'TU_SUPABASE_ANON_KEY_AQUI'; 
 
     let tokenAuth = sessionStorage.getItem('tokenAdminVictor');
     let todasLasCitas = [];
@@ -486,7 +487,6 @@
         document.getElementById('btnCerrarSesion').style.display = 'block';
         document.getElementById('navegacionTabs').style.display = 'flex';
         
-        // Auto rellenar fechas
         const hoy = obtenerFechaHoy();
         document.getElementById('gFecha').value = hoy;
         document.getElementById('mFecha').value = hoy;
@@ -756,7 +756,7 @@
     }
 
     // =====================================================================
-    // MÓDULO: AJUSTES WEB (Horarios Generados por Día y Galería Supabase)
+    // MÓDULO: AJUSTES WEB (Horarios Generados por Día y Galería Base64)
     // =====================================================================
     async function cargarAjustesWeb() {
         try {
@@ -772,7 +772,7 @@
                     tbody.innerHTML += `<tr>
                         <td data-label="Imagen"><img src="${img.url}" class="galeria-miniatura"></td>
                         <td data-label="Título">${img.titulo || 'Sin título'}</td>
-                        <td data-label="Acción"><button class="btn-accion btn-accion-rojo" onclick="eliminarDeGaleria('${img.id}', '${img.nombreArchivo}')">Eliminar</button></td>
+                        <td data-label="Acción"><button class="btn-accion btn-accion-rojo" onclick="eliminarDeGaleria('${img.id}')">Eliminar</button></td>
                     </tr>`;
                 });
             } else {
@@ -809,7 +809,6 @@
         }
 
         try {
-            // Guarda los horarios en un nodo específico para ese día
             await fetch(`${FIREBASE_URL}horarios_por_fecha/${fecha}.json?auth=${tokenAuth}`, { 
                 method: 'PUT', 
                 body: JSON.stringify(horarios) 
@@ -823,59 +822,53 @@
         }
     }
 
+    // NUEVO SISTEMA DE SUBIDA DE IMÁGENES AUTOMÁTICO (Convierte a Base64 y achica la foto)
     window.subirImagenGaleria = async function(e) {
         e.preventDefault();
         const btn = document.getElementById('btnSubirImg');
         const file = document.getElementById('galArchivo').files[0];
         if(!file) return;
 
-        btn.textContent = 'Subiendo...'; btn.disabled = true;
+        btn.textContent = 'Optimizando y Subiendo...'; btn.disabled = true;
 
-        try {
-            const fileName = `${Date.now()}_victor.${file.name.split('.').pop()}`;
-            
-            // LA CORRECCIÓN CLAVE DE SUPABASE: AGREGAR EL HEADER 'apikey'
-            const uploadRes = await fetch(`${SUPABASE_URL}/storage/v1/object/galeria/${fileName}`, {
-                method: 'POST', 
-                headers: { 
-                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 
-                    'apikey': SUPABASE_ANON_KEY,
-                    'Content-Type': file.type 
-                }, 
-                body: file
-            });
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function(event) {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = async function() {
+                // Redimensionar para no saturar tu base de datos
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const MAX_WIDTH = 800;
+                const scaleSize = MAX_WIDTH / img.width;
+                canvas.width = MAX_WIDTH;
+                canvas.height = img.height * scaleSize;
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                
+                const base64Url = canvas.toDataURL('image/jpeg', 0.8);
+                
+                try {
+                    await fetch(`${FIREBASE_URL}galeria.json?auth=${tokenAuth}`, { 
+                        method: 'POST', 
+                        body: JSON.stringify({ titulo: document.getElementById('galTitulo').value, url: base64Url, fecha: new Date().toISOString() }) 
+                    });
 
-            if(!uploadRes.ok) {
-                const errDetail = await uploadRes.json();
-                throw new Error(errDetail.message || "Error Supabase");
+                    document.getElementById('formGaleria').reset(); 
+                    cargarAjustesWeb();
+                } catch (error) { 
+                    alert(`Error al guardar en Firebase.`); 
+                } finally { 
+                    btn.textContent = 'Subir Imagen'; btn.disabled = false; 
+                }
             }
-
-            const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/galeria/${fileName}`;
-            await fetch(`${FIREBASE_URL}galeria.json?auth=${tokenAuth}`, { 
-                method: 'POST', 
-                body: JSON.stringify({ titulo: document.getElementById('galTitulo').value, url: publicUrl, nombreArchivo: fileName, fecha: new Date().toISOString() }) 
-            });
-
-            document.getElementById('formGaleria').reset(); cargarAjustesWeb();
-        } catch (error) { 
-            alert(`Error al subir: ${error.message}`); 
-        } finally { 
-            btn.textContent = 'Subir Imagen'; btn.disabled = false; 
-        }
+        };
     }
 
-    window.eliminarDeGaleria = async function(idFirebase, nombreArchivo) {
+    window.eliminarDeGaleria = async function(idFirebase) {
         if(!confirm("¿Seguro que deseas eliminar esta imagen?")) return;
         try {
             await fetch(`${FIREBASE_URL}galeria/${idFirebase}.json?auth=${tokenAuth}`, { method: 'DELETE' });
-            // TAMBIÉN SE AGREGA EL APIKEY AL ELIMINAR
-            await fetch(`${SUPABASE_URL}/storage/v1/object/galeria/${nombreArchivo}`, { 
-                method: 'DELETE', 
-                headers: { 
-                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                    'apikey': SUPABASE_ANON_KEY 
-                } 
-            });
             cargarAjustesWeb();
         } catch (error) { alert("Error eliminando imagen."); }
     }
