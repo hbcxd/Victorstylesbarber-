@@ -90,7 +90,6 @@
 </head>
 <body>
 
-<!-- LOGIN (Permanece igual) -->
 <div class="login-container" id="pantallaLogin">
     <div class="login-box">
         <h3 style="border:none; justify-content:center; margin-bottom:0;">Acceso Restringido</h3>
@@ -112,22 +111,53 @@
     <button class="tab-btn" onclick="cambiarTab('tab-agenda', this)">Agenda</button>
     <button class="tab-btn" onclick="cambiarTab('tab-finanzas', this)">Finanzas</button>
     <button class="tab-btn" onclick="cambiarTab('tab-clientes', this)">Clientes</button>
-    <button class="tab-btn" onclick="cambiarTab('tab-ajustes', this)">Ajustes Web</button> <!-- NUEVA PESTAÑA -->
+    <button class="tab-btn" onclick="cambiarTab('tab-ajustes', this)">Ajustes Web</button>
 </nav>
 
-<!-- Modales existentes omitidos aquí por brevedad visual, pero se mantienen intactos -->
+<div id="tab-dashboard" class="modulo-admin active"><h2>Panel de Rendimiento</h2></div>
 
-<!-- PESTAÑAS EXISTENTES: Dashboard, Agenda, Finanzas, Clientes (Se mantienen intactos) -->
-<div id="tab-dashboard" class="modulo-admin active"><h2>Panel de Rendimiento</h2><!-- ... --></div>
-<div id="tab-agenda" class="modulo-admin"><h2>Agenda e Historial</h2><!-- ... --></div>
-<div id="tab-finanzas" class="modulo-admin"><h2>Gestión Financiera</h2><!-- ... --></div>
-<div id="tab-clientes" class="modulo-admin"><h2>Fidelidad de Clientes</h2><!-- ... --></div>
+<div id="tab-agenda" class="modulo-admin">
+    <h2>Agenda e Historial</h2>
+    
+    <div class="seccion-bloque">
+        <h3>Agendar Nueva Cita / Bloquear Hora</h3>
+        <p style="font-size: 0.8rem; color: var(--gris-secundario); margin-bottom: 15px;">
+            Al agendar un cliente desde aquí, la hora quedará automáticamente deshabilitada en la web pública.
+        </p>
+        <form class="form-manual" id="formAgendarAdmin" onsubmit="guardarCitaAdmin(event)">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                <div class="form-grupo">
+                    <label>Fecha del Servicio</label>
+                    <input type="date" id="citaFecha" required>
+                </div>
+                <div class="form-grupo">
+                    <label>Hora (Ej: 09:00, 14:30)</label>
+                    <input type="text" id="citaHora" placeholder="Ej: 09:00" required>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 5px;">
+                <div class="form-grupo">
+                    <label>Nombre del Cliente</label>
+                    <input type="text" id="citaCliente" placeholder="Nombre completo" required>
+                </div>
+                <div class="form-grupo">
+                    <label>Servicio / Nota Interna</label>
+                    <input type="text" id="citaServicio" placeholder="Ej: Degradado + Cejas (Reservado por Admin)">
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-guardar" id="btnAgendarAdmin" style="margin-top: 10px;">Bloquear Hora y Registrar Cita</button>
+        </form>
+    </div>
+</div>
 
-<!-- NUEVA PESTAÑA: AJUSTES WEB -->
+<div id="tab-finanzas" class="modulo-admin"><h2>Gestión Financiera</h2></div>
+<div id="tab-clientes" class="modulo-admin"><h2>Fidelidad de Clientes</h2></div>
+
 <div id="tab-ajustes" class="modulo-admin">
     <h2>Ajustes de la Web</h2>
 
-    <!-- SECCIÓN HORARIOS -->
     <div class="seccion-bloque">
         <h3>Horarios de Cita Disponibles</h3>
         <p style="font-size: 0.8rem; color: var(--gris-secundario); margin-bottom: 15px;">
@@ -142,7 +172,6 @@
         </form>
     </div>
 
-    <!-- SECCIÓN GALERÍA -->
     <div class="seccion-bloque">
         <h3>Subir Nueva Foto a Galería</h3>
         <form class="form-manual" id="formGaleria" onsubmit="subirImagenGaleria(event)">
@@ -183,38 +212,169 @@
     let tokenAuth = sessionStorage.getItem('tokenAdminVictor');
     let galeriaActual = [];
 
-    // --- LÓGICA DE PESTAÑAS (Modificada para incluir tab-ajustes) ---
+    // --- LÓGICA DE PESTAÑAS ---
     function cambiarTab(idTab, boton) {
         document.querySelectorAll('.modulo-admin').forEach(mod => mod.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById(idTab).classList.add('active');
         boton.classList.add('active');
         
-        // Si entra a ajustes, cargar datos web
         if(idTab === 'tab-ajustes') cargarAjustesWeb();
     }
 
-    // Funciones previas (Login, cargarDatos, renderizar) van aquí intactas...
-    
-    // === NUEVA LÓGICA: AJUSTES WEB Y GALERÍA ===
+    // =================================================================
+    // SCRIPT DE AUTENTICACIÓN Y CONTROL DE ACCESO
+    // =================================================================
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const btnIngresar = document.getElementById('btnIngresar');
+        if (btnIngresar) {
+            btnIngresar.addEventListener('click', ejecutarLogin);
+        }
+
+        const btnCerrarSesion = document.getElementById('btnCerrarSesion');
+        if (btnCerrarSesion) {
+            btnCerrarSesion.addEventListener('click', () => {
+                sessionStorage.removeItem('tokenAdminVictor');
+                window.location.reload();
+            });
+        }
+        
+        if (tokenAuth) {
+            mostrarPanelAdmin();
+        }
+    });
+
+    async function ejecutarLogin() {
+        const email = document.getElementById('campoEmail').value.trim();
+        const password = document.getElementById('campoClave').value;
+        const mensajeError = document.getElementById('mensajeError');
+        const btnIngresar = document.getElementById('btnIngresar');
+
+        if (!email || !password) {
+            mensajeError.innerText = "Por favor, escribe tu correo y contraseña.";
+            mensajeError.style.display = "block";
+            return;
+        }
+
+        mensajeError.style.display = "none";
+        btnIngresar.textContent = "Verificando...";
+
+        try {
+            const urlAuth = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY_FIREBASE}`;
+            
+            const respuesta = await fetch(urlAuth, {
+                method: 'POST',
+                body: JSON.stringify({ email, password, returnSecureToken: true }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            const datos = await respuesta.json();
+
+            if (!respuesta.ok) {
+                throw new Error(datos.error?.message || "Error de autenticación");
+            }
+
+            sessionStorage.setItem('tokenAdminVictor', datos.idToken);
+            tokenAuth = datos.idToken;
+
+            mostrarPanelAdmin();
+            
+        } catch (error) {
+            console.error("Detalle del error de login:", error.message);
+            if (error.message === "INVALID_PASSWORD" || error.message === "EMAIL_NOT_FOUND" || error.message === "INVALID_LOGIN_CREDENTIALS") {
+                mensajeError.innerText = "El correo o la contraseña son incorrectos.";
+            } else if (error.message === "OPERATION_NOT_ALLOWED") {
+                mensajeError.innerText = "El inicio de sesión con Correo/Clave no está activado en tu Firebase.";
+            } else if (error.message === "INVALID_API_KEY") {
+                mensajeError.innerText = "La API Key escrita en el código no es correcta.";
+            } else {
+                mensajeError.innerText = "Error de conexión. Revisa que tu URL y API Key de Firebase estén bien.";
+            }
+            mensajeError.style.display = "block";
+        } finally {
+            btnIngresar.textContent = "Ingresar";
+        }
+    }
+
+    function mostrarPanelAdmin() {
+        document.getElementById('pantallaLogin').style.display = 'none';
+        document.getElementById('btnCerrarSesion').style.display = 'block';
+        document.getElementById('navegacionTabs').style.display = 'flex';
+    }
+
+    // =================================================================
+    // NUEVA LÓGICA: GUARDAR CITA DESDE EL ADMIN (BLOQUEAR EN FIREBASE)
+    // =================================================================
+    window.guardarCitaAdmin = async function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('btnAgendarAdmin');
+        const fecha = document.getElementById('citaFecha').value; // Formato: YYYY-MM-DD
+        const horaOriginal = document.getElementById('citaHora').value.trim();
+        
+        // Reemplazamos los dos puntos (:) por guión (-) para crear una ruta de Firebase limpia y segura.
+        // Ej: "09:00" se convierte en "09-00"
+        const horaKey = horaOriginal.replace(':', '-'); 
+        
+        const cliente = document.getElementById('citaCliente').value.trim();
+        const servicio = document.getElementById('citaServicio').value.trim();
+
+        if(!fecha || !horaKey) return;
+
+        btn.textContent = 'Bloqueando hora...';
+        btn.disabled = true;
+
+        // Estructura limpia de la cita que se almacena en la Base de Datos
+        const payloadCita = {
+            cliente: cliente,
+            servicio: servicio || "Bloqueado por Administrador",
+            fecha: fecha,
+            hora: horaOriginal,
+            origen: "admin_panel",
+            timestamp: new Date().toISOString()
+        };
+
+        try {
+            // Guardamos la cita estructurada por: citas -> FECHA -> HORA
+            // Endpoint resultante: https://.../citas/2026-06-24/09-00.json?auth=TOKEN
+            const res = await fetch(`${FIREBASE_URL}citas/${fecha}/${horaKey}.json?auth=${tokenAuth}`, {
+                method: 'PUT',
+                body: JSON.stringify(payloadCita)
+            });
+
+            if(!res.ok) throw new Error("Error en Firebase al procesar el bloqueo.");
+
+            alert(`¡Éxito! La hora ${horaOriginal} para el día ${fecha} ha sido bloqueada y agendada correctamente.`);
+            document.getElementById('formAgendarAdmin').reset();
+
+        } catch (error) {
+            console.error("Error guardando cita admin:", error);
+            alert("Error al intentar bloquear la hora en Firebase. Revisa la consola.");
+        } finally {
+            btn.textContent = 'Bloquear Hora y Registrar Cita';
+            btn.disabled = false;
+        }
+    }
+
+    // =================================================================
+    // LÓGICA: AJUSTES WEB Y GALERÍA 
+    // =================================================================
 
     async function cargarAjustesWeb() {
         try {
-            // Cargar Horarios
             const resHorarios = await fetch(`${FIREBASE_URL}configuracion/horarios.json?auth=${tokenAuth}`);
             const horarios = await resHorarios.json();
             if(horarios) {
                 document.getElementById('hListado').value = horarios.join(', ');
             }
 
-            // Cargar Galería
             const resGaleria = await fetch(`${FIREBASE_URL}galeria.json?auth=${tokenAuth}`);
             const galeriaData = await resGaleria.json();
             
             const tbody = document.getElementById('tabla-galeria-cuerpo');
             tbody.innerHTML = '';
             
-            if(galeriaData) {
+            if(galeriaData && !galeriaData.error) {
                 galeriaActual = Object.keys(galeriaData).map(id => ({ id, ...galeriaData[id] }));
                 
                 galeriaActual.forEach(img => {
@@ -227,27 +387,25 @@
                     `;
                 });
             } else {
-                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">No hay imágenes en la galería.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">No hay imágenes en la galería o falta permisos.</td></tr>';
             }
 
         } catch (error) {
-            console.error("Error cargando ajustes web", error);
+            console.error("Error cargando ajustes web:", error);
         }
     }
 
-    // Guardar Horarios
     window.guardarHorariosWeb = async function(e) {
         e.preventDefault();
         const btn = e.target.querySelector('button');
         btn.textContent = 'Guardando...';
         
-        // Convertir string separado por comas a un Array limpio
         const stringHoras = document.getElementById('hListado').value;
         const arrayHoras = stringHoras.split(',').map(h => h.trim()).filter(h => h !== '');
 
         try {
             await fetch(`${FIREBASE_URL}configuracion/horarios.json?auth=${tokenAuth}`, { 
-                method: 'PUT', // PUT reemplaza todo el arreglo
+                method: 'PUT',
                 body: JSON.stringify(arrayHoras) 
             });
             alert('Horarios actualizados correctamente.');
@@ -258,7 +416,6 @@
         }
     }
 
-    // Subir Imagen a Supabase y guardar URL en Firebase
     window.subirImagenGaleria = async function(e) {
         e.preventDefault();
         const btn = document.getElementById('btnSubirImg');
@@ -272,7 +429,6 @@
         btn.disabled = true;
 
         try {
-            // 1. Subir archivo a Supabase Storage (Bucket: galeria)
             const fileExt = file.name.split('.').pop();
             const fileName = `${Date.now()}_victor.${fileExt}`;
 
@@ -287,10 +443,8 @@
 
             if(!uploadRes.ok) throw new Error("Error en Supabase");
 
-            // 2. Construir la URL pública de Supabase
             const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/galeria/${fileName}`;
 
-            // 3. Guardar registro en Firebase
             btn.textContent = 'Guardando en Base de Datos...';
             const nuevoRegistro = {
                 titulo: titulo,
@@ -304,7 +458,6 @@
                 body: JSON.stringify(nuevoRegistro) 
             });
 
-            // Limpiar y recargar
             document.getElementById('formGaleria').reset();
             cargarAjustesWeb();
 
@@ -317,15 +470,12 @@
         }
     }
 
-    // Eliminar imagen de Firebase (y opcionalmente de Supabase)
     window.eliminarDeGaleria = async function(idFirebase, nombreArchivo) {
         if(!confirm("¿Seguro que deseas eliminar esta imagen de la galería?")) return;
 
         try {
-            // 1. Borrar de Firebase
             await fetch(`${FIREBASE_URL}galeria/${idFirebase}.json?auth=${tokenAuth}`, { method: 'DELETE' });
 
-            // 2. Intentar borrar de Supabase (Opcional pero recomendado para ahorrar espacio)
             await fetch(`${SUPABASE_URL}/storage/v1/object/galeria/${nombreArchivo}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
@@ -336,8 +486,6 @@
             alert("Error al eliminar la imagen.");
         }
     }
-    
-    // ... Resto de tu lógica JS existente (iniciarPanel, graficos, etc.)
 </script>
 </body>
 </html>
