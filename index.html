@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Víctor Styles | Barbería y Panel Pro</title>
     <link rel="manifest" href="manifest.json">
     
@@ -33,14 +33,35 @@
 
             --borde-sutil: rgba(184, 146, 78, 0.08);
             --borde-enfoque: rgba(184, 146, 78, 0.35);
-            --shadow-premium: 0 15px 45px -12px rgba(0, 0, 0, 0.9);
+            --shadow-premium: 0 20px 40px rgba(0, 0, 0, 0.7);
             --gradiente-metal: linear-gradient(135deg, #866428 0%, #dfba6b 50%, #b8924e 100%);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: '-apple-system', BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; scroll-behavior: smooth;}
-        body { background-color: var(--fondo-oscuro); color: var(--gris-texto); -webkit-font-smoothing: antialiased; }
+        /* AJUSTES PARA SENSACIÓN NATIVA DE APK */
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            font-family: '-apple-system', BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent; 
+        }
+        body { 
+            background-color: var(--fondo-oscuro); color: var(--gris-texto); 
+            -webkit-font-smoothing: antialiased;
+            overscroll-behavior-y: none; /* Evita el rebote del navegador */
+            user-select: none; /* Evita selección de texto accidental en la app */
+        }
         
-        button { font-family: inherit; }
+        input, select, textarea {
+            user-select: auto; /* Permite escribir en los inputs */
+        }
+
+        button { 
+            font-family: inherit; 
+            transition: transform 0.15s ease, opacity 0.2s ease;
+        }
+        button:active {
+            transform: scale(0.96); /* Feedback táctil estilo app */
+        }
 
         /* ==========================================================================
            ESTILOS VISTA PÚBLICA (#app-publica)
@@ -81,7 +102,7 @@
         .banner-mundial { background: linear-gradient(135deg, rgba(15, 15, 15, 0.9) 0%, rgba(184, 146, 78, 0.1) 100%); border: 1px solid rgba(223, 186, 107, 0.4); border-radius: 16px; padding: 16px 20px; margin: 0 auto 35px auto; display: flex; align-items: center; gap: 16px; max-width: 450px; text-align:left;}
         .banner-mundial-text h4 { color: var(--dorado-brillante); font-size: 1rem; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; }
         .banner-mundial-text p { color: #f0f0f0; font-size: 0.82rem; }
-        .hero-btn { display: inline-block; padding: 16px 36px; background: var(--gradiente-metal); color: #0a0a0a; text-decoration: none; font-weight: 800; font-size: 0.85rem; border-radius: 8px; text-transform: uppercase; }
+        .hero-btn { display: inline-block; padding: 16px 36px; background: var(--gradiente-metal); color: #0a0a0a; text-decoration: none; font-weight: 800; font-size: 0.85rem; border-radius: 8px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(184, 146, 78, 0.3);}
 
         .encuesta-section { padding: 50px 5%; text-align: center; background-color: #0e0e0e; border-top: 1px solid var(--borde-sutil); }
         #contenedor-votos { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; max-width: 550px; margin: 20px auto 0 auto; }
@@ -106,38 +127,39 @@
         .precio-tarjeta.destacado .servicio-costo { background: var(--gradiente-metal); color: #0a0a0a; border-color: transparent; }
 
         .agenda-section { padding: 70px 5%; background-color: #0e0e0e; }
-        .form-agenda { max-width: 550px; margin: 0 auto; background-color: var(--fondo-tarjeta); padding: 32px 26px; border-radius: 16px; border: 1px solid var(--borde-sutil); }
+        .form-agenda { max-width: 550px; margin: 0 auto; background-color: var(--fondo-tarjeta); padding: 32px 26px; border-radius: 20px; border: 1px solid var(--borde-sutil); box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
         .paso-titulo { font-size: 1.1rem; color: var(--dorado-brillante); margin-bottom: 20px; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(184, 146, 78, 0.2); padding-bottom: 10px; }
         .paso-titulo span { background: var(--dorado-acento); color: #000; border-radius: 50%; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 900; }
         .grupo-input { margin-bottom: 22px; display: flex; flex-direction: column; gap: 8px; }
         .grupo-input label { color: var(--gris-texto); font-size: 0.75rem; text-transform: uppercase; font-weight: 700; }
-        .grupo-input input, .grupo-input select { width: 100%; padding: 16px; background-color: var(--fondo-input); border: 1px solid rgba(255, 255, 255, 0.08); color: #ffffff; border-radius: 12px; outline: none; }
+        .grupo-input input, .grupo-input select { width: 100%; padding: 18px; font-size: 1rem; background-color: var(--fondo-input); border: 1px solid rgba(255, 255, 255, 0.08); color: #ffffff; border-radius: 12px; outline: none; }
         .grupo-input input[type="date"] { color-scheme: dark; }
         .cartelera-horas { display: grid; grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)); gap: 12px; margin-bottom: 25px; margin-top: 5px; }
         .msj-informativo { color: var(--gris-secundario); font-size: 0.85rem; font-style: italic; text-align: center; padding: 20px 0; grid-column: 1 / -1; }
-        .pill-hora { background-color: var(--fondo-input); border: 1px solid rgba(184, 146, 78, 0.3); color: #fff; padding: 12px 5px; border-radius: 10px; font-size: 0.85rem; cursor: pointer; text-align: center; }
-        .pill-hora.activa { background: var(--gradiente-metal); color: #0a0a0a; border-color: transparent; }
+        .pill-hora { background-color: var(--fondo-input); border: 1px solid rgba(184, 146, 78, 0.3); color: #fff; padding: 14px 5px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; cursor: pointer; text-align: center; }
+        .pill-hora.activa { background: var(--gradiente-metal); color: #0a0a0a; border-color: transparent; transform: scale(1.05); }
         #seccion-datos-personales { opacity: 0.4; pointer-events: none; transition: opacity 0.4s ease; margin-top: 30px; }
         #seccion-datos-personales.habilitado { opacity: 1; pointer-events: auto; }
-        .btn-submit { width: 100%; padding: 18px; background: var(--gradiente-metal); color: #0a0a0a; border: none; font-weight: 800; text-transform: uppercase; border-radius: 12px; cursor: pointer; }
+        .btn-submit { width: 100%; padding: 20px; background: var(--gradiente-metal); color: #0a0a0a; border: none; font-weight: 800; font-size: 0.9rem; text-transform: uppercase; border-radius: 12px; cursor: pointer; margin-top: 10px; }
+        
         .contenedor-reagendar { margin-top: 35px; padding-top: 25px; border-top: 1px dashed rgba(184, 146, 78, 0.15); }
         .fila-reagendar { display: flex; gap: 10px; }
-        .input-codigo { flex: 1; text-transform: uppercase; text-align: center; padding: 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: #1a1a1a; color: #fff;}
+        .input-codigo { flex: 1; text-transform: uppercase; text-align: center; padding: 16px; font-size: 0.95rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: #1a1a1a; color: #fff;}
         .btn-reagendar { padding: 0 20px; background-color: #2a2a2a; color: #ffffff; border: 1px solid var(--borde-sutil); border-radius: 10px; font-weight: 600; cursor: pointer; }
         
         .ubicacion-section { padding: 60px 5%; background-color: #060606; border-top: 1px solid var(--borde-sutil); text-align: center; }
         .contenedor-direccion { max-width: 550px; margin: 0 auto; background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-radius: 14px; padding: 24px; }
         .btn-mapa { display: inline-flex; align-items: center; gap: 8px; color: var(--dorado-acento); text-decoration: none; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
         
-        footer { text-align: center; padding: 35px; background-color: var(--fondo-oscuro); color: #333333; font-size: 0.8rem; font-weight: 500; border-top: 1px solid var(--borde-sutil); }
-        .btn-admin-inferior { color: #555555; text-decoration: none; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; padding: 10px 20px; border: 1px solid var(--borde-sutil); border-radius: 8px; cursor:pointer;}
+        footer { text-align: center; padding: 35px; background-color: var(--fondo-oscuro); color: #555; font-size: 0.8rem; font-weight: 500; border-top: 1px solid var(--borde-sutil); }
+        .btn-admin-inferior { color: #666; text-decoration: none; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; padding: 10px 20px; border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; background: transparent; cursor:pointer;}
         
         /* Modal VIP (Pública) */
         .modal-cita-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.9); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; backdrop-filter: blur(8px); transition: opacity 0.3s; }
         .modal-cita-overlay.show { opacity: 1; pointer-events: auto; }
-        .ticket-vip { background-color: #121212; border: 1px solid rgba(184, 146, 78, 0.15); border-radius: 20px; width: 100%; max-width: 400px; transform: scale(0.9); transition: transform 0.3s; }
+        .ticket-vip { background-color: #121212; border: 1px solid rgba(184, 146, 78, 0.15); border-radius: 20px; width: 100%; max-width: 400px; transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .modal-cita-overlay.show .ticket-vip { transform: scale(1); }
-        .ticket-header { background: linear-gradient(135deg, #181818 0%, #0a0a0a 100%); padding: 24px; text-align: center; border-bottom: 2px dashed rgba(184, 146, 78, 0.2); }
+        .ticket-header { background: linear-gradient(135deg, #181818 0%, #0a0a0a 100%); padding: 24px; text-align: center; border-bottom: 2px dashed rgba(184, 146, 78, 0.2); border-radius: 20px 20px 0 0; }
         .ticket-header h3 { font-size: 1.1rem; color: var(--dorado-brillante); text-transform: uppercase; font-weight: 800; margin-bottom: 4px; }
         .ticket-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
         .ticket-dato { display: flex; flex-direction: column; gap: 4px; }
@@ -145,8 +167,8 @@
         .ticket-codigo-box { background-color: #0a0a0a; border: 1px dashed rgba(184, 146, 78, 0.4); border-radius: 10px; padding: 14px; text-align: center; margin-top: 5px; }
         .ticket-codigo-num { font-size: 1.5rem; font-weight: 900; color: var(--dorado-brillante); letter-spacing: 4px; }
         .ticket-footer { padding: 0 24px 24px 24px; display: flex; flex-direction: column; gap: 10px; }
-        .btn-ticket-primario { background: var(--gradiente-metal); color: #0a0a0a; padding: 12px; border-radius: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer; border: none; }
-        .btn-ticket-secundario { background-color: transparent; color: var(--gris-texto); border: 1px solid rgba(184, 146, 78, 0.2); padding: 12px; border-radius: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
+        .btn-ticket-primario { background: var(--gradiente-metal); color: #0a0a0a; padding: 16px; border-radius: 12px; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; cursor: pointer; border: none; }
+        .btn-ticket-secundario { background-color: transparent; color: var(--gris-texto); border: 1px solid rgba(184, 146, 78, 0.2); padding: 16px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; text-transform: uppercase; cursor: pointer; }
 
 
         /* ==========================================================================
@@ -159,22 +181,22 @@
         #app-admin header { display: flex; justify-content: center; align-items: center; padding: 0 5%; background-color: rgba(10, 10, 10, 0.85); backdrop-filter: blur(20px); position: fixed; width: 100%; top: 0; left: 0; z-index: 1000; border-bottom: 1px solid var(--borde-sutil); height: 70px; }
         #app-admin .logo img { height: 35px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)); }
         
-        .btn-cerrar-sesion { background: transparent; border: 1px solid var(--dorado-acento); color: var(--dorado-acento); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .btn-cerrar-sesion { background: transparent; border: 1px solid var(--dorado-acento); color: var(--dorado-acento); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
         .tabs-container { display: flex; gap: 10px; overflow-x: auto; padding: 0 5% 15px 5%; margin-bottom: 20px; border-bottom: 1px solid var(--borde-sutil); }
         .tabs-container::-webkit-scrollbar { display: none; }
-        .tab-btn { background: transparent; color: var(--gris-secundario); border: none; padding: 10px 15px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; position: relative; white-space: nowrap; transition: color 0.3s; }
+        .tab-btn { background: transparent; color: var(--gris-secundario); border: none; padding: 12px 15px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; position: relative; white-space: nowrap; transition: color 0.3s; }
         .tab-btn.active { color: var(--dorado-acento); }
         .tab-btn.active::after { content: ''; position: absolute; bottom: -16px; left: 0; width: 100%; height: 3px; background: var(--dorado-acento); border-radius: 3px 3px 0 0; }
         
-        .modulo-admin { display: none; padding: 0 5%; max-width: 1150px; margin: 0 auto; }
+        .modulo-admin { display: none; padding: 0 5%; max-width: 1150px; margin: 0 auto; padding-bottom: 40px; }
         .modulo-admin.active { display: block; }
         
-        /* LOGIN SEGURO */
+        /* LOGIN SEGURO Y NATIVO */
         .login-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(6, 6, 6, 0.98); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 24px; }
-        .login-box { background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); padding: 40px 30px; border-radius: 16px; width: 100%; max-width: 380px; text-align: center; border-top: 3px solid var(--dorado-acento); box-shadow: var(--shadow-premium); }
-        .login-box input { width: 100%; padding: 14px; background-color: var(--fondo-input); border: 1px solid var(--borde-sutil); color: #fff; border-radius: 8px; outline: none; margin-bottom: 16px; font-size: 0.9rem; text-align: center;}
-        .btn-login { width: 100%; padding: 14px; background-color: var(--dorado-acento); color: #000; border: none; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; border-radius: 8px; cursor: pointer; }
-        .error-login { color: var(--rojo-alerta); font-size: 0.8rem; margin-top: 14px; display: none; font-weight: 600; }
+        .login-box { background-color: var(--fondo-tarjeta); border: 1px solid rgba(184, 146, 78, 0.2); padding: 45px 30px; border-radius: 24px; width: 100%; max-width: 380px; text-align: center; border-top: 4px solid var(--dorado-acento); box-shadow: var(--shadow-premium); }
+        .login-box input { width: 100%; padding: 16px; background-color: var(--fondo-input); border: 1px solid var(--borde-sutil); color: #fff; border-radius: 12px; outline: none; margin-bottom: 16px; font-size: 1rem; text-align: center;}
+        .btn-login { width: 100%; padding: 18px; background-color: var(--dorado-acento); color: #000; border: none; font-weight: 800; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1.5px; border-radius: 12px; cursor: pointer; margin-top: 5px; }
+        .error-login { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--rojo-alerta); color: var(--rojo-alerta); padding: 12px; border-radius: 8px; font-size: 0.8rem; margin-top: 18px; display: none; font-weight: 600; line-height: 1.4; }
 
         .seccion-bloque { background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-radius: 16px; padding: 22px; margin-bottom: 24px; }
         .grid-contable { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 14px; margin-bottom: 24px; }
@@ -190,32 +212,32 @@
         #app-admin .form-manual { display: flex; flex-direction: column; gap: 16px; }
         #app-admin .form-grupo { display: flex; flex-direction: column; gap: 8px; }
         #app-admin .form-grupo label { font-size: 0.7rem; color: var(--gris-secundario); text-transform: uppercase; font-weight: 700; }
-        #app-admin .form-grupo input, #app-admin .form-grupo select { background-color: var(--fondo-input); border: 1px solid var(--borde-sutil); color: #fff; padding: 14px; border-radius: 10px; outline: none; }
-        #app-admin .btn-guardar { background-color: var(--dorado-acento); color: #000; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-weight: 800; text-transform: uppercase; }
+        #app-admin .form-grupo input, #app-admin .form-grupo select { background-color: var(--fondo-input); border: 1px solid var(--borde-sutil); color: #fff; padding: 16px; border-radius: 12px; outline: none; font-size: 0.9rem;}
+        #app-admin .btn-guardar { background-color: var(--dorado-acento); color: #000; border: none; padding: 18px; border-radius: 12px; cursor: pointer; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; }
         
-        .btn-accion { background: transparent; border: 1px solid var(--dorado-acento); color: var(--dorado-acento); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
+        .btn-accion { background: transparent; border: 1px solid var(--dorado-acento); color: var(--dorado-acento); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: bold; }
         .btn-accion-rojo { border-color: var(--rojo-alerta); color: var(--rojo-alerta); }
         
         .contenedor-tabla { width: 100%; overflow-x: auto; margin-top: 10px; border: 1px solid var(--borde-sutil); border-radius: 12px; }
         #app-admin table { width: 100%; border-collapse: collapse; text-align: left; background: var(--fondo-input); }
-        #app-admin th, #app-admin td { padding: 14px; border-bottom: 1px solid var(--borde-sutil); font-size: 0.85rem; }
-        #app-admin th { background-color: #1a1a1a; color: var(--gris-secundario); text-transform: uppercase; font-size: 0.7rem; }
+        #app-admin th, #app-admin td { padding: 16px 14px; border-bottom: 1px solid var(--borde-sutil); font-size: 0.85rem; }
+        #app-admin th { background-color: #1a1a1a; color: var(--gris-secundario); text-transform: uppercase; font-size: 0.75rem; }
 
         /* MODALES ADMIN */
         .modal-overlay-admin { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 3000; display: none; justify-content: center; align-items: center; padding: 20px; }
-        .modal-box-admin { background: var(--fondo-tarjeta); border: 1px solid var(--dorado-acento); border-radius: 16px; width: 100%; max-width: 400px; padding: 24px; position: relative; }
-        .modal-cerrar { position: absolute; top: 15px; right: 20px; background: transparent; border: none; color: var(--gris-secundario); font-size: 1.5rem; cursor: pointer; }
+        .modal-box-admin { background: var(--fondo-tarjeta); border: 1px solid var(--dorado-acento); border-radius: 20px; width: 100%; max-width: 400px; padding: 24px; position: relative; box-shadow: var(--shadow-premium); }
+        .modal-cerrar { position: absolute; top: 15px; right: 20px; background: transparent; border: none; color: var(--gris-secundario); font-size: 1.8rem; cursor: pointer; }
         
         .filtros-rango { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; background: var(--fondo-input); padding: 15px; border-radius: 12px; border: 1px solid var(--borde-sutil); margin-bottom: 20px; }
-        .filtros-rango input { background: var(--fondo-tarjeta); color: #fff; border: 1px solid var(--borde-sutil); padding: 10px; border-radius: 6px; flex: 1; }
+        .filtros-rango input { background: var(--fondo-tarjeta); color: #fff; border: 1px solid var(--borde-sutil); padding: 12px; border-radius: 8px; flex: 1; font-size: 0.9rem;}
         .galeria-miniatura { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid var(--borde-sutil); }
 
         @media (max-width: 768px) {
             #app-admin table, #app-admin thead, #app-admin tbody, #app-admin th, #app-admin td, #app-admin tr { display: block; width: 100%; border:none; }
             #app-admin thead { display: none; }
-            #app-admin tr { border-bottom: 1px solid var(--dorado-acento); margin-bottom: 10px; padding: 10px; background: var(--fondo-input); border-radius: 8px;}
-            #app-admin td { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);}
-            #app-admin td::before { content: attr(data-label); font-weight: 700; text-transform: uppercase; font-size: 0.7rem; color: var(--gris-secundario); }
+            #app-admin tr { border-bottom: 1px solid var(--dorado-acento); margin-bottom: 10px; padding: 14px; background: var(--fondo-input); border-radius: 12px;}
+            #app-admin td { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);}
+            #app-admin td::before { content: attr(data-label); font-weight: 700; text-transform: uppercase; font-size: 0.75rem; color: var(--gris-secundario); }
         }
     </style>
 </head>
@@ -369,7 +391,7 @@
             </div>
 
             <div class="contenedor-reagendar">
-                <div class="titulo-reagendar">¿Necesitas gestionar o reagendar tu cita?</div>
+                <div class="titulo-reagendar" style="text-align: center; font-size: 0.85rem; color: var(--gris-secundario); margin-bottom: 12px;">¿Necesitas gestionar o reagendar tu cita?</div>
                 <div class="fila-reagendar">
                     <input type="text" id="codigoGestion" class="input-codigo" placeholder="CÓDIGO DE CITA" maxlength="6">
                     <button type="button" id="btnGestionar" class="btn-reagendar">Buscar</button>
@@ -378,7 +400,7 @@
         </form>
 
         <div class="contenedor-admin-abajo" style="display: flex; justify-content: center; margin-top: 35px;">
-            <button onclick="switchView('admin')" class="btn-admin-inferior" style="background: transparent; color: #555;">Acceso Administrador</button>
+            <button onclick="switchView('admin')" class="btn-admin-inferior">Acceso Administrador</button>
         </div>
     </section>
 
@@ -429,14 +451,14 @@
 <main id="app-admin" style="display: none;">
     <div class="login-container" id="pantallaLogin">
         <div class="login-box">
-            <h3 style="border:none; justify-content:center; margin-bottom:0;">Acceso Restringido</h3>
-            <p style="color:var(--gris-secundario); font-size:0.8rem; margin-bottom:24px;">Autenticación con Firebase</p>
+            <h3 style="border:none; justify-content:center; margin-bottom:0; font-size: 1.3rem;">Acceso Restringido</h3>
+            <p style="color:var(--gris-secundario); font-size:0.85rem; margin-bottom:24px;">Autenticación con Firebase</p>
             <input type="email" id="campoEmail" placeholder="correo@ejemplo.com" autocomplete="email">
             <input type="password" id="campoClave" placeholder="••••••••" autocomplete="current-password">
-            <button class="btn-login" id="btnIngresar">Ingresar</button>
-            <div class="error-login" id="mensajeError">Datos incorrectos. Inténtalo de nuevo.</div>
+            <button class="btn-login" id="btnIngresar">Ingresar al Panel</button>
+            <div class="error-login" id="mensajeError"></div>
             
-            <button onclick="switchView('public')" style="margin-top: 20px; background: transparent; border: none; color: var(--gris-secundario); text-decoration: underline; font-size: 0.8rem; cursor: pointer;">Volver a la Web</button>
+            <button onclick="switchView('public')" style="margin-top: 25px; background: transparent; border: none; color: var(--gris-secundario); text-decoration: underline; font-size: 0.85rem; cursor: pointer;">Volver a la Web</button>
         </div>
     </div>
 
@@ -444,7 +466,7 @@
         <div class="logo"><img src="LOGO.png" alt="Víctor Styles"></div>
         <div style="position: absolute; right: 5%; display: flex; gap: 10px;">
             <button class="btn-cerrar-sesion" id="btnVolverWeb" onclick="switchView('public')" style="display:none; color: var(--gris-texto); border-color: var(--borde-sutil);">Ver Web</button>
-            <button class="btn-cerrar-sesion" id="btnCerrarSesion" style="display:none;">Salir</button>
+            <button class="btn-cerrar-sesion" id="btnCerrarSesion" style="display:none; border-color: var(--rojo-alerta); color: var(--rojo-alerta);">Salir</button>
         </div>
     </header>
 
@@ -465,7 +487,7 @@
             <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 5px;"><span style="color:var(--gris-secundario); font-size:0.8rem; text-transform:uppercase; font-weight:600;">Fecha / Hora</span><span id="modalFecha" style="color:#fff; font-weight:bold;"></span></div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 5px;"><span style="color:var(--gris-secundario); font-size:0.8rem; text-transform:uppercase; font-weight:600;">Estado</span><span id="modalEstado" style="color:#fff; font-weight:bold;"></span></div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 5px;"><span style="color:var(--gris-secundario); font-size:0.8rem; text-transform:uppercase; font-weight:600;">Patrocinado</span><span id="modalPatrocinio" style="color:#fff; font-weight:bold;"></span></div>
-            <div style="margin-top: 20px; text-align: center;"><button class="btn-accion" id="btnAbrirEdicion" style="width: 100%;">Editar Datos del Cliente</button></div>
+            <div style="margin-top: 20px; text-align: center;"><button class="btn-accion" id="btnAbrirEdicion" style="width: 100%; padding: 14px;">Editar Datos del Cliente</button></div>
         </div>
     </div>
 
@@ -557,9 +579,9 @@
                     <div class="form-grupo" style="flex: 1;"><label>Fecha</label><input type="date" id="mFecha" required></div>
                     <div class="form-grupo" style="flex: 1;"><label>Hora (Ej: 09:00)</label><input type="time" id="mHora" required></div>
                 </div>
-                <div style="display:flex; align-items:center; gap:10px; margin-top:5px;">
-                    <input type="checkbox" id="mPatrocinado" style="width:18px; height:18px; accent-color:var(--dorado-acento);">
-                    <label style="color:var(--gris-secundario); font-size:0.8rem;">¿Trabajo Patrocinado? (El 100% será para ti)</label>
+                <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
+                    <input type="checkbox" id="mPatrocinado" style="width:22px; height:22px; accent-color:var(--dorado-acento);">
+                    <label style="color:var(--gris-texto); font-size:0.9rem;">¿Trabajo Patrocinado? (El 100% será para ti)</label>
                 </div>
                 <button type="submit" class="btn-guardar" style="margin-top: 10px;">Guardar y Bloquear</button>
             </form>
@@ -568,8 +590,8 @@
         <div class="seccion-bloque">
             <h3>Historial Operativo</h3>
             <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <input type="date" id="filtroFechaAgenda" style="background:var(--fondo-input); color:#fff; padding:12px; border:1px solid var(--borde-sutil); border-radius:8px; width:100%;">
-                <button id="btnVerTodoAgenda" style="background:#1a1a1a; color:#fff; border:1px solid var(--borde-sutil); border-radius:8px; padding:0 15px; cursor:pointer;">Ver Todo</button>
+                <input type="date" id="filtroFechaAgenda" style="background:var(--fondo-input); color:#fff; padding:12px; border:1px solid var(--borde-sutil); border-radius:12px; width:100%; font-size: 0.9rem;">
+                <button id="btnVerTodoAgenda" style="background:#1a1a1a; color:#fff; border:1px solid var(--borde-sutil); border-radius:12px; padding:0 15px; cursor:pointer; font-weight: bold;">Ver Todo</button>
             </div>
             <div class="contenedor-tabla">
                 <table>
@@ -627,7 +649,7 @@
             <p style="font-size: 0.8rem; color: var(--gris-secundario); margin-bottom: 15px;">Las imágenes se subirán a Supabase y se registrarán en tu Firebase.</p>
             <form class="form-manual" id="formGaleria" onsubmit="subirImagenGaleria(event)">
                 <div class="form-grupo"><label>Título / Estilo (Opcional)</label><input type="text" id="galTitulo" placeholder="Ej: Mid Fade con Textura"></div>
-                <div class="form-grupo"><label>Seleccionar Imagen</label><input type="file" id="galArchivo" accept="image/png, image/jpeg, image/webp" required style="padding: 10px;"></div>
+                <div class="form-grupo"><label>Seleccionar Imagen</label><input type="file" id="galArchivo" accept="image/png, image/jpeg, image/webp" required style="padding: 16px;"></div>
                 <button type="submit" class="btn-guardar" id="btnSubirImg" style="background:#333; color:#fff;">Subir Imagen</button>
             </form>
         </div>
@@ -651,11 +673,9 @@
     const API_KEY_FIREBASE = 'AIzaSyBKrJD4VAzOkvbCay-C8Dxsg3gsUkAt4EA'; 
     const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
     
-    // Supabase (Corregido sin /rest/v1/)
     const SUPABASE_URL = 'https://ghfugbvqleevtptqybgt.supabase.co'; 
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoZnVnYnZxbGVldnRwdHF5Ymd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMTAyNjMsImV4cCI6MjA5Nzg4NjI2M30.Hy2E6S8H7UTdowhN7z1_-7fLM7sRA3QlMEUd9SJH138';
 
-    // Inicializaciones
     if (!firebase.apps.length) {
         firebase.initializeApp({ databaseURL: FIREBASE_URL });
     }
@@ -665,6 +685,9 @@
     // -------------------------------------------------------------------------
     // 2. SISTEMA DE VISTAS (Pública / Privada)
     // -------------------------------------------------------------------------
+    // ¡ARREGLO DE PERSISTENCIA!: Cambio a localStorage para evitar desconexiones en APK
+    let tokenAuth = localStorage.getItem('tokenAdminVictor');
+    
     function switchView(view) {
         const vistaPublica = document.getElementById('app-publica');
         const vistaAdmin = document.getElementById('app-admin');
@@ -672,7 +695,7 @@
         if (view === 'admin') {
             vistaPublica.style.display = 'none';
             vistaAdmin.style.display = 'block';
-            if (sessionStorage.getItem('tokenAdminVictor')) {
+            if (localStorage.getItem('tokenAdminVictor')) {
                 iniciarPanel();
             }
             window.scrollTo(0,0);
@@ -681,15 +704,12 @@
             vistaPublica.style.display = 'block';
             window.scrollTo(0,0);
             
-            // Recargar datos públicos al volver a la web por si se hicieron cambios
             cargarGaleriaDinamica(); 
             if(document.getElementById('fecha').value) {
-                // Forzar actualización de horas disponibles si había una fecha elegida
                 document.getElementById('fecha').dispatchEvent(new Event('change'));
             }
         }
         
-        // Cerrar menú móvil si estaba abierto
         document.getElementById('btnHamburguesa').classList.remove('open');
         document.getElementById('menuLateral').classList.remove('open');
         document.getElementById('menuOverlay').classList.remove('show');
@@ -706,10 +726,8 @@
     }
 
     // =========================================================================================
-    // LÓGICA DE LA VISTA PÚBLICA (Agenda, Encuesta, Galería)
+    // LÓGICA DE LA VISTA PÚBLICA (Se mantiene intacta por seguridad)
     // =========================================================================================
-    
-    // MENÚ MÓVIL
     document.getElementById('btnHamburguesa').addEventListener('click', function() {
         this.classList.toggle('open');
         document.getElementById('menuLateral').classList.toggle('open');
@@ -724,7 +742,6 @@
         link.addEventListener('click', () => document.getElementById('menuOverlay').click());
     });
 
-    // CARGAR GALERÍA
     function cargarGaleriaDinamica() {
         fetch(`${FIREBASE_URL}galeria.json?t=${new Date().getTime()}`)
             .then(res => res.json())
@@ -743,7 +760,6 @@
             });
     }
 
-    // MOTOR DE DISPONIBILIDAD DE HORARIOS (CON ANTI-CACHÉ)
     const horariosBarberia = { 1:true, 2:true, 3:true, 4:true, 5:true, 6:true, 0:true };
     const inputFecha = document.getElementById('fecha');
     const selectHora = document.getElementById('hora'); 
@@ -758,7 +774,6 @@
         carteleraHoras.innerHTML = '<div class="msj-informativo">Consultando disponibilidad en tiempo real...</div>';
         seccionDatos.classList.remove('habilitado');
         
-        // El parámetro ?t= evita que el navegador muestre horarios viejos de caché
         const t = new Date().getTime();
         Promise.all([
             fetch(`${FIREBASE_URL}citas.json?t=${t}`).then(res => res.json()),
@@ -809,7 +824,6 @@
         }).catch(() => carteleraHoras.innerHTML = '<div class="msj-informativo" style="color:var(--rojo-alerta)">Error buscando horas. Recarga la página.</div>');
     });
 
-    // SUBMIT FORMULARIO PÚBLICO
     let textoCitaGlobal = "";
     document.getElementById('formulario-cita').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -848,7 +862,6 @@
     document.getElementById('btnCopiarTicket').onclick = () => navigator.clipboard.writeText(textoCitaGlobal).then(()=>{ document.getElementById('btnCopiarTicket').textContent="¡Copiado!"; setTimeout(()=>document.getElementById('btnCopiarTicket').textContent="Copiar Datos",2000); });
     document.getElementById('btnGuardarTicket').onclick = () => navigator.share ? navigator.share({title:'Cita Víctor Styles', text:textoCitaGlobal}) : alert('Usa el botón de Copiar Datos.');
 
-    // GESTIONAR CITA (PÚBLICO)
     document.getElementById('btnGestionar').onclick = () => {
         const cod = document.getElementById('codigoGestion').value.trim().toUpperCase();
         if(!cod) return;
@@ -870,20 +883,18 @@
         }).finally(() => { btn.textContent="Buscar"; btn.disabled=false; });
     };
 
-    // ENCUESTA
     function votar(eq) {
         firebase.database().ref('votos_mundial/'+eq).transaction(c => (c||0)+1);
         document.getElementById('contenedor-votos').style.display='none'; document.getElementById('resultados-encuesta').style.display='block';
     }
     firebase.database().ref('votos_mundial').on('value', snap => {
-        const d = snapshot.val()||{}; const t = Object.values(d).reduce((a,b)=>a+b,0);
+        const d = snap.val()||{}; const t = Object.values(d).reduce((a,b)=>a+b,0);
         document.getElementById('barras-resultados').innerHTML = ["Brasil","España","Francia","Portugal","Argentina","Otro"].map(eq => {
             const p = t>0 ? Math.round(((d[eq]||0)/t)*100) : 0;
             return `<div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:600; margin-bottom:6px;"><span>${eq}</span><span style="color:var(--dorado-brillante)">${p}%</span></div><div class="barra-progreso"><div class="progreso-relleno" style="width:${p}%"></div></div>`;
         }).join('');
     });
 
-    // INICIO PUBLICO
     document.addEventListener('DOMContentLoaded', () => {
         inputFecha.min = obtenerFechaVenezuelaStr();
         if(localStorage.getItem('barberia_nombre')) { document.getElementById('nombre').value=localStorage.getItem('barberia_nombre'); document.getElementById('telefono').value=localStorage.getItem('barberia_telefono'); }
@@ -891,9 +902,8 @@
     });
 
     // =========================================================================================
-    // LÓGICA DE LA VISTA PRIVADA (Panel Administrativo)
+    // LÓGICA DE LA VISTA PRIVADA (ARREGLOS DE INICIO DE SESIÓN APLICADOS)
     // =========================================================================================
-    let tokenAuth = sessionStorage.getItem('tokenAdminVictor');
     let todasLasCitas = []; let todosLosGastos = []; let galeriaActual = [];
     let graficoServiciosObj = null; let graficoFinanzasObj = null;
 
@@ -924,16 +934,53 @@
         document.getElementById('modalEditar').style.display = 'flex';
     }
 
+    // ¡ARREGLO DEL SISTEMA DE LOGIN!: 
+    // Manejo correcto de errores HTTP 400 y de persistencia local
     document.getElementById('btnIngresar').onclick = async () => {
-        const btn = document.getElementById('btnIngresar'); btn.textContent = 'Verificando...';
+        const btn = document.getElementById('btnIngresar'); 
+        const errorDiv = document.getElementById('mensajeError');
+        
+        btn.textContent = 'Verificando datos...';
+        btn.disabled = true;
+        errorDiv.style.display = 'none';
+
         try {
-            const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY_FIREBASE}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: document.getElementById('campoEmail').value, password: document.getElementById('campoClave').value, returnSecureToken: true }) });
+            const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY_FIREBASE}`, { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({ 
+                    email: document.getElementById('campoEmail').value.trim(), 
+                    password: document.getElementById('campoClave').value, 
+                    returnSecureToken: true 
+                }) 
+            });
             const data = await res.json();
-            if(data.idToken) { sessionStorage.setItem('tokenAdminVictor', data.idToken); tokenAuth = data.idToken; iniciarPanel(); } else throw new Error();
-        } catch(err) { document.getElementById('mensajeError').style.display = 'block'; btn.textContent = 'Ingresar'; }
+            
+            // Evaluamos específicamente si res.ok es false o si existe un error en la respuesta
+            if (!res.ok || data.error) {
+                throw new Error(data.error ? data.error.message : 'Error al conectar');
+            }
+            
+            if(data.idToken) { 
+                localStorage.setItem('tokenAdminVictor', data.idToken); 
+                tokenAuth = data.idToken; 
+                iniciarPanel(); 
+            }
+        } catch(err) { 
+            console.error("Error Auth:", err);
+            errorDiv.textContent = 'Credenciales inválidas. Verifica tu correo y contraseña.';
+            errorDiv.style.display = 'block'; 
+        } finally {
+            btn.textContent = 'Ingresar al Panel'; 
+            btn.disabled = false;
+        }
     };
 
-    document.getElementById('btnCerrarSesion').onclick = () => { sessionStorage.removeItem('tokenAdminVictor'); switchView('public'); location.reload(); };
+    document.getElementById('btnCerrarSesion').onclick = () => { 
+        localStorage.removeItem('tokenAdminVictor'); 
+        switchView('public'); 
+        location.reload(); 
+    };
 
     function iniciarPanel() {
         document.getElementById('pantallaLogin').style.display = 'none';
@@ -952,8 +999,13 @@
 
     async function cargarDatosDesdeServidor() {
         try {
-            const resCitas = await fetch(`${FIREBASE_URL}citas.json?auth=${tokenAuth}`); const citasData = await resCitas.json();
-            const resGastos = await fetch(`${FIREBASE_URL}gastos.json?auth=${tokenAuth}`); const gastosData = await resGastos.json();
+            const resCitas = await fetch(`${FIREBASE_URL}citas.json?auth=${tokenAuth}`); 
+            // Control de Token Expirado (401 Unauthorized)
+            if (resCitas.status === 401) throw new Error("SesiónExpirada");
+            
+            const citasData = await resCitas.json();
+            const resGastos = await fetch(`${FIREBASE_URL}gastos.json?auth=${tokenAuth}`); 
+            const gastosData = await resGastos.json();
 
             todasLasCitas = [];
             if(citasData) {
@@ -963,7 +1015,12 @@
             todosLosGastos = gastosData ? Object.keys(gastosData).map(id => ({id,...gastosData[id]})) : [];
 
             renderizarTablaAgenda(document.getElementById('filtroFechaAgenda').value); procesarMetricasGlobales(); calcularFrecuencias();
-        } catch(e) {}
+        } catch(e) {
+            if(e.message === "SesiónExpirada") {
+                alert("Tu sesión ha expirado por seguridad. Por favor ingresa nuevamente.");
+                document.getElementById('btnCerrarSesion').click();
+            }
+        }
     }
 
     function procesarMetricasGlobales() {
