@@ -2,20 +2,16 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Víctor Styles | Barbería y Panel Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Víctor Styles | Barbería Mundialista</title>
     <link rel="manifest" href="manifest.json">
-    
+    <!-- Scripts necesarios para EmailJS y Firebase (Votación) -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        /* ==========================================================================
-           VARIABLES GLOBALES (Unificadas)
-           ========================================================================== */
+        /* Variables de color adaptadas a la identidad (Dorado Viejo, Bronce y Negro Premium) */
         :root {
             --fondo-oscuro: #0a0a0a;
             --fondo-tarjeta: #121212;
@@ -27,693 +23,729 @@
             --dorado-brillante: #dfba6b;
             --bronce-oscuro: #866428;
             
-            --verde-exito: #10b981;
-            --rojo-alerta: #ef4444; 
-            --naranja-alerta: #f59e0b;
-
             --borde-sutil: rgba(184, 146, 78, 0.08);
             --borde-enfoque: rgba(184, 146, 78, 0.35);
-            --shadow-premium: 0 20px 40px rgba(0, 0, 0, 0.7);
+            --shadow-premium: 0 15px 45px -12px rgba(0, 0, 0, 0.9);
             --gradiente-metal: linear-gradient(135deg, #866428 0%, #dfba6b 50%, #b8924e 100%);
         }
 
-        /* AJUSTES PARA SENSACIÓN NATIVA DE APK */
-        * { 
-            margin: 0; padding: 0; box-sizing: border-box; 
-            font-family: '-apple-system', BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+        /* Configuración General */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: '-apple-system', BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             scroll-behavior: smooth;
-            -webkit-tap-highlight-color: transparent; 
-        }
-        body { 
-            background-color: var(--fondo-oscuro); color: var(--gris-texto); 
-            -webkit-font-smoothing: antialiased;
-            overscroll-behavior-y: none; /* Evita el rebote del navegador */
-            user-select: none; /* Evita selección de texto accidental en la app */
-        }
-        
-        input, select, textarea {
-            user-select: auto; /* Permite escribir en los inputs */
         }
 
-        button { 
-            font-family: inherit; 
-            transition: transform 0.15s ease, opacity 0.2s ease;
+        body {
+            background-color: var(--fondo-oscuro);
+            color: var(--gris-texto);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
-        button:active {
-            transform: scale(0.96); /* Feedback táctil estilo app */
+
+        /* Patrón sutil de balón de fútbol para secciones */
+        .bg-mundial-hex {
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='69' viewBox='0 0 40 69' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0L40 11.5v23L20 46 0 34.5v-23L20 0zm0 13L6.928 20.5v15L20 43l13.072-7.5v-15L20 13z' fill='%23b8924e' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 1.6rem;
+            color: #ffffff;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 800;
+            background: linear-gradient(180deg, #ffffff 30%, var(--dorado-acento) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitulo {
+            text-align: center;
+            color: var(--gris-secundario);
+            margin-top: 6px;
+            margin-bottom: 35px;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            font-weight: 400;
         }
 
         /* ==========================================================================
-           ESTILOS VISTA PÚBLICA (#app-publica)
+           BARRA DE NAVEGACIÓN Y MENÚ DESPLEGABLE (GLASSMORPHISM)
            ========================================================================== */
-        .bg-mundial-hex { background-image: url("data:image/svg+xml,%3Csvg width='40' height='69' viewBox='0 0 40 69' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0L40 11.5v23L20 46 0 34.5v-23L20 0zm0 13L6.928 20.5v15L20 43l13.072-7.5v-15L20 13z' fill='%23b8924e' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E"); }
-        #app-publica h2 { text-align: center; font-size: 1.6rem; color: #ffffff; letter-spacing: 3px; text-transform: uppercase; font-weight: 800; background: linear-gradient(180deg, #ffffff 30%, var(--dorado-acento) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        #app-publica .subtitulo { text-align: center; color: var(--gris-secundario); margin-top: 6px; margin-bottom: 35px; font-size: 0.85rem; letter-spacing: 1px; font-weight: 400; }
-        
-        #app-publica header { display: flex; flex-direction: row; justify-content: space-between; align-items: center; padding: 0 5%; background-color: rgba(10, 10, 10, 0.85); backdrop-filter: blur(20px); position: fixed; width: 100%; top: 0; left: 0; z-index: 1000; border-bottom: 1px solid var(--borde-sutil); height: 75px; }
-        .header-decoracion-mundial { position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, #006847 0%, #CE1126 50%, #0033A0 100%); z-index: 1001; }
-        .header-badge { display: flex; align-items: center; gap: 5px; font-size: 0.7rem; font-weight: 800; color: var(--dorado-brillante); text-transform: uppercase; letter-spacing: 1px; border: 1px solid rgba(184, 146, 78, 0.3); padding: 4px 10px; border-radius: 20px; background: rgba(184, 146, 78, 0.05); }
-        .menu-hamburguesa { display: flex; flex-direction: column; justify-content: space-between; width: 24px; height: 15px; background: transparent; border: none; cursor: pointer; z-index: 1100; }
-        .menu-hamburguesa span { width: 100%; height: 2px; background-color: #ffffff; border-radius: 2px; transition: transform 0.3s ease, opacity 0.3s ease; }
+        header {
+            display: flex;
+            flex-direction: row; 
+            justify-content: space-between;
+            align-items: center;        
+            padding: 0 5%;          
+            background-color: rgba(10, 10, 10, 0.85);  
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: fixed;            
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--borde-sutil);
+            height: 75px;
+        }
+
+        .header-decoracion-mundial {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #006847 0%, #CE1126 50%, #0033A0 100%);
+            z-index: 1001;
+        }
+
+        .header-badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--dorado-brillante);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid rgba(184, 146, 78, 0.3);
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(184, 146, 78, 0.05);
+        }
+
+        .menu-hamburguesa {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 24px;
+            height: 15px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 1100;
+        }
+
+        .menu-hamburguesa span {
+            width: 100%;
+            height: 2px;
+            background-color: #ffffff;
+            border-radius: 2px;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
         .menu-hamburguesa.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); background-color: var(--dorado-brillante); }
         .menu-hamburguesa.open span:nth-child(2) { opacity: 0; }
         .menu-hamburguesa.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); background-color: var(--dorado-brillante); }
-        .menu-desplegable { position: fixed; top: 0; left: -290px; width: 290px; height: 100vh; background-color: #0e0e0e; border-right: 1px solid var(--borde-sutil); box-shadow: 20px 0 40px rgba(0, 0, 0, 0.9); z-index: 1050; display: flex; flex-direction: column; padding: 100px 35px 40px 35px; transition: left 0.35s ease; }
-        .menu-desplegable.open { left: 0; }
-        .menu-desplegable a { color: var(--gris-texto); text-decoration: none; font-size: 0.9rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 18px 0; border-bottom: 1px solid rgba(184, 146, 78, 0.05); }
-        .menu-desplegable .link-admin-menu { margin-top: auto; color: var(--dorado-acento); font-size: 0.8rem; border: 1px solid rgba(184, 146, 78, 0.2); border-radius: 8px; text-align: center; padding: 14px; background-color: rgba(184, 146, 78, 0.02); display: block; cursor: pointer;}
-        #app-publica .logo { display: flex; align-items: center; }
-        #app-publica .logo img { height: 55px; filter: drop-shadow(0 2px 10px rgba(0,0,0,0.6)); }
+
+        .menu-desplegable {
+            position: fixed;
+            top: 0;
+            left: -290px; 
+            width: 290px;
+            height: 100vh;
+            background-color: #0e0e0e;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='69' viewBox='0 0 40 69' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0L40 11.5v23L20 46 0 34.5v-23L20 0zm0 13L6.928 20.5v15L20 43l13.072-7.5v-15L20 13z' fill='%23b8924e' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
+            border-right: 1px solid var(--borde-sutil);
+            box-shadow: 20px 0 40px rgba(0, 0, 0, 0.9);
+            z-index: 1050;
+            display: flex;
+            flex-direction: column;
+            padding: 100px 35px 40px 35px;
+            transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .menu-desplegable.open {
+            left: 0; 
+        }
+
+        .menu-desplegable a {
+            color: var(--gris-texto);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 18px 0;
+            border-bottom: 1px solid rgba(184, 146, 78, 0.05);
+            transition: color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-desplegable a:active, .menu-desplegable a:hover {
+            color: var(--dorado-brillante);
+            padding-left: 5px;
+        }
+
+        .menu-desplegable .link-admin-menu {
+            margin-top: auto; 
+            color: var(--dorado-acento);
+            font-size: 0.8rem;
+            border: 1px solid rgba(184, 146, 78, 0.2);
+            border-radius: 8px;
+            text-align: center;
+            padding: 14px;
+            background-color: rgba(184, 146, 78, 0.02);
+            transition: all 0.25s ease;
+            display: block;
+        }
+
+        .logo { display: flex; align-items: center; flex-shrink: 0; }
+        .logo img { height: 55px; width: auto; display: block; filter: drop-shadow(0 2px 10px rgba(0,0,0,0.6)); }
+
         .menu-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.8); z-index: 1040; display: none; backdrop-filter: blur(4px); }
         .menu-overlay.show { display: block; }
 
-        .banderines-top { position: absolute; top: 75px; width: 100%; display: flex; justify-content: space-around; z-index: 500; pointer-events: none; }
-        .banderines-top span { width: 20px; height: 30px; clip-path: polygon(50% 100%, 0 0, 100% 0); opacity: 0.85; }
-        .banderines-top span:nth-child(4n+1) { background: #006847; margin-top: -5px; } .banderines-top span:nth-child(4n+2) { background: var(--dorado-acento); } .banderines-top span:nth-child(4n+3) { background: #CE1126; margin-top: -8px; } .banderines-top span:nth-child(4n+4) { background: #0033A0; margin-top: -2px; } 
+        /* ==========================================================================
+           BANDERINES DEL MUNDIAL 2026
+           ========================================================================== */
+        .banderines-top {
+            position: absolute;
+            top: 75px; 
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            z-index: 500;
+            pointer-events: none;
+        }
 
-        .hero-container { position: relative; width: 100%; height: 85vh; display: flex; align-items: center; justify-content: center; overflow: hidden; background-color: #000000; margin-top: 75px; }
+        .banderines-top span {
+            width: 20px;
+            height: 30px;
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+            opacity: 0.85;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+        }
+
+        /* Colores de los anfitriones y la marca */
+        .banderines-top span:nth-child(4n+1) { background: #006847; margin-top: -5px; } /* Verde México */
+        .banderines-top span:nth-child(4n+2) { background: var(--dorado-acento); } /* Dorado Víctor Styles */
+        .banderines-top span:nth-child(4n+3) { background: #CE1126; margin-top: -8px; } /* Rojo Canadá/USA/Mex */
+        .banderines-top span:nth-child(4n+4) { background: #0033A0; margin-top: -2px; } /* Azul USA */
+
+        /* ==========================================================================
+           SECCIÓN DE BIENVENIDA (HERO PANEL)
+           ========================================================================== */
+        .hero-container {
+            position: relative;
+            width: 100%;
+            height: 85vh; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: #000000; 
+            margin-top: 75px;
+        }
+
         .hero-media { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
         .hero-img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
         .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(10, 10, 10, 0.4) 0%, rgba(10, 10, 10, 0.98) 100%); }
-        .hero-content { position: relative; z-index: 2; text-align: center; padding: 0 24px; max-width: 700px; }
-        .hero-title { font-size: 2.5rem; font-weight: 900; color: #ffffff; letter-spacing: 5px; margin-bottom: 8px; text-transform: uppercase; background: linear-gradient(180deg, #ffffff 40%, var(--dorado-acento) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .badge-mundial { display: inline-block; padding: 6px 14px; border: 1px solid var(--dorado-acento); color: var(--dorado-brillante); font-size: 0.7rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; border-radius: 6px; margin-bottom: 15px; }
-        .hero-subtitle { font-size: 1rem; color: #d1d1d6; margin-bottom: 25px; }
-        .banner-mundial { background: linear-gradient(135deg, rgba(15, 15, 15, 0.9) 0%, rgba(184, 146, 78, 0.1) 100%); border: 1px solid rgba(223, 186, 107, 0.4); border-radius: 16px; padding: 16px 20px; margin: 0 auto 35px auto; display: flex; align-items: center; gap: 16px; max-width: 450px; text-align:left;}
-        .banner-mundial-text h4 { color: var(--dorado-brillante); font-size: 1rem; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; }
-        .banner-mundial-text p { color: #f0f0f0; font-size: 0.82rem; }
-        .hero-btn { display: inline-block; padding: 16px 36px; background: var(--gradiente-metal); color: #0a0a0a; text-decoration: none; font-weight: 800; font-size: 0.85rem; border-radius: 8px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(184, 146, 78, 0.3);}
 
-        .encuesta-section { padding: 50px 5%; text-align: center; background-color: #0e0e0e; border-top: 1px solid var(--borde-sutil); }
-        #contenedor-votos { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; max-width: 550px; margin: 20px auto 0 auto; }
-        .btn-equipo { background: linear-gradient(145deg, #181818, #101010); border: 1px solid rgba(184, 146, 78, 0.2); color: #ffffff; padding: 18px 10px; border-radius: 14px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .barra-progreso { height: 8px; background: #121212; border-radius: 6px; margin-bottom: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
-        .progreso-relleno { height: 100%; background: var(--gradiente-metal); border-radius: 6px; }
+        .hero-content {
+            position: relative;
+            z-index: 2; 
+            text-align: center;
+            padding: 0 24px;
+            max-width: 700px;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 5px; 
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            background: linear-gradient(180deg, #ffffff 40%, var(--dorado-acento) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.6));
+        }
+
+        .badge-mundial {
+            display: inline-block;
+            padding: 6px 14px;
+            background: linear-gradient(90deg, #0a0a0a, #1a1a1a);
+            border: 1px solid var(--dorado-acento);
+            color: var(--dorado-brillante);
+            font-size: 0.7rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(184, 146, 78, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+            color: #d1d1d6;
+            margin-bottom: 25px;
+            font-weight: 300;
+            letter-spacing: 1.2px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        /* ==========================================================================
+           BANNER PROMOCIONAL BARAJITAS (PREMIUM & NO INVASIVO)
+           ========================================================================== */
+        .banner-mundial {
+            background: linear-gradient(135deg, rgba(18, 18, 18, 0.8) 0%, rgba(184, 146, 78, 0.15) 100%);
+            border: 1px solid rgba(184, 146, 78, 0.3);
+            border-left: 4px solid var(--dorado-brillante);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin: 0 auto 35px auto;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: left;
+            max-width: 450px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .banner-mundial:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(184, 146, 78, 0.2);
+        }
+
+        .banner-mundial-icon {
+            font-size: 2.2rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+
+        .banner-mundial-text h4 {
+            color: var(--dorado-brillante);
+            font-size: 0.95rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .banner-mundial-text p {
+            color: #e5e5e5;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            font-weight: 400;
+        }
+
+        .banner-mundial-text strong {
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .hero-btn {
+            display: inline-block;
+            padding: 16px 36px;
+            background: var(--gradiente-metal);
+            color: #0a0a0a;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            box-shadow: 0 8px 30px rgba(184, 146, 78, 0.25);
+            transition: transform 0.2s ease, box-shadow 0.25s ease;
+        }
+
+        .hero-btn:active { transform: scale(0.97); box-shadow: 0 4px 12px rgba(184, 146, 78, 0.15); }
+
+        /* ==========================================================================
+           SECCIONES RESTANTES
+           ========================================================================== */
+        .encuesta-section { padding: 40px 5%; text-align: center; background-color: #0e0e0e; border-top: 1px solid var(--borde-sutil); }
+        .btn-equipo { background: #181818; border: 1px solid var(--dorado-acento); color: #ffffff; padding: 12px 5px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.8rem; transition: all 0.3s ease; }
+        .btn-equipo:hover { background: var(--dorado-acento); color: #0a0a0a; }
+        .barra-progreso { height: 6px; background: #181818; border-radius: 4px; margin-bottom: 12px; overflow: hidden; border: 1px solid rgba(184, 146, 78, 0.1); }
+        .progreso-relleno { height: 100%; background: var(--gradiente-metal); width: 0%; transition: width 1s ease-in-out; }
 
         .galeria-section { padding: 70px 5%; max-width: 1150px; margin: 0 auto; }
         .grid-galeria { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-        .tarjeta-galeria { background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-radius: 14px; overflow: hidden; text-align: center; padding-bottom: 20px; }
-        .tarjeta-galeria img { width: 100%; height: 360px; object-fit: cover; }
-        .tarjeta-galeria p { margin-top: 18px; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; color: var(--dorado-brillante); }
+        .tarjeta-galeria { background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-radius: 14px; overflow: hidden; text-align: center; padding-bottom: 20px; box-shadow: var(--shadow-premium); }
+        .tarjeta-galeria img { width: 100%; height: 360px; object-fit: cover; filter: grayscale(40%); transition: filter 0.4s, transform 0.4s; }
+        .tarjeta-galeria:hover img { filter: grayscale(0%); transform: scale(1.02); }
+        .tarjeta-galeria p { margin-top: 18px; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--dorado-brillante); }
 
         .precios-section { padding: 70px 5%; background-color: #060606; color: #ffffff; }
         .precios-grid { display: flex; flex-direction: column; gap: 16px; max-width: 550px; margin: 0 auto; }
-        .precio-tarjeta { display: flex; justify-content: space-between; align-items: center; padding: 22px; background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-left: 4px solid #2a2a2a; border-radius: 12px; }
+        .precio-tarjeta { display: flex; justify-content: space-between; align-items: center; padding: 22px; background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-left: 4px solid #2a2a2a; border-radius: 12px; box-shadow: var(--shadow-premium); }
         .precio-tarjeta.destacado { border-left: 4px solid var(--dorado-acento); background: linear-gradient(90deg, #121212 0%, #1a1610 100%); }
-        .servicio-info h3 { font-size: 1rem; margin-bottom: 6px; color: #ffffff; }
+        .servicio-info h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; color: #ffffff; }
         .precio-tarjeta.destacado .servicio-info h3 { color: var(--dorado-brillante); }
-        .servicio-info p { font-size: 0.82rem; color: var(--gris-secundario); }
-        .servicio-costo { font-size: 1.25rem; font-weight: 800; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--borde-sutil); }
+        .servicio-info p { font-size: 0.82rem; color: var(--gris-secundario); padding-right: 14px; line-height: 1.4; }
+        .servicio-costo { font-size: 1.25rem; font-weight: 800; color: #ffffff; background-color: #1e1e1e; padding: 8px 16px; border-radius: 8px; min-width: 68px; text-align: center; border: 1px solid var(--borde-sutil); }
         .precio-tarjeta.destacado .servicio-costo { background: var(--gradiente-metal); color: #0a0a0a; border-color: transparent; }
 
         .agenda-section { padding: 70px 5%; background-color: #0e0e0e; }
-        .form-agenda { max-width: 550px; margin: 0 auto; background-color: var(--fondo-tarjeta); padding: 32px 26px; border-radius: 20px; border: 1px solid var(--borde-sutil); box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
-        .paso-titulo { font-size: 1.1rem; color: var(--dorado-brillante); margin-bottom: 20px; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(184, 146, 78, 0.2); padding-bottom: 10px; }
-        .paso-titulo span { background: var(--dorado-acento); color: #000; border-radius: 50%; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 900; }
+        .form-agenda { max-width: 520px; margin: 0 auto; background-color: var(--fondo-tarjeta); padding: 32px 26px; border-radius: 16px; border: 1px solid var(--borde-sutil); box-shadow: var(--shadow-premium); }
         .grupo-input { margin-bottom: 22px; display: flex; flex-direction: column; gap: 8px; }
-        .grupo-input label { color: var(--gris-texto); font-size: 0.75rem; text-transform: uppercase; font-weight: 700; }
-        .grupo-input input, .grupo-input select { width: 100%; padding: 18px; font-size: 1rem; background-color: var(--fondo-input); border: 1px solid rgba(255, 255, 255, 0.08); color: #ffffff; border-radius: 12px; outline: none; }
-        .grupo-input input[type="date"] { color-scheme: dark; }
-        .cartelera-horas { display: grid; grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)); gap: 12px; margin-bottom: 25px; margin-top: 5px; }
-        .msj-informativo { color: var(--gris-secundario); font-size: 0.85rem; font-style: italic; text-align: center; padding: 20px 0; grid-column: 1 / -1; }
-        .pill-hora { background-color: var(--fondo-input); border: 1px solid rgba(184, 146, 78, 0.3); color: #fff; padding: 14px 5px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; cursor: pointer; text-align: center; }
-        .pill-hora.activa { background: var(--gradiente-metal); color: #0a0a0a; border-color: transparent; transform: scale(1.05); }
-        #seccion-datos-personales { opacity: 0.4; pointer-events: none; transition: opacity 0.4s ease; margin-top: 30px; }
-        #seccion-datos-personales.habilitado { opacity: 1; pointer-events: auto; }
-        .btn-submit { width: 100%; padding: 20px; background: var(--gradiente-metal); color: #0a0a0a; border: none; font-weight: 800; font-size: 0.9rem; text-transform: uppercase; border-radius: 12px; cursor: pointer; margin-top: 10px; }
+        .grupo-input label { color: var(--dorado-acento); font-size: 0.72rem; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+        .grupo-input input, .grupo-input select, .select-servicio { width: 100%; padding: 14px 16px; background-color: var(--fondo-input); border: 1px solid rgba(255, 255, 255, 0.05); color: #ffffff; border-radius: 10px; outline: none; font-size: 0.92rem; font-weight: 500; appearance: none; -webkit-appearance: none; }
+        .grupo-input input:focus, .grupo-input select:focus { border-color: var(--dorado-acento); box-shadow: 0 0 0 3px var(--borde-enfoque); }
         
-        .contenedor-reagendar { margin-top: 35px; padding-top: 25px; border-top: 1px dashed rgba(184, 146, 78, 0.15); }
+        /* Modales, botones y utilidades que tenías antes... (Se mantienen iguales) */
+        .btn-submit { width: 100%; padding: 15px; background: var(--gradiente-metal); color: #0a0a0a; border: none; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; border-radius: 10px; cursor: pointer; box-shadow: 0 6px 20px rgba(184, 146, 78, 0.2); }
+        .contenedor-reagendar { margin-top: 30px; padding-top: 25px; border-top: 1px dashed rgba(184, 146, 78, 0.15); }
+        .titulo-reagendar { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #ffffff; margin-bottom: 12px; text-align: center; }
         .fila-reagendar { display: flex; gap: 10px; }
-        .input-codigo { flex: 1; text-transform: uppercase; text-align: center; padding: 16px; font-size: 0.95rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: #1a1a1a; color: #fff;}
-        .btn-reagendar { padding: 0 20px; background-color: #2a2a2a; color: #ffffff; border: 1px solid var(--borde-sutil); border-radius: 10px; font-weight: 600; cursor: pointer; }
+        .input-codigo { flex: 1; text-transform: uppercase; letter-spacing: 2px; text-align: center; }
+        .btn-reagendar { padding: 0 20px; background-color: #1e1e1e; color: #ffffff; border: 1px solid var(--borde-sutil); border-radius: 10px; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; cursor: pointer; }
         
         .ubicacion-section { padding: 60px 5%; background-color: #060606; border-top: 1px solid var(--borde-sutil); text-align: center; }
-        .contenedor-direccion { max-width: 550px; margin: 0 auto; background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-radius: 14px; padding: 24px; }
-        .btn-mapa { display: inline-flex; align-items: center; gap: 8px; color: var(--dorado-acento); text-decoration: none; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
+        .contenedor-direccion { max-width: 550px; margin: 0 auto; background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-radius: 14px; padding: 24px; box-shadow: var(--shadow-premium); }
+        .direccion-texto { font-size: 0.95rem; color: #ffffff; line-height: 1.5; font-weight: 500; margin-bottom: 15px; }
+        .btn-mapa { display: inline-flex; align-items: center; gap: 8px; color: var(--dorado-acento); text-decoration: none; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
         
-        footer { text-align: center; padding: 35px; background-color: var(--fondo-oscuro); color: #555; font-size: 0.8rem; font-weight: 500; border-top: 1px solid var(--borde-sutil); }
-        .btn-admin-inferior { color: #666; text-decoration: none; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; padding: 10px 20px; border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; background: transparent; cursor:pointer;}
+        footer { text-align: center; padding: 35px; background-color: var(--fondo-oscuro); color: #333333; font-size: 0.8rem; font-weight: 500; border-top: 1px solid var(--borde-sutil); }
+        .contenedor-admin-abajo { display: flex; justify-content: center; margin-top: 35px; margin-bottom: 5px; }
+        .btn-admin-inferior { color: #555555; text-decoration: none; font-size: 0.75rem; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; padding: 10px 20px; border: 1px solid var(--borde-sutil); border-radius: 8px; }
         
-        /* Modal VIP (Pública) */
+        /* Modal VIP */
         .modal-cita-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.9); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; backdrop-filter: blur(8px); transition: opacity 0.3s; }
         .modal-cita-overlay.show { opacity: 1; pointer-events: auto; }
-        .ticket-vip { background-color: #121212; border: 1px solid rgba(184, 146, 78, 0.15); border-radius: 20px; width: 100%; max-width: 400px; transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .ticket-vip { background-color: #121212; border: 1px solid rgba(184, 146, 78, 0.15); border-radius: 20px; width: 100%; max-width: 400px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9); transform: scale(0.9); transition: transform 0.3s; }
         .modal-cita-overlay.show .ticket-vip { transform: scale(1); }
-        .ticket-header { background: linear-gradient(135deg, #181818 0%, #0a0a0a 100%); padding: 24px; text-align: center; border-bottom: 2px dashed rgba(184, 146, 78, 0.2); border-radius: 20px 20px 0 0; }
-        .ticket-header h3 { font-size: 1.1rem; color: var(--dorado-brillante); text-transform: uppercase; font-weight: 800; margin-bottom: 4px; }
+        .ticket-header { background: linear-gradient(135deg, #181818 0%, #0a0a0a 100%); padding: 24px; text-align: center; border-bottom: 2px dashed rgba(184, 146, 78, 0.2); position: relative; }
+        .ticket-header h3 { font-size: 1.1rem; letter-spacing: 3px; color: var(--dorado-brillante); text-transform: uppercase; font-weight: 800; margin-bottom: 4px; }
+        .ticket-header p { font-size: 0.75rem; color: var(--gris-secundario); text-transform: uppercase; letter-spacing: 1px; }
         .ticket-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
         .ticket-dato { display: flex; flex-direction: column; gap: 4px; }
-        .ticket-label { font-size: 0.65rem; text-transform: uppercase; color: var(--dorado-acento); font-weight: 600; }
+        .ticket-label { font-size: 0.65rem; text-transform: uppercase; color: var(--dorado-acento); letter-spacing: 1px; font-weight: 600; }
+        .ticket-valor { font-size: 0.95rem; color: #ffffff; font-weight: 600; }
         .ticket-codigo-box { background-color: #0a0a0a; border: 1px dashed rgba(184, 146, 78, 0.4); border-radius: 10px; padding: 14px; text-align: center; margin-top: 5px; }
         .ticket-codigo-num { font-size: 1.5rem; font-weight: 900; color: var(--dorado-brillante); letter-spacing: 4px; }
         .ticket-footer { padding: 0 24px 24px 24px; display: flex; flex-direction: column; gap: 10px; }
-        .btn-ticket-primario { background: var(--gradiente-metal); color: #0a0a0a; padding: 16px; border-radius: 12px; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; cursor: pointer; border: none; }
-        .btn-ticket-secundario { background-color: transparent; color: var(--gris-texto); border: 1px solid rgba(184, 146, 78, 0.2); padding: 16px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; text-transform: uppercase; cursor: pointer; }
-
-
-        /* ==========================================================================
-           ESTILOS VISTA ADMINISTRATIVA (#app-admin)
-           ========================================================================== */
-        #app-admin { padding-top: 85px; }
-        #app-admin h2 { font-size: 1.5rem; text-align: center; font-weight: 800; margin-bottom: 6px; background: linear-gradient(180deg, #ffffff 0%, #d4af37 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 2px;}
-        #app-admin h3 { font-size: 0.95rem; font-weight: 700; border-bottom: 1px solid var(--borde-sutil); padding-bottom: 14px; margin-bottom: 14px; color: rgba(255, 255, 255, 0.9); text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center;}
-        
-        #app-admin header { display: flex; justify-content: center; align-items: center; padding: 0 5%; background-color: rgba(10, 10, 10, 0.85); backdrop-filter: blur(20px); position: fixed; width: 100%; top: 0; left: 0; z-index: 1000; border-bottom: 1px solid var(--borde-sutil); height: 70px; }
-        #app-admin .logo img { height: 35px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)); }
-        
-        .btn-cerrar-sesion { background: transparent; border: 1px solid var(--dorado-acento); color: var(--dorado-acento); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
-        .tabs-container { display: flex; gap: 10px; overflow-x: auto; padding: 0 5% 15px 5%; margin-bottom: 20px; border-bottom: 1px solid var(--borde-sutil); }
-        .tabs-container::-webkit-scrollbar { display: none; }
-        .tab-btn { background: transparent; color: var(--gris-secundario); border: none; padding: 12px 15px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; position: relative; white-space: nowrap; transition: color 0.3s; }
-        .tab-btn.active { color: var(--dorado-acento); }
-        .tab-btn.active::after { content: ''; position: absolute; bottom: -16px; left: 0; width: 100%; height: 3px; background: var(--dorado-acento); border-radius: 3px 3px 0 0; }
-        
-        .modulo-admin { display: none; padding: 0 5%; max-width: 1150px; margin: 0 auto; padding-bottom: 40px; }
-        .modulo-admin.active { display: block; }
-        
-        /* LOGIN SEGURO Y NATIVO */
-        .login-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(6, 6, 6, 0.98); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 24px; }
-        .login-box { background-color: var(--fondo-tarjeta); border: 1px solid rgba(184, 146, 78, 0.2); padding: 45px 30px; border-radius: 24px; width: 100%; max-width: 380px; text-align: center; border-top: 4px solid var(--dorado-acento); box-shadow: var(--shadow-premium); }
-        .login-box input { width: 100%; padding: 16px; background-color: var(--fondo-input); border: 1px solid var(--borde-sutil); color: #fff; border-radius: 12px; outline: none; margin-bottom: 16px; font-size: 1rem; text-align: center;}
-        .btn-login { width: 100%; padding: 18px; background-color: var(--dorado-acento); color: #000; border: none; font-weight: 800; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1.5px; border-radius: 12px; cursor: pointer; margin-top: 5px; }
-        .error-login { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--rojo-alerta); color: var(--rojo-alerta); padding: 12px; border-radius: 8px; font-size: 0.8rem; margin-top: 18px; display: none; font-weight: 600; line-height: 1.4; }
-
-        .seccion-bloque { background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-radius: 16px; padding: 22px; margin-bottom: 24px; }
-        .grid-contable { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 14px; margin-bottom: 24px; }
-        .tarjeta-contable { background-color: var(--fondo-input); border: 1px solid var(--borde-sutil); border-radius: 12px; padding: 18px 14px; text-align: center; }
-        .tarjeta-contable h4 { font-size: 0.65rem; text-transform: uppercase; color: var(--gris-secundario); margin-bottom: 6px; font-weight: 600; }
-        .tarjeta-contable .dato-principal { font-size: 1.5rem; font-weight: 800; color: #ffffff; }
-
-        .contenedor-graficos { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 24px; }
-        .tarjeta-grafico { background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .tarjeta-grafico h4 { font-size: 0.8rem; color: var(--gris-secundario); margin-bottom: 15px; width: 100%; border-bottom: 1px solid var(--borde-sutil); padding-bottom: 10px;}
-        .canvas-container { position: relative; width: 100%; max-height: 250px; display: flex; justify-content: center;}
-
-        #app-admin .form-manual { display: flex; flex-direction: column; gap: 16px; }
-        #app-admin .form-grupo { display: flex; flex-direction: column; gap: 8px; }
-        #app-admin .form-grupo label { font-size: 0.7rem; color: var(--gris-secundario); text-transform: uppercase; font-weight: 700; }
-        #app-admin .form-grupo input, #app-admin .form-grupo select { background-color: var(--fondo-input); border: 1px solid var(--borde-sutil); color: #fff; padding: 16px; border-radius: 12px; outline: none; font-size: 0.9rem;}
-        #app-admin .btn-guardar { background-color: var(--dorado-acento); color: #000; border: none; padding: 18px; border-radius: 12px; cursor: pointer; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; }
-        
-        .btn-accion { background: transparent; border: 1px solid var(--dorado-acento); color: var(--dorado-acento); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: bold; }
-        .btn-accion-rojo { border-color: var(--rojo-alerta); color: var(--rojo-alerta); }
-        
-        .contenedor-tabla { width: 100%; overflow-x: auto; margin-top: 10px; border: 1px solid var(--borde-sutil); border-radius: 12px; }
-        #app-admin table { width: 100%; border-collapse: collapse; text-align: left; background: var(--fondo-input); }
-        #app-admin th, #app-admin td { padding: 16px 14px; border-bottom: 1px solid var(--borde-sutil); font-size: 0.85rem; }
-        #app-admin th { background-color: #1a1a1a; color: var(--gris-secundario); text-transform: uppercase; font-size: 0.75rem; }
-
-        /* MODALES ADMIN */
-        .modal-overlay-admin { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 3000; display: none; justify-content: center; align-items: center; padding: 20px; }
-        .modal-box-admin { background: var(--fondo-tarjeta); border: 1px solid var(--dorado-acento); border-radius: 20px; width: 100%; max-width: 400px; padding: 24px; position: relative; box-shadow: var(--shadow-premium); }
-        .modal-cerrar { position: absolute; top: 15px; right: 20px; background: transparent; border: none; color: var(--gris-secundario); font-size: 1.8rem; cursor: pointer; }
-        
-        .filtros-rango { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; background: var(--fondo-input); padding: 15px; border-radius: 12px; border: 1px solid var(--borde-sutil); margin-bottom: 20px; }
-        .filtros-rango input { background: var(--fondo-tarjeta); color: #fff; border: 1px solid var(--borde-sutil); padding: 12px; border-radius: 8px; flex: 1; font-size: 0.9rem;}
-        .galeria-miniatura { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid var(--borde-sutil); }
-
-        @media (max-width: 768px) {
-            #app-admin table, #app-admin thead, #app-admin tbody, #app-admin th, #app-admin td, #app-admin tr { display: block; width: 100%; border:none; }
-            #app-admin thead { display: none; }
-            #app-admin tr { border-bottom: 1px solid var(--dorado-acento); margin-bottom: 10px; padding: 14px; background: var(--fondo-input); border-radius: 12px;}
-            #app-admin td { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);}
-            #app-admin td::before { content: attr(data-label); font-weight: 700; text-transform: uppercase; font-size: 0.75rem; color: var(--gris-secundario); }
-        }
+        .btn-ticket-accion { width: 100%; padding: 12px; border-radius: 10px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; cursor: pointer; text-align: center; text-decoration: none; border: none; }
+        .btn-ticket-primario { background: var(--gradiente-metal); color: #0a0a0a; }
+        .btn-ticket-secundario { background-color: transparent; color: var(--gris-texto); border: 1px solid rgba(184, 146, 78, 0.2); }
     </style>
 </head>
 <body>
+<div id="alerta-actualizacion" style="display: none; position: fixed; bottom: 20px; right: 20px; background-color: var(--fondo-tarjeta); color: var(--gris-texto); padding: 16px 24px; border-radius: 8px; box-shadow: var(--shadow-premium); border: 1px solid var(--dorado-acento); z-index: 9999; text-align: center;">
+    <p style="margin: 0 0 10px 0; font-size: 0.9rem; font-weight: bold; color: var(--dorado-brillante);">¡Nueva versión disponible!</p>
+    <button onclick="aplicarActualizacion()" style="background: var(--gradiente-metal); color: #0a0a0a; border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; width: 100%; text-transform: uppercase; font-size: 0.8rem;">Actualizar ahora</button>
+</div>
 
-<main id="app-publica">
-    <div class="menu-overlay" id="menuOverlay"></div>
+<div class="menu-overlay" id="menuOverlay"></div>
 
-    <header>
-        <div class="header-decoracion-mundial"></div>
-        <button class="menu-hamburguesa" id="btnHamburguesa">
-            <span></span><span></span><span></span>
-        </button>
-        <div class="logo"><img src="LOGO.png" alt="Logo Víctor Styles"></div>
-        <div class="header-badge">⚽ M26</div>
-    </header>
-
-    <div class="banderines-top">
-        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+<header>
+    <div class="header-decoracion-mundial"></div>
+    <button class="menu-hamburguesa" id="btnHamburguesa">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    
+    <div class="logo"> 
+        <img src="LOGO.png" alt="Logo Víctor Styles">
     </div>
 
-    <nav class="menu-desplegable" id="menuLateral">
-        <a href="#inicio" class="menu-link">⚽ Inicio</a>
-        <a href="#galeria" class="menu-link">✂️ Cortes</a>
-        <a href="#precios" class="menu-link">🏆 Servicios</a>
-        <a href="#agenda" class="menu-link">📅 Agendar Cita</a>
-        <a href="#ubicacion" class="menu-link">📍 Ubicación</a>
-        <button class="link-admin-menu" onclick="switchView('admin')">Acceso Administrador</button>
-    </nav>
-
-    <section id="inicio" class="hero-container">
-        <div class="hero-media">
-            <img src="Hero.jpg" alt="Fondo Víctor Styles" class="hero-img">
-            <div class="hero-overlay"></div>
-        </div>
-        <div class="hero-content">
-            <h1 class="hero-title">VÍCTOR STYLES</h1>
-            <div class="badge-mundial">Edición Mundialista 26</div>
-            <p class="hero-subtitle">Estilo, precisión y elegancia en cada corte.</p>
-            <div class="banner-mundial">
-                <div class="banner-mundial-icon">🎫</div>
-                <div class="banner-mundial-text">
-                    <h4>¡Fiebre Mundialista!</h4>
-                    <p>Con cada servicio te llevas una <strong>barajita oficial</strong> de cortesía. ¡Llena tu álbum con nosotros!</p>
-                </div>
-            </div>
-            <a href="#agenda" class="hero-btn">AGENDAR CITA</a>
-        </div>
-    </section>
-
-    <section id="encuesta" class="encuesta-section bg-mundial-hex">
-        <h2 style="font-size: 1.4rem; margin-bottom: 5px;">Rumbo al Título</h2>
-        <p class="subtitulo">¿Quién se coronará campeón en 2026? ¡Vota por tu favorito!</p>
-        <div id="contenedor-votos">
-            <button class="btn-equipo" onclick="votar('Brasil')"><span class="bandera">🇧🇷</span> Brasil</button>
-            <button class="btn-equipo" onclick="votar('España')"><span class="bandera">🇪🇸</span> España</button>
-            <button class="btn-equipo" onclick="votar('Francia')"><span class="bandera">🇫🇷</span> Francia</button>
-            <button class="btn-equipo" onclick="votar('Portugal')"><span class="bandera">🇵🇹</span> Portugal</button>
-            <button class="btn-equipo" onclick="votar('Argentina')"><span class="bandera">🇦🇷</span> Argentina</button>
-            <button class="btn-equipo" onclick="votar('Otro')"><span class="bandera">🌍</span> Otro</button>
-        </div>
-        <div id="resultados-encuesta" style="margin-top: 30px; display: none; max-width: 500px; margin-left: auto; margin-right: auto; text-align: left;">
-            <p style="color: var(--dorado-brillante); font-size: 0.9rem; font-weight: bold; margin-bottom: 20px; text-align: center; text-transform: uppercase;">Resultados en tiempo real</p>
-            <div id="barras-resultados"></div>
-        </div>
-    </section>
-
-    <section id="galeria" class="galeria-section">
-        <h2>Mi Trabajo</h2>
-        <p class="subtitulo">Una muestra de los cortes y estilos recientes.</p>
-        <div class="grid-galeria" id="grid-galeria-dinamica">
-            <div class="tarjeta-galeria" style="grid-column: 1/-1; background: transparent; border: none; box-shadow: none;">
-                <p style="color: var(--dorado-brillante); padding: 30px; font-size: 0.85rem;">Cargando cortes en tendencia...</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="precios" class="precios-section bg-mundial-hex">
-        <div class="precios-header">
-            <h2>Nuestros Servicios</h2>
-            <p class="subtitulo">Calidad, precisión y estilo a tu alcance</p>
-        </div>
-        <div class="precios-grid">
-            <div class="precio-tarjeta">
-                <div class="servicio-info"><h3>Corte Sencillo</h3><p>Corte clásico o moderno con acabado limpio.</p></div>
-                <div class="servicio-costo">10$</div>
-            </div>
-            <div class="precio-tarjeta destacado">
-                <div class="servicio-info"><h3>Corte Premium</h3><p>Corte estilizado, lavado, peinado y producto premium.</p></div>
-                <div class="servicio-costo">13$</div>
-            </div>
-            <div class="precio-tarjeta">
-                <div class="servicio-info"><h3>Corte con Barba Sencillo</h3><p>Arreglo de cabello y perfilado de barba básico.</p></div>
-                <div class="servicio-costo">16$</div>
-            </div>
-            <div class="precio-tarjeta destacado">
-                <div class="servicio-info"><h3>Corte con Barba Premium</h3><p>Servicio completo, ritual de toalla caliente y navaja.</p></div>
-                <div class="servicio-costo">19$</div>
-            </div>
-            <div class="precio-tarjeta">
-                <div class="servicio-info"><h3>Barba Sola</h3><p>Perfilado, hidratación y cuidado de tu barba.</p></div>
-                <div class="servicio-costo">6$</div>
-            </div>
-            <div class="precio-tarjeta">
-                <div class="servicio-info"><h3>Cero con Barba Premium</h3><p>Rasurado al ras (cero) combinado con arreglo premium.</p></div>
-                <div class="servicio-costo">13$</div>
-            </div>
-        </div>
-    </section>
-
-    <section id="agenda" class="agenda-section">
-        <h2>Agenda tu Cita</h2>
-        <p class="subtitulo">Asegura tu puesto antes de que empiece el partido.</p>
-        <form id="formulario-cita" class="form-agenda">
-            <div class="paso-titulo"><span>1</span> Elige tu espacio</div>
-            <div class="grupo-input">
-                <label for="fecha">Selecciona la Fecha de tu Cita</label>
-                <input type="date" id="fecha" required>
-            </div>
-            <div class="grupo-input">
-                <label>Horarios Disponibles</label>
-                <div id="cartelera-horas-contenedor" class="cartelera-horas">
-                    <div class="msj-informativo">Primero selecciona una fecha en el calendario.</div>
-                </div>
-                <select id="hora" style="display: none;"><option value="" disabled selected>Primero selecciona un día</option></select>
-            </div>
-            
-            <div id="seccion-datos-personales">
-                <div class="paso-titulo"><span>2</span> Completa tu reserva</div>
-                <div class="grupo-input">
-                    <label for="nombre">Nombre Completo</label>
-                    <input type="text" id="nombre" required placeholder="Ej. Juan Pérez">
-                </div>
-                <div class="grupo-input">
-                    <label for="telefono">Teléfono de Contacto</label>
-                    <input type="tel" id="telefono" required placeholder="Ej. 04121234567">
-                </div>
-                <div class="grupo-input">
-                    <label for="servicio">Selecciona el Servicio</label>
-                    <select id="servicio" required class="select-servicio">
-                        <option value="" disabled selected>-- Elige un servicio --</option>
-                        <option value="Corte Sencillo (10$)">Corte Sencillo - 10$</option>
-                        <option value="Corte Premium (13$)">Corte Premium - 13$</option>
-                        <option value="Corte con Barba Sencillo (16$)">Corte con Barba Sencillo - 16$</option>
-                        <option value="Corte con Barba Premium (19$)">Corte con Barba Premium - 19$</option>
-                        <option value="Barba Sola (6$)">Barba Sola - 6$</option>
-                        <option value="Cero con Barba Premium (13$)">Cero con Barba Premium - 13$</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-submit">Confirmar Reserva</button>
-            </div>
-
-            <div class="contenedor-reagendar">
-                <div class="titulo-reagendar" style="text-align: center; font-size: 0.85rem; color: var(--gris-secundario); margin-bottom: 12px;">¿Necesitas gestionar o reagendar tu cita?</div>
-                <div class="fila-reagendar">
-                    <input type="text" id="codigoGestion" class="input-codigo" placeholder="CÓDIGO DE CITA" maxlength="6">
-                    <button type="button" id="btnGestionar" class="btn-reagendar">Buscar</button>
-                </div>
-            </div>
-        </form>
-
-        <div class="contenedor-admin-abajo" style="display: flex; justify-content: center; margin-top: 35px;">
-            <button onclick="switchView('admin')" class="btn-admin-inferior">Acceso Administrador</button>
-        </div>
-    </section>
-
-    <section id="ubicacion" class="ubicacion-section bg-mundial-hex">
-        <h2>Ubicación</h2>
-        <p class="subtitulo">Visítanos y vive la experiencia premium</p>
-        <div class="contenedor-direccion">
-            <p class="direccion-texto">
-                <strong>Spartanos Barber Shop</strong><br>
-                Urb. La Gaviota, San Diego,<br>
-                Estado Carabobo, Venezuela.
-            </p>
-            <a href="https://maps.google.com" target="_blank" class="btn-mapa">
-                <svg width="14" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                Ver en Google Maps
-            </a>
-        </div>
-    </section>
-
-    <footer>
-        <p>© 2026 Víctor Styles. Todos los derechos reservados.</p>
-    </footer>
-
-    <div class="modal-cita-overlay" id="modalCita">
-        <div class="ticket-vip">
-            <div class="ticket-header">
-                <h3>Pase de Cita</h3><p style="color:var(--gris-secundario); font-size:0.75rem;">Víctor Styles Barbería</p>
-            </div>
-            <div class="ticket-body">
-                <div class="ticket-dato"><span class="ticket-label">Cliente</span><span class="ticket-valor" id="lblTicketCliente">-</span></div>
-                <div class="ticket-dato"><span class="ticket-label">Servicio</span><span class="ticket-valor" id="lblTicketServicio">-</span></div>
-                <div class="ticket-dato"><span class="ticket-label">Fecha y Hora</span><span class="ticket-valor" id="lblTicketFechaHora">-</span></div>
-                <div class="ticket-dato">
-                    <span class="ticket-label">Código Único de Gestión</span>
-                    <div class="ticket-codigo-box"><span class="ticket-codigo-num" id="lblTicketCodigo">000000</span></div>
-                </div>
-            </div>
-            <div class="ticket-footer">
-                <button class="btn-ticket-primario" id="btnGuardarTicket">Guardar / Compartir Pase</button>
-                <button class="btn-ticket-secundario" id="btnCopiarTicket">Copiar Datos de Cita</button>
-                <button class="btn-ticket-secundario" style="border:none; margin-top:5px; color:#aaa;" id="btnCerrarTicket">Cerrar</button>
-            </div>
-        </div>
+    <div class="header-badge">
+        ⚽ M26
     </div>
-</main>
+</header>
 
+<div class="banderines-top">
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+</div>
 
-<main id="app-admin" style="display: none;">
-    <div class="login-container" id="pantallaLogin">
-        <div class="login-box">
-            <h3 style="border:none; justify-content:center; margin-bottom:0; font-size: 1.3rem;">Acceso Restringido</h3>
-            <p style="color:var(--gris-secundario); font-size:0.85rem; margin-bottom:24px;">Autenticación con Firebase</p>
-            <input type="email" id="campoEmail" placeholder="correo@ejemplo.com" autocomplete="email">
-            <input type="password" id="campoClave" placeholder="••••••••" autocomplete="current-password">
-            <button class="btn-login" id="btnIngresar">Ingresar al Panel</button>
-            <div class="error-login" id="mensajeError"></div>
-            
-            <button onclick="switchView('public')" style="margin-top: 25px; background: transparent; border: none; color: var(--gris-secundario); text-decoration: underline; font-size: 0.85rem; cursor: pointer;">Volver a la Web</button>
+<nav class="menu-desplegable" id="menuLateral">
+    <a href="#inicio" class="menu-link">⚽ Inicio</a>
+    <a href="#galeria" class="menu-link">✂️ Cortes</a>
+    <a href="#precios" class="menu-link">🏆 Servicios</a>
+    <a href="#agenda" class="menu-link">📅 Agendar Cita</a>
+    <a href="#ubicacion" class="menu-link">📍 Ubicación</a>
+    <a href="admin.html" class="link-admin-menu">Acceso Administrador</a>
+</nav>
+
+<section id="inicio" class="hero-container">
+    <div class="hero-media">
+        <img src="Hero.jpg" alt="Fondo Víctor Styles" class="hero-img">
+        <div class="hero-overlay"></div>
+    </div>
+    
+    <div class="hero-content">
+        <h1 class="hero-title">VÍCTOR STYLES</h1>
+        <div class="badge-mundial">Edición Mundialista 26</div>
+        <p class="hero-subtitle">Estilo, precisión y elegancia en cada corte.</p>
+        
+        <!-- Nuevo Banner de Barajitas Mundial -->
+        <div class="banner-mundial">
+            <div class="banner-mundial-icon">⚽🎫</div>
+            <div class="banner-mundial-text">
+                <h4>¡Fiebre Mundialista!</h4>
+                <p>Por cada servicio te llevas una <strong>barajita sorpresa</strong> oficial. ¡Empieza a llenar tu álbum!</p>
+            </div>
         </div>
+
+        <a href="#agenda" class="hero-btn">AGENDAR CITA</a>
+    </div>
+</section>
+
+<section id="encuesta" class="encuesta-section bg-mundial-hex">
+    <h2 style="font-size: 1.2rem; color: #ffffff; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;">¿Quién es tu favorito al título?</h2>
+    
+    <div id="contenedor-votos" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 400px; margin: 0 auto;">
+        <button class="btn-equipo" onclick="votar('Brasil')">🇧🇷 Brasil</button>
+        <button class="btn-equipo" onclick="votar('España')">🇪🇸 España</button>
+        <button class="btn-equipo" onclick="votar('Francia')">🇫🇷 Francia</button>
+        <button class="btn-equipo" onclick="votar('Portugal')">🇵🇹 Portugal</button>
+        <button class="btn-equipo" onclick="votar('Argentina')">🇦🇷 Argentina</button>
+        <button class="btn-equipo" onclick="votar('Otro')">🌍 Otro</button>
     </div>
 
-    <header>
-        <div class="logo"><img src="LOGO.png" alt="Víctor Styles"></div>
-        <div style="position: absolute; right: 5%; display: flex; gap: 10px;">
-            <button class="btn-cerrar-sesion" id="btnVolverWeb" onclick="switchView('public')" style="display:none; color: var(--gris-texto); border-color: var(--borde-sutil);">Ver Web</button>
-            <button class="btn-cerrar-sesion" id="btnCerrarSesion" style="display:none; border-color: var(--rojo-alerta); color: var(--rojo-alerta);">Salir</button>
-        </div>
-    </header>
+    <div id="resultados-encuesta" style="margin-top: 20px; display: none; max-width: 400px; margin-left: auto; margin-right: auto;">
+        <p style="color: var(--gris-secundario); font-size: 0.8rem; margin-bottom: 15px;">Resultados en tiempo real:</p>
+        <div id="barras-resultados"></div>
+    </div>
+</section>
 
-    <nav class="tabs-container" id="navegacionTabs" style="display:none;">
-        <button class="tab-btn active" onclick="cambiarTab('tab-dashboard', this)">Resumen</button>
-        <button class="tab-btn" onclick="cambiarTab('tab-agenda', this)">Agenda</button>
-        <button class="tab-btn" onclick="cambiarTab('tab-finanzas', this)">Finanzas</button>
-        <button class="tab-btn" onclick="cambiarTab('tab-clientes', this)">Clientes</button>
-        <button class="tab-btn" onclick="cambiarTab('tab-ajustes', this)">Ajustes Web</button>
-    </nav>
+<section id="galeria" class="galeria-section">
+    <h2>Mi Trabajo</h2>
+    <p class="subtitulo">Una muestra de los cortes y estilos recientes.</p>
+    <div class="grid-galeria">
+        <div class="tarjeta-galeria"><img src="corte1.png" alt="Corte de cabello 1"><p>Hair Fade</p></div>
+        <div class="tarjeta-galeria"><img src="corte2.jpg" alt="Corte de cabello 2"><p>Fade con linea</p></div>
+        <div class="tarjeta-galeria"><img src="corte3.jpg" alt="Corte de cabello 3"><p>Mid Fade</p></div>
+    </div>
+</section>
 
-    <div class="modal-overlay-admin" id="modalDetalle">
-        <div class="modal-box-admin">
-            <button class="modal-cerrar" onclick="cerrarModal('modalDetalle')">×</button>
-            <div class="modal-titulo" id="modalNombreCliente" style="font-size: 1.2rem; color: #fff; border-bottom: 1px solid var(--borde-sutil); padding-bottom: 10px; margin-bottom: 15px;">Nombre Cliente</div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 5px;"><span style="color:var(--gris-secundario); font-size:0.8rem; text-transform:uppercase; font-weight:600;">Teléfono</span><span id="modalTlf" style="color:#fff; font-weight:bold;"></span></div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 5px;"><span style="color:var(--gris-secundario); font-size:0.8rem; text-transform:uppercase; font-weight:600;">Servicio</span><span id="modalServicio" style="color:#fff; font-weight:bold;"></span></div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 5px;"><span style="color:var(--gris-secundario); font-size:0.8rem; text-transform:uppercase; font-weight:600;">Fecha / Hora</span><span id="modalFecha" style="color:#fff; font-weight:bold;"></span></div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 5px;"><span style="color:var(--gris-secundario); font-size:0.8rem; text-transform:uppercase; font-weight:600;">Estado</span><span id="modalEstado" style="color:#fff; font-weight:bold;"></span></div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 5px;"><span style="color:var(--gris-secundario); font-size:0.8rem; text-transform:uppercase; font-weight:600;">Patrocinado</span><span id="modalPatrocinio" style="color:#fff; font-weight:bold;"></span></div>
-            <div style="margin-top: 20px; text-align: center;"><button class="btn-accion" id="btnAbrirEdicion" style="width: 100%; padding: 14px;">Editar Datos del Cliente</button></div>
-        </div>
+<section id="precios" class="precios-section bg-mundial-hex">
+    <div class="precios-header">
+        <h2>Nuestros Servicios</h2>
+        <p class="subtitulo">Calidad, precisión y estilo a tu alcance</p>
     </div>
 
-    <div class="modal-overlay-admin" id="modalEditar">
-        <div class="modal-box-admin">
-            <button class="modal-cerrar" onclick="cerrarModal('modalEditar')">×</button>
-            <div class="modal-titulo" style="font-size: 1.2rem; color: #fff; border-bottom: 1px solid var(--borde-sutil); padding-bottom: 10px; margin-bottom: 15px;">Editar Registro</div>
-            <form class="form-manual" id="formEditar" onsubmit="guardarEdicion(event)">
-                <input type="hidden" id="editIdRuta">
-                <div class="form-grupo"><label>Nombre</label><input type="text" id="editNombre" required></div>
-                <div class="form-grupo"><label>Teléfono</label><input type="tel" id="editTelefono"></div>
-                <div class="form-grupo">
-                    <label>Servicio</label>
-                    <select id="editServicio" required>
-                        <option value="Corte Sencillo (10$)">Corte Sencillo (10$)</option>
-                        <option value="Corte Premium (13$)">Corte Premium (13$)</option>
-                        <option value="Corte y barba sencillo (16$)">Corte y barba sencillo (16$)</option>
-                        <option value="Corte y barba premium (19$)">Corte y barba premium (19$)</option>
-                        <option value="Barba Sola (6$)">Barba Sola (6$)</option>
-                        <option value="Bloqueo Administrativo (0$)">Bloqueo de Horario (0$)</option>
-                    </select>
-                </div>
-                <div class="form-grupo">
-                    <label>Estado de la Cita</label>
-                    <select id="editEstado" required>
-                        <option value="Pendiente">Pendiente</option>
-                        <option value="Atendido">Atendido</option>
-                        <option value="Cancelado">Cancelado</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-guardar" style="margin-top: 15px;">Actualizar Cambios</button>
-            </form>
+    <div class="precios-grid">
+        <div class="precio-tarjeta">
+            <div class="servicio-info">
+                <h3>Corte Sencillo</h3>
+                <p>Corte clásico o moderno con acabado limpio.</p>
+            </div>
+            <div class="servicio-costo">10$</div>
+        </div>
+
+        <div class="precio-tarjeta destacado">
+            <div class="servicio-info">
+                <h3>Corte Premium</h3>
+                <p>Corte estilizado, lavado, peinado y producto premium.</p>
+            </div>
+            <div class="servicio-costo">13$</div>
+        </div>
+
+        <div class="precio-tarjeta">
+            <div class="servicio-info">
+                <h3>Corte con Barba Sencillo</h3>
+                <p>Arreglo de cabello y perfilado de barba básico.</p>
+            </div>
+            <div class="servicio-costo">16$</div>
+        </div>
+
+        <div class="precio-tarjeta destacado">
+            <div class="servicio-info">
+                <h3>Corte con Barba Premium</h3>
+                <p>Servicio completo, ritual de toalla caliente y navaja.</p>
+            </div>
+            <div class="servicio-costo">19$</div>
+        </div>
+
+        <div class="precio-tarjeta">
+            <div class="servicio-info">
+                <h3>Barba Sola</h3>
+                <p>Perfilado, hidratación y cuidado de tu barba.</p>
+            </div>
+            <div class="servicio-costo">6$</div>
+        </div>
+
+        <div class="precio-tarjeta">
+            <div class="servicio-info">
+                <h3>Cero con Barba Premium</h3>
+                <p>Rasurado al ras (cero) combinado con arreglo premium de barba.</p>
+            </div>
+            <div class="servicio-costo">13$</div>
         </div>
     </div>
+</section>
 
-    <div id="tab-dashboard" class="modulo-admin active">
-        <h2>Panel de Rendimiento</h2>
-        <div class="filtros-rango">
-            <span style="font-size: 0.8rem; color: var(--gris-secundario); font-weight: bold; text-transform: uppercase;">Desde:</span>
-            <input type="date" id="fechaInicioGlobal">
-            <span style="font-size: 0.8rem; color: var(--gris-secundario); font-weight: bold; text-transform: uppercase;">Hasta:</span>
-            <input type="date" id="fechaFinGlobal">
-            <button class="btn-accion" onclick="procesarMetricasGlobales()">Calcular</button>
-            <button class="btn-accion" onclick="limpiarMetricasGlobales()" style="border-color: var(--rojo-alerta); color: var(--rojo-alerta);">Ver Todo</button>
+<section id="agenda" class="agenda-section">
+    <h2>Agenda tu Cita</h2>
+    <p class="subtitulo">Asegura tu puesto antes de que empiece el partido.</p>
+    
+    <form id="formulario-cita" class="form-agenda">
+        <div class="grupo-input">
+            <label for="nombre">Nombre Completo</label>
+            <input type="text" id="nombre" required placeholder="Ej. Juan Pérez">
+        </div>
+        
+        <div class="grupo-input">
+            <label for="telefono">Teléfono de Contacto</label>
+            <input type="tel" id="telefono" required placeholder="Ej. 04121234567">
         </div>
 
-        <div class="grid-contable">
-            <div class="tarjeta-contable"><h4>Total Cortes</h4><div class="dato-principal" id="cortesTotales">0</div></div>
-            <div class="tarjeta-contable"><h4>Promedio Diario</h4><div class="dato-principal" id="promedioCortes" style="color:var(--naranja-alerta);">0</div></div>
-            <div class="tarjeta-contable"><h4>Tu Neto Bruto</h4><div class="dato-principal" style="color:var(--verde-exito);" id="totalVictor">$0.00</div></div>
-            <div class="tarjeta-contable" style="border: 1px solid var(--dorado-acento); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);">
-                <h4 style="color: var(--dorado-acento);">Tu Neto Real</h4><div class="dato-principal" style="color:var(--dorado-acento);" id="netoRealTotal">$0.00</div>
+        <div class="grupo-input">
+            <label for="servicio">Selecciona el Servicio</label>
+            <select id="servicio" required class="select-servicio">
+                <option value="" disabled selected>-- Elige un servicio --</option>
+                <option value="Corte Sencillo (10$)">Corte Sencillo - 10$</option>
+                <option value="Corte Premium (13$)">Corte Premium - 13$</option>
+                <option value="Corte con Barba Sencillo (16$)">Corte con Barba Sencillo - 16$</option>
+                <option value="Corte con Barba Premium (19$)">Corte con Barba Premium - 19$</option>
+                <option value="Barba Sola (6$)">Barba Sola - 6$</option>
+                <option value="Cero con Barba Premium (13$)">Cero con Barba Premium - 13$</option>
+            </select>
+        </div>
+        
+        <div class="grupo-input">
+            <label for="fecha">Fecha de tu Cita</label>
+            <input type="date" id="fecha" required>
+        </div>
+        
+        <div class="grupo-input">
+            <label for="hora">Hora Disponible para ese día</label>
+            <select id="hora" required disabled>
+                <option value="" disabled selected>Primero selecciona un día</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="btn-submit">Confirmar Reserva</button>
+
+        <div class="contenedor-reagendar">
+            <div class="titulo-reagendar">¿Necesitas gestionar o reagendar tu cita?</div>
+            <div class="fila-reagendar">
+                <input type="text" id="codigoGestion" class="input-codigo" placeholder="CÓDIGO DE CITA" maxlength="6">
+                <button type="button" id="btnGestionar" class="btn-reagendar">Buscar</button>
             </div>
         </div>
+    </form>
 
-        <div class="contenedor-graficos">
-            <div class="tarjeta-grafico"><h4>Distribución de Servicios</h4><div class="canvas-container"><canvas id="graficoServicios"></canvas></div></div>
-            <div class="tarjeta-grafico"><h4>Balance Financiero ($)</h4><div class="canvas-container"><canvas id="graficoFinanzas"></canvas></div></div>
-        </div>
+    <div class="contenedor-admin-abajo">
+        <a href="admin.html" class="btn-admin-inferior">Acceso Administrador</a>
     </div>
+</section>
 
-    <div id="tab-agenda" class="modulo-admin">
-        <h2>Agenda e Historial</h2>
-        <div class="seccion-bloque">
-            <h3>Registrar Cita / Bloquear Horario Web</h3>
-            <p style="font-size: 0.8rem; color: var(--gris-secundario); margin-bottom: 15px;">Al registrar desde aquí, la hora quedará <b>bloqueada en la web pública</b>. Úsalo para agendar clientes manuales o apartar tu tiempo.</p>
-            <form class="form-manual" id="formManual" onsubmit="guardarCitaCentralizada(event)">
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <div class="form-grupo" style="flex: 1; min-width: 200px;"><label>Nombre del Cliente (o Motivo)</label><input type="text" id="mNombre" placeholder="Ej: Juan Pérez / Almuerzo" required></div>
-                    <div class="form-grupo" style="flex: 1; min-width: 150px;"><label>Teléfono (Opcional)</label><input type="tel" id="mTelefono" placeholder="0414..."></div>
-                </div>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <div class="form-grupo" style="flex: 2; min-width: 200px;">
-                        <label>Servicio</label>
-                        <select id="mServicio" required>
-                            <option value="Corte Sencillo (10$)">Corte Sencillo (10$)</option>
-                            <option value="Corte Premium (13$)">Corte Premium (13$)</option>
-                            <option value="Corte y barba sencillo (16$)">Corte y barba sencillo (16$)</option>
-                            <option value="Corte y barba premium (19$)">Corte y barba premium (19$)</option>
-                            <option value="Barba Sola (6$)">Barba Sola (6$)</option>
-                            <option value="Bloqueo Administrativo (0$)">Bloqueo de Horario (Sin Cliente)</option>
-                        </select>
-                    </div>
-                    <div class="form-grupo" style="flex: 1; min-width: 150px;">
-                        <label>Estado</label><select id="mEstado" required><option value="Atendido">Atendido</option><option value="Pendiente">Pendiente</option></select>
-                    </div>
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    <div class="form-grupo" style="flex: 1;"><label>Fecha</label><input type="date" id="mFecha" required></div>
-                    <div class="form-grupo" style="flex: 1;"><label>Hora (Ej: 09:00)</label><input type="time" id="mHora" required></div>
-                </div>
-                <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
-                    <input type="checkbox" id="mPatrocinado" style="width:22px; height:22px; accent-color:var(--dorado-acento);">
-                    <label style="color:var(--gris-texto); font-size:0.9rem;">¿Trabajo Patrocinado? (El 100% será para ti)</label>
-                </div>
-                <button type="submit" class="btn-guardar" style="margin-top: 10px;">Guardar y Bloquear</button>
-            </form>
+<section id="ubicacion" class="ubicacion-section bg-mundial-hex">
+    <h2>Ubicación</h2>
+    <p class="subtitulo">Visítanos y vive la experiencia premium</p>
+    <div class="contenedor-direccion">
+        <p class="direccion-texto">
+            <strong>Spartanos Barber Shop</strong><br>
+            Urb. La Gaviota, San Diego,<br>
+            Estado Carabobo, Venezuela.
+        </p>
+        <a href="https://maps.google.com" target="_blank" class="btn-mapa">
+            <svg width="14" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Ver en Google Maps
+        </a>
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 Víctor Styles. Todos los derechos reservados.</p>
+</footer>
+
+<div class="modal-cita-overlay" id="modalCita">
+    <div class="ticket-vip">
+        <div class="ticket-header">
+            <h3>Pase de Cita</h3>
+            <p>Víctor Styles Barbería</p>
         </div>
-
-        <div class="seccion-bloque">
-            <h3>Historial Operativo</h3>
-            <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <input type="date" id="filtroFechaAgenda" style="background:var(--fondo-input); color:#fff; padding:12px; border:1px solid var(--borde-sutil); border-radius:12px; width:100%; font-size: 0.9rem;">
-                <button id="btnVerTodoAgenda" style="background:#1a1a1a; color:#fff; border:1px solid var(--borde-sutil); border-radius:12px; padding:0 15px; cursor:pointer; font-weight: bold;">Ver Todo</button>
+        <div class="ticket-body">
+            <div class="ticket-dato">
+                <span class="ticket-label">Cliente</span>
+                <span class="ticket-valor" id="lblTicketCliente">-</span>
             </div>
-            <div class="contenedor-tabla">
-                <table>
-                    <thead><tr><th>Cliente / Motivo</th><th>Servicio</th><th>Fecha / Hora</th><th>Acción</th></tr></thead>
-                    <tbody id="tabla-citas-cuerpo"><tr><td colspan="4" style="text-align:center; padding:20px;">Cargando...</td></tr></tbody>
-                </table>
+            <div class="ticket-dato">
+                <span class="ticket-label">Servicio</span>
+                <span class="ticket-valor" id="lblTicketServicio">-</span>
+            </div>
+            <div class="ticket-dato">
+                <span class="ticket-label">Fecha y Hora</span>
+                <span class="ticket-valor" id="lblTicketFechaHora">-</span>
+            </div>
+            <div class="ticket-dato">
+                <span class="ticket-label">Código Único de Gestión</span>
+                <div class="ticket-codigo-box">
+                    <span class="ticket-codigo-num" id="lblTicketCodigo">000000</span>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div id="tab-finanzas" class="modulo-admin">
-        <h2>Gestión Financiera</h2>
-        <div class="seccion-bloque">
-            <h3>Registrar Gasto</h3>
-            <form class="form-manual" id="formGastos" onsubmit="guardarGastoManual(event)">
-                <div class="form-grupo"><label>Concepto</label><input type="text" id="gConcepto" required></div>
-                <div class="form-grupo"><label>Monto ($)</label><input type="number" id="gMonto" step="0.01" required></div>
-                <div class="form-grupo"><label>Fecha</label><input type="date" id="gFecha" required></div>
-                <button type="submit" class="btn-guardar" style="background:#333; color:#fff;">Registrar Gasto</button>
-            </form>
+        <div class="ticket-footer">
+            <button class="btn-ticket-accion btn-ticket-primario" id="btnGuardarTicket">Guardar / Compartir Pase</button>
+            <button class="btn-ticket-accion btn-ticket-secundario" id="btnCopiarTicket">Copiar Datos de Cita</button>
+            <button class="btn-ticket-accion btn-ticket-secundario" style="border:none; margin-top:5px; color:#aaa;" id="btnCerrarTicket">Cerrar</button>
         </div>
     </div>
-
-    <div id="tab-clientes" class="modulo-admin">
-        <h2>Fidelidad de Clientes</h2>
-        <div class="seccion-bloque">
-            <p style="color:var(--gris-secundario); font-size:0.85rem; margin-bottom:10px;">Clientes ordenados por número de visitas.</p>
-            <div class="contenedor-tabla">
-                <table>
-                    <thead><tr><th>Cliente</th><th>Visitas</th><th>Última Vez</th><th>Detalle</th></tr></thead>
-                    <tbody id="tabla-frecuencia-cuerpo"><tr><td colspan="4" style="text-align:center; padding:20px;">Calculando...</td></tr></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div id="tab-ajustes" class="modulo-admin">
-        <h2>Ajustes de la Web</h2>
-        <div class="seccion-bloque">
-            <h3>Horarios de Cita (Por Día)</h3>
-            <p style="font-size: 0.8rem; color: var(--gris-secundario); margin-bottom: 15px;">Selecciona la fecha y tu rango de trabajo. El sistema calculará los turnos.</p>
-            <form class="form-manual" id="formHorarios" onsubmit="guardarHorariosWeb(event)">
-                <div class="form-grupo"><label>Fecha a configurar</label><input type="date" id="hFecha" required></div>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <div class="form-grupo" style="flex: 1; min-width: 100px;"><label>Hora Inicio</label><input type="time" id="hInicio" value="09:00" required></div>
-                    <div class="form-grupo" style="flex: 1; min-width: 100px;"><label>Hora Fin</label><input type="time" id="hFin" value="18:00" required></div>
-                    <div class="form-grupo" style="flex: 1; min-width: 100px;"><label>Intervalo (Min)</label><input type="number" id="hIntervalo" value="45" min="15" required></div>
-                </div>
-                <button type="submit" class="btn-guardar">Generar y Actualizar Horarios</button>
-            </form>
-        </div>
-
-        <div class="seccion-bloque">
-            <h3>Subir Nueva Foto a Galería</h3>
-            <p style="font-size: 0.8rem; color: var(--gris-secundario); margin-bottom: 15px;">Las imágenes se subirán a Supabase y se registrarán en tu Firebase.</p>
-            <form class="form-manual" id="formGaleria" onsubmit="subirImagenGaleria(event)">
-                <div class="form-grupo"><label>Título / Estilo (Opcional)</label><input type="text" id="galTitulo" placeholder="Ej: Mid Fade con Textura"></div>
-                <div class="form-grupo"><label>Seleccionar Imagen</label><input type="file" id="galArchivo" accept="image/png, image/jpeg, image/webp" required style="padding: 16px;"></div>
-                <button type="submit" class="btn-guardar" id="btnSubirImg" style="background:#333; color:#fff;">Subir Imagen</button>
-            </form>
-        </div>
-
-        <div class="seccion-bloque">
-            <h3>Galería Actual</h3>
-            <div class="contenedor-tabla">
-                <table>
-                    <thead><tr><th>Imagen</th><th>Título</th><th>Acción</th></tr></thead>
-                    <tbody id="tabla-galeria-cuerpo"><tr><td colspan="3" style="text-align:center; padding:20px;">Cargando galería...</td></tr></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</main>
+</div>
 
 <script>
-    // -------------------------------------------------------------------------
-    // 1. CONFIGURACIÓN Y CONSTANTES
-    // -------------------------------------------------------------------------
-    const API_KEY_FIREBASE = 'AIzaSyBKrJD4VAzOkvbCay-C8Dxsg3gsUkAt4EA'; 
-    const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
-    
-    const SUPABASE_URL = 'https://ghfugbvqleevtptqybgt.supabase.co'; 
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoZnVnYnZxbGVldnRwdHF5Ymd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMTAyNjMsImV4cCI6MjA5Nzg4NjI2M30.Hy2E6S8H7UTdowhN7z1_-7fLM7sRA3QlMEUd9SJH138';
-
+    // Inicialización de Firebase (Asegúrate de colocar tu configuración real aquí para la base de datos)
+    const firebaseConfig = {
+        databaseURL: "https://barberia-victor-default-rtdb.firebaseio.com/"
+    };
     if (!firebase.apps.length) {
-        firebase.initializeApp({ databaseURL: FIREBASE_URL });
+        firebase.initializeApp(firebaseConfig);
     }
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const btnHamburguesa = document.getElementById('btnHamburguesa');
+    const menuLateral = document.getElementById('menuLateral');
+    const menuOverlay = document.getElementById('menuOverlay');
+    const linksMenu = document.querySelectorAll('.menu-desplegable a');
+
+    function toggleMenu() {
+        btnHamburguesa.classList.toggle('open');
+        menuLateral.classList.toggle('open');
+        menuOverlay.classList.toggle('show');
+    }
+
+    btnHamburguesa.addEventListener('click', toggleMenu);
+    menuOverlay.addEventListener('click', toggleMenu);
+
+    linksMenu.forEach(link => {
+        link.addEventListener('click', toggleMenu);
+    });
+
+    const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
     emailjs.init('qVvgWBz_cfropwyVU');
 
-    // -------------------------------------------------------------------------
-    // 2. SISTEMA DE VISTAS (Pública / Privada)
-    // -------------------------------------------------------------------------
-    // ¡ARREGLO DE PERSISTENCIA!: Cambio a localStorage para evitar desconexiones en APK
-    let tokenAuth = localStorage.getItem('tokenAdminVictor');
-    
-    function switchView(view) {
-        const vistaPublica = document.getElementById('app-publica');
-        const vistaAdmin = document.getElementById('app-admin');
-        
-        if (view === 'admin') {
-            vistaPublica.style.display = 'none';
-            vistaAdmin.style.display = 'block';
-            if (localStorage.getItem('tokenAdminVictor')) {
-                iniciarPanel();
-            }
-            window.scrollTo(0,0);
-        } else {
-            vistaAdmin.style.display = 'none';
-            vistaPublica.style.display = 'block';
-            window.scrollTo(0,0);
-            
-            cargarGaleriaDinamica(); 
-            if(document.getElementById('fecha').value) {
-                document.getElementById('fecha').dispatchEvent(new Event('change'));
-            }
-        }
-        
-        document.getElementById('btnHamburguesa').classList.remove('open');
-        document.getElementById('menuLateral').classList.remove('open');
-        document.getElementById('menuOverlay').classList.remove('show');
-    }
+    const horariosBarberia = {
+        1: { inicio: "09:00", fin: "16:00" }, // Lunes
+        2: { inicio: "09:00", fin: "16:00" }, // Martes
+        3: { inicio: "09:00", fin: "14:30" }, // Miércoles
+        4: { inicio: "09:00", fin: "20:30" }, // Jueves
+        5: { inicio: "09:00", fin: "20:30" }, // Viernes
+        6: { inicio: "09:00", fin: "20:30" }, // Sábado
+        0: { inicio: "14:00", fin: "18:00" }  // Domingo
+    };
+
+    const inputFecha = document.getElementById('fecha');
+    const selectHora = document.getElementById('hora');
+
+    const modalCita = document.getElementById('modalCita');
+    const lblTicketCliente = document.getElementById('lblTicketCliente');
+    const lblTicketServicio = document.getElementById('lblTicketServicio');
+    const lblTicketFechaHora = document.getElementById('lblTicketFechaHora');
+    const lblTicketCodigo = document.getElementById('lblTicketCodigo');
+    const btnGuardarTicket = document.getElementById('btnGuardarTicket');
+    const btnCopiarTicket = document.getElementById('btnCopiarTicket');
+    const btnCerrarTicket = document.getElementById('btnCerrarTicket');
+    const inputCodigoGestion = document.getElementById('codigoGestion');
+    const btnGestionar = document.getElementById('btnGestionar');
+
+    let textoCitaGlobalParaCopiar = "";
 
     function obtenerFechaVenezuelaObj() {
         const cadenaCaracas = new Date().toLocaleString("en-US", { timeZone: "America/Caracas" });
@@ -722,425 +754,319 @@
 
     function obtenerFechaVenezuelaStr(objetoFecha) {
         const d = objetoFecha || obtenerFechaVenezuelaObj();
-        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        const año = d.getFullYear();
+        const mes = String(d.getMonth() + 1).padStart(2, '0');
+        const dia = String(d.getDate()).padStart(2, '0');
+        return `${año}-${mes}-${dia}`;
     }
 
-    // =========================================================================================
-    // LÓGICA DE LA VISTA PÚBLICA (Se mantiene intacta por seguridad)
-    // =========================================================================================
-    document.getElementById('btnHamburguesa').addEventListener('click', function() {
-        this.classList.toggle('open');
-        document.getElementById('menuLateral').classList.toggle('open');
-        document.getElementById('menuOverlay').classList.toggle('show');
-    });
-    document.getElementById('menuOverlay').addEventListener('click', function() {
-        document.getElementById('btnHamburguesa').classList.remove('open');
-        document.getElementById('menuLateral').classList.remove('open');
-        this.classList.remove('show');
-    });
-    document.querySelectorAll('.menu-link').forEach(link => {
-        link.addEventListener('click', () => document.getElementById('menuOverlay').click());
-    });
-
-    function cargarGaleriaDinamica() {
-        fetch(`${FIREBASE_URL}galeria.json?t=${new Date().getTime()}`)
-            .then(res => res.json())
-            .then(data => {
-                const grid = document.getElementById('grid-galeria-dinamica');
-                grid.innerHTML = '';
-                if (data && Object.keys(data).length > 0) {
-                    Object.values(data).forEach(img => {
-                        grid.innerHTML += `<div class="tarjeta-galeria"><img src="${img.url}" alt="${img.titulo||''}"><p>${img.titulo||'Estilo Premium'}</p></div>`;
-                    });
-                } else {
-                    grid.innerHTML = '<p style="color:var(--gris-secundario); grid-column:1/-1; text-align:center;">Próximamente nuevos estilos.</p>';
-                }
-            }).catch(() => {
-                document.getElementById('grid-galeria-dinamica').innerHTML = '<p style="color:var(--gris-secundario); grid-column:1/-1; text-align:center;">No se pudo cargar la galería.</p>';
-            });
+    function generarCodigoUnicoCita() {
+        const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let resultado = '';
+        for (let i = 0; i < 6; i++) {
+            resultado += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+        }
+        return resultado;
     }
 
-    const horariosBarberia = { 1:true, 2:true, 3:true, 4:true, 5:true, 6:true, 0:true };
-    const inputFecha = document.getElementById('fecha');
-    const selectHora = document.getElementById('hora'); 
-    const carteleraHoras = document.getElementById('cartelera-horas-contenedor');
-    const seccionDatos = document.getElementById('seccion-datos-personales');
+    document.addEventListener('DOMContentLoaded', function() {
+        const hoyVzlaStr = obtenerFechaVenezuelaStr();
+        inputFecha.min = hoyVzlaStr;
+
+        const nombreGuardado = localStorage.getItem('barberia_nombre');
+        const telefonoGuardado = localStorage.getItem('barberia_telefono');
+        if (nombreGuardado && telefonoGuardado) {
+            document.getElementById('nombre').value = nombreGuardado;
+            document.getElementById('telefono').value = telefonoGuardado;
+        }
+    });
 
     inputFecha.addEventListener('change', function() {
-        const fechaStr = this.value; 
-        const diaSemana = new Date(fechaStr + 'T00:00:00').getDay(); 
+        const fechaSeleccionadaStr = this.value; 
+        const fechaSeleccionada = new Date(fechaSeleccionadaStr + 'T00:00:00');
+        const diaSemana = fechaSeleccionada.getDay(); 
 
-        selectHora.innerHTML = '<option value="" disabled selected>Cargando horas...</option>';
-        carteleraHoras.innerHTML = '<div class="msj-informativo">Consultando disponibilidad en tiempo real...</div>';
-        seccionDatos.classList.remove('habilitado');
+        selectHora.innerHTML = '<option value="" disabled selected>Cargando horas disponibles...</option>';
+        selectHora.disabled = true;
         
-        const t = new Date().getTime();
-        Promise.all([
-            fetch(`${FIREBASE_URL}citas.json?t=${t}`).then(res => res.json()),
-            fetch(`${FIREBASE_URL}horarios_por_fecha/${fechaStr}.json?t=${t}`).then(res => res.json())
-        ])
-        .then(([citasData, horasAdminData]) => {
-            selectHora.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
-            carteleraHoras.innerHTML = ''; 
-            
-            if (horariosBarberia[diaSemana] === true) {
-                const ahoraVzla = obtenerFechaVenezuelaObj();
-                const esHoy = (fechaStr === obtenerFechaVenezuelaStr(ahoraVzla));
-                const minutosHoy = ahoraVzla.getHours() * 60 + ahoraVzla.getMinutes();
+        fetch(`${FIREBASE_URL}citas.json`)
+            .then(response => response.json())
+            .then(citasEnLaNube => {
+                selectHora.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
+                const horario = horariosBarberia[diaSemana];
+                const citasOcupadas = citasEnLaNube ? Object.values(citasEnLaNube) : [];
 
-                const listadoHoras = (horasAdminData && horasAdminData.length > 0) ? horasAdminData : ["09:00", "09:45", "10:30", "11:15", "12:00", "14:00", "14:45", "15:30", "16:15", "17:00"];
-                let hayLibres = false;
-
-                listadoHoras.forEach(hora24 => {
-                    let [hStr, mStr] = hora24.split(':');
-                    if (esHoy && (parseInt(hStr) * 60 + parseInt(mStr)) <= minutosHoy) return;
-
-                    let textoHora = `${parseInt(hStr)%12||12}:${mStr.padStart(2,'0')} ${parseInt(hStr)>=12?'PM':'AM'}`;
-                    const horaKey = hora24.replace(':', '-');
+                if (horario) {
+                    selectHora.disabled = false;
                     
-                    const bloqueadoAdmin = citasData && citasData[fechaStr] && citasData[fechaStr][horaKey];
-                    const bloqueadoPublico = citasData ? Object.values(citasData).some(c => c && c.cita_fecha === fechaStr && c.cita_hora === textoHora) : false;
-
-                    if (bloqueadoAdmin || bloqueadoPublico) return; 
+                    let [hInicio, mInicio] = horario.inicio.split(':').map(Number);
+                    let [hFin, mFin] = horario.fin.split(':').map(Number);
                     
-                    let op = document.createElement('option'); op.value = hora24; op.textContent = textoHora; selectHora.appendChild(op);
-                    let btn = document.createElement('button'); btn.type = 'button'; btn.className = 'pill-hora'; btn.textContent = textoHora;
-                    
-                    btn.onclick = function() {
-                        document.querySelectorAll('.pill-hora').forEach(p => p.classList.remove('activa'));
-                        this.classList.add('activa');
-                        selectHora.value = hora24;
-                        seccionDatos.classList.add('habilitado');
-                        setTimeout(() => document.getElementById('nombre').focus(), 300);
-                    };
-                    carteleraHoras.appendChild(btn);
-                    hayLibres = true;
-                });
+                    let tiempoActual = hInicio * 60 + mInicio;
+                    const tiempoFin = hFin * 60 + mFin;
 
-                if (!hayLibres) carteleraHoras.innerHTML = '<div class="msj-informativo">Agotado por hoy. Por favor, selecciona otro día.</div>';
-            } else {
-                carteleraHoras.innerHTML = '<div class="msj-informativo">La barbería se encuentra cerrada este día.</div>';
-            }
-        }).catch(() => carteleraHoras.innerHTML = '<div class="msj-informativo" style="color:var(--rojo-alerta)">Error buscando horas. Recarga la página.</div>');
+                    const ahoraVzla = obtenerFechaVenezuelaObj();
+                    const hoyVzlaStr = obtenerFechaVenezuelaStr(ahoraVzla);
+                    const esHoy = (fechaSeleccionadaStr === hoyVzlaStr);
+                    const minutosTranscurridosHoy = ahoraVzla.getHours() * 60 + ahoraVzla.getMinutes();
+
+                    let banderaOpcionesDisponibles = false;
+
+                    while (tiempoActual <= tiempoFin) {
+                        let horas = Math.floor(tiempoActual / 60);
+                        let minutos = tiempoActual % 60;
+                        
+                        let horasStr = horas.toString().padStart(2, '0');
+                        let minutosStr = minutos.toString().padStart(2, '0');
+                        let horaFormato24 = `${horasStr}:${minutosStr}`;
+                        
+                        if (esHoy && tiempoActual <= minutosTranscurridosHoy) {
+                            tiempoActual += 30;
+                            continue;
+                        }
+
+                        let ampmComp = horas >= 12 ? 'PM' : 'AM';
+                        let horas12Comp = horas % 12 || 12;
+                        let textoHoraDeComparacion = `${horas12Comp}:${minutosStr} ${ampmComp}`;
+
+                        let tiempoHace30 = tiempoActual - 30;
+                        let horasHace30 = Math.floor(tiempoHace30 / 60);
+                        let minutesHace30 = tiempoHace30 % 60;
+                        let ampmHace30 = horasHace30 >= 12 ? 'PM' : 'AM';
+                        let horas12Hace30 = horasHace30 % 12 || 12;
+                        let minutosHace30Str = minutesHace30.toString().padStart(2, '0');
+                        let textoHoraHace30DeComparacion = `${horas12Hace30}:${minutosHace30Str} ${ampmHace30}`;
+
+                        const estaOcupadaAhora = citasOcupadas.some(cita => 
+                            cita.cita_fecha === fechaSeleccionadaStr && cita.cita_hora === textoHoraDeComparacion
+                        );
+                        const estaOcupadaAntes = citasOcupadas.some(cita => 
+                            cita.cita_fecha === fechaSeleccionadaStr && cita.cita_hora === textoHoraHace30DeComparacion
+                        );
+
+                        if (estaOcupadaAhora || estaOcupadaAntes) {
+                            tiempoActual += 30;
+                            continue; 
+                        }
+                        
+                        let ampm = horas >= 12 ? 'PM' : 'AM';
+                        let horas12 = horas % 12 || 12;
+                        let textoHora = `${horas12}:${minutosStr} ${ampm}`;
+
+                        let nuevaOpcion = document.createElement('option');
+                        nuevaOpcion.value = horaFormato24;
+                        nuevaOpcion.textContent = textoHora;
+                        selectHora.appendChild(nuevaOpcion);
+
+                        banderaOpcionesDisponibles = true;
+                        tiempoActual += 30;
+                    }
+
+                    if (!banderaOpcionesDisponibles) {
+                        selectHora.innerHTML = '<option value="" disabled selected>No quedan horas libres para hoy</option>';
+                        selectHora.disabled = true;
+                    }
+                } else {
+                    selectHora.innerHTML = '<option value="" disabled selected>Barbería cerrada este día</option>';
+                }
+            })
+            .catch(error => {
+                console.error("Error al consultar la nube:", error);
+                selectHora.innerHTML = '<option value="" disabled selected>Error de conexión</option>';
+            });
     });
 
-    let textoCitaGlobal = "";
-    document.getElementById('formulario-cita').addEventListener('submit', function(e) {
-        e.preventDefault();
-        if(selectHora.selectedIndex <= 0) return alert("Selecciona una hora.");
+    document.getElementById('formulario-cita').addEventListener('submit', function(event) {
+        event.preventDefault();
 
-        const datos = {
-            cliente_nombre: document.getElementById('nombre').value.trim(),
-            cliente_telefono: document.getElementById('telefono').value.trim(),
+        const fechaValue = inputFecha.value;
+        const horaTexto = selectHora.options[selectHora.selectedIndex].text;
+        const nombreInput = document.getElementById('nombre').value.trim();
+        const telefonoInput = document.getElementById('telefono').value.trim();
+        const codigoCitaGenerado = generarCodigoUnicoCita();
+        
+        const datosCita = {
+            cliente_nombre: nombreInput,
+            cliente_telefono: telefonoInput,
             servicio: document.getElementById('servicio').value,
-            cita_fecha: inputFecha.value,
-            cita_hora: selectHora.options[selectHora.selectedIndex].text,
-            codigo_gestion: Array.from({length:6},()=>'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.charAt(Math.floor(Math.random()*36))).join('')
+            cita_fecha: fechaValue,
+            cita_hora: horaTexto,
+            codigo_gestion: codigoCitaGenerado
         };
 
-        localStorage.setItem('barberia_nombre', datos.cliente_nombre);
-        localStorage.setItem('barberia_telefono', datos.cliente_telefono);
+        localStorage.setItem('barberia_nombre', nombreInput);
+        localStorage.setItem('barberia_telefono', telefonoInput);
 
-        const btn = document.querySelector('.btn-submit'); btn.textContent = "Procesando...";
-
-        fetch(`${FIREBASE_URL}citas.json`, { method: 'POST', body: JSON.stringify(datos) })
-        .then(() => emailjs.send('service_vsrbt7k', 'template_8j4r6p2', datos))
+        fetch(`${FIREBASE_URL}citas.json`, {
+            method: 'POST',
+            body: JSON.stringify(datosCita)
+        })
         .then(() => {
-            document.getElementById('lblTicketCliente').textContent = datos.cliente_nombre;
-            document.getElementById('lblTicketServicio').textContent = datos.servicio;
-            document.getElementById('lblTicketFechaHora').textContent = `${datos.cita_fecha} a las ${datos.cita_hora}`;
-            document.getElementById('lblTicketCodigo').textContent = datos.codigo_gestion;
-            textoCitaGlobal = `💈 VÍCTOR STYLES 💈\n👤 ${datos.cliente_nombre}\n✂️ ${datos.servicio}\n📅 ${datos.cita_fecha} - ⏰ ${datos.cita_hora}\n🔑 Código: ${datos.codigo_gestion}\n📍 Urb. La Gaviota, San Diego.`;
-            
-            document.getElementById('modalCita').classList.add('show');
-            btn.textContent = "Confirmar Reserva";
-            this.reset(); carteleraHoras.innerHTML = '<div class="msj-informativo">Selecciona una fecha.</div>'; seccionDatos.classList.remove('habilitado');
-        }).catch(() => { alert('Hubo un problema. Intenta de nuevo.'); btn.textContent = "Confirmar Reserva"; });
+            return emailjs.send('service_vsrbt7k', 'template_8j4r6p2', datosCita);
+        })
+        .then(function() {
+            lblTicketCliente.textContent = datosCita.cliente_nombre;
+            lblTicketServicio.textContent = datosCita.servicio;
+            lblTicketFechaHora.textContent = `${datosCita.cita_fecha} a las ${datosCita.cita_hora}`;
+            lblTicketCodigo.textContent = datosCita.codigo_gestion;
+
+            textoCitaGlobalParaCopiar = `💈 VÍCTOR STYLES BARBERÍA 💈\n\nPase de Cita Confirmada\n\n👤 Cliente: ${datosCita.cliente_nombre}\n✂️ Servicio: ${datosCita.servicio}\n📅 Fecha: ${datosCita.cita_fecha}\n⏰ Hora: ${datosCita.cita_hora}\n🔑 Código de Gestión: ${datosCita.codigo_gestion}\n\n📍 Ubicación: Víctor Styles Barbería, Urb. La Gaviota, San Diego, Carabobo.\n\n*Usa tu código para reagendar si lo necesitas.`;
+
+            modalCita.classList.add('show');
+        })
+        .catch(error => {
+            console.error('Error en el flujo de automatización:', error);
+            alert('Hubo un problema al guardar tu turno en internet.');
+        });
+
+        this.reset();
+        selectHora.disabled = true;
+        selectHora.innerHTML = '<option value="" disabled selected>Primero selecciona un día</option>';
+        
+        document.getElementById('nombre').value = nombreInput;
+        document.getElementById('telefono').value = telefonoInput;
     });
 
-    document.getElementById('btnCerrarTicket').onclick = () => document.getElementById('modalCita').classList.remove('show');
-    document.getElementById('btnCopiarTicket').onclick = () => navigator.clipboard.writeText(textoCitaGlobal).then(()=>{ document.getElementById('btnCopiarTicket').textContent="¡Copiado!"; setTimeout(()=>document.getElementById('btnCopiarTicket').textContent="Copiar Datos",2000); });
-    document.getElementById('btnGuardarTicket').onclick = () => navigator.share ? navigator.share({title:'Cita Víctor Styles', text:textoCitaGlobal}) : alert('Usa el botón de Copiar Datos.');
+    btnCerrarTicket.addEventListener('click', () => {
+        modalCita.classList.remove('show');
+    });
 
-    document.getElementById('btnGestionar').onclick = () => {
-        const cod = document.getElementById('codigoGestion').value.trim().toUpperCase();
-        if(!cod) return;
-        const btn = document.getElementById('btnGestionar'); btn.textContent="Buscando..."; btn.disabled=true;
-        
-        fetch(`${FIREBASE_URL}citas.json?t=${new Date().getTime()}`).then(res=>res.json()).then(citas => {
-            let citaKey = null, citaData = null;
-            if(citas) Object.keys(citas).forEach(k => { if(citas[k].codigo_gestion === cod) { citaKey = k; citaData = citas[k]; } });
-            
-            if(citaKey) {
-                if(confirm(`Cita localizada: ${citaData.cliente_nombre}.\n¿Deseas cancelarla para reagendar?`)) {
-                    fetch(`${FIREBASE_URL}citas/${citaKey}.json`, {method:'DELETE'}).then(()=>{
-                        alert("Espacio liberado. Elige tu nueva fecha.");
-                        document.getElementById('nombre').value = citaData.cliente_nombre; document.getElementById('telefono').value = citaData.cliente_telefono; document.getElementById('servicio').value = citaData.servicio;
-                        inputFecha.scrollIntoView({behavior:'smooth'}); inputFecha.focus(); document.getElementById('codigoGestion').value="";
+    btnCopiarTicket.addEventListener('click', () => {
+        navigator.clipboard.writeText(textoCitaGlobalParaCopiar)
+            .then(() => {
+                btnCopiarTicket.textContent = "¡Copiado con éxito!";
+                setTimeout(() => { btnCopiarTicket.textContent = "Copiar Datos de Cita"; }, 2000);
+            })
+            .catch(err => console.error("Error al copiar texto: ", err));
+    });
+
+    btnGuardarTicket.addEventListener('click', () => {
+        if (navigator.share) {
+            navigator.share({
+                title: 'Mi Cita - Víctor Styles',
+                text: textoCitaGlobalParaCopiar
+            }).catch(err => console.log(err));
+        } else {
+            const blob = new Blob([textoCitaGlobalParaCopiar], { type: 'text/plain;charset=utf-8' });
+            const enlaceDescarga = document.createElement('a');
+            enlaceDescarga.href = URL.createObjectURL(blob);
+            enlaceDescarga.download = `Cita_VictorStyles_${lblTicketCodigo.textContent}.txt`;
+            enlaceDescarga.click();
+        }
+    });
+
+    btnGestionar.addEventListener('click', () => {
+        const codigoIngresado = inputCodigoGestion.value.trim().toUpperCase();
+        if (!codigoIngresado) {
+            alert("Por favor, ingresa un código válido.");
+            return;
+        }
+
+        btnGestionar.textContent = "Buscando...";
+        btnGestionar.disabled = true;
+
+        fetch(`${FIREBASE_URL}citas.json`)
+            .then(response => response.json())
+            .then(citas => {
+                let citaEncontradaClave = null;
+                let citaDatos = null;
+
+                if (citas) {
+                    Object.keys(citas).forEach(clave => {
+                        if (citas[clave].codigo_gestion === codigoIngresado) {
+                            citaEncontradaClave = clave;
+                            citaDatos = citas[clave];
+                        }
                     });
                 }
-            } else alert("Código no encontrado.");
-        }).finally(() => { btn.textContent="Buscar"; btn.disabled=false; });
-    };
 
-    function votar(eq) {
-        firebase.database().ref('votos_mundial/'+eq).transaction(c => (c||0)+1);
-        document.getElementById('contenedor-votos').style.display='none'; document.getElementById('resultados-encuesta').style.display='block';
-    }
-    firebase.database().ref('votos_mundial').on('value', snap => {
-        const d = snap.val()||{}; const t = Object.values(d).reduce((a,b)=>a+b,0);
-        document.getElementById('barras-resultados').innerHTML = ["Brasil","España","Francia","Portugal","Argentina","Otro"].map(eq => {
-            const p = t>0 ? Math.round(((d[eq]||0)/t)*100) : 0;
-            return `<div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:600; margin-bottom:6px;"><span>${eq}</span><span style="color:var(--dorado-brillante)">${p}%</span></div><div class="barra-progreso"><div class="progreso-relleno" style="width:${p}%"></div></div>`;
-        }).join('');
+                if (citaEncontradaClave) {
+                    const confirmacion = confirm(`Cita localizada a nombre de ${citaDatos.cliente_nombre}.\n¿Deseas cancelarla para proceder a reagendar un nuevo espacio?`);
+                    if (confirmacion) {
+                        fetch(`${FIREBASE_URL}citas/${citaEncontradaClave}.json`, { method: 'DELETE' })
+                            .then(() => {
+                                alert("Tu espacio anterior ha sido liberado. El formulario está listo para que elijas tu nueva fecha y hora.");
+                                document.getElementById('nombre').value = citaDatos.cliente_nombre;
+                                document.getElementById('telefono').value = citaDatos.cliente_telefono;
+                                document.getElementById('servicio').value = citaDatos.servicio;
+                                document.getElementById('nombre').scrollIntoView({ behavior: 'smooth' });
+                                inputCodigoGestion.value = "";
+                            });
+                    }
+                } else {
+                    alert("No se encontró ninguna cita registrada con ese código. Verifica e intenta de nuevo.");
+                }
+            })
+            .catch(error => {
+                console.error("Error al gestionar la cita:", error);
+                alert("Error de conexión al buscar el código.");
+            })
+            .finally(() => {
+                btnGestionar.textContent = "Buscar";
+                btnGestionar.disabled = false;
+            });
     });
 
-    document.addEventListener('DOMContentLoaded', () => {
-        inputFecha.min = obtenerFechaVenezuelaStr();
-        if(localStorage.getItem('barberia_nombre')) { document.getElementById('nombre').value=localStorage.getItem('barberia_nombre'); document.getElementById('telefono').value=localStorage.getItem('barberia_telefono'); }
-        cargarGaleriaDinamica();
+    const equipos = ["Brasil", "España", "Francia", "Portugal", "Argentina", "Otro"];
+
+    function votar(equipo) {
+        const dbRef = firebase.database().ref('votos_mundial/' + equipo);
+        dbRef.transaction(current => (current || 0) + 1);
+        
+        document.getElementById('contenedor-votos').style.display = 'none';
+        document.getElementById('resultados-encuesta').style.display = 'block';
+    }
+
+    firebase.database().ref('votos_mundial').on('value', (snapshot) => {
+        const data = snapshot.val() || {};
+        const total = Object.values(data).reduce((a, b) => a + b, 0);
+        const barras = document.getElementById('barras-resultados');
+        barras.innerHTML = '';
+
+        equipos.forEach(equipo => {
+            const votos = data[equipo] || 0;
+            const porcentaje = total > 0 ? Math.round((votos / total) * 100) : 0;
+            
+            barras.innerHTML += `
+                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 4px; color: #ffffff;">
+                    <span>${equipo}</span>
+                    <span>${porcentaje}%</span>
+                </div>
+                <div class="barra-progreso"><div class="progreso-relleno" style="width: ${porcentaje}%"></div></div>
+            `;
+        });
     });
 
-    // =========================================================================================
-    // LÓGICA DE LA VISTA PRIVADA (ARREGLOS DE INICIO DE SESIÓN APLICADOS)
-    // =========================================================================================
-    let todasLasCitas = []; let todosLosGastos = []; let galeriaActual = [];
-    let graficoServiciosObj = null; let graficoFinanzasObj = null;
+    let nuevoServiceWorker;
 
-    function cambiarTab(idTab, boton) {
-        document.querySelectorAll('.modulo-admin').forEach(m => m.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(idTab).classList.add('active'); boton.classList.add('active');
-        if(idTab === 'tab-ajustes') cargarAjustesWeb();
-    }
-    function cerrarModal(idModal) { document.getElementById(idModal).style.display = 'none'; }
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').then(registro => {
+            registro.addEventListener('updatefound', () => {
+                nuevoServiceWorker = registro.installing;
+                
+                nuevoServiceWorker.addEventListener('statechange', () => {
+                    if (nuevoServiceWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        document.getElementById('alerta-actualizacion').style.display = 'block';
+                    }
+                });
+            });
+        }).catch(error => console.error('Error al registrar el Service Worker:', error));
 
-    function abrirModalDetalle(idRuta) {
-        const cita = todasLasCitas.find(c => c.id_ruta === idRuta); if(!cita) return;
-        document.getElementById('modalNombreCliente').textContent = cita.cliente_nombre || 'Sin Nombre';
-        document.getElementById('modalTlf').textContent = cita.cliente_telefono || 'N/A';
-        document.getElementById('modalServicio').textContent = cita.servicio || 'N/A';
-        document.getElementById('modalFecha').textContent = `${cita.cita_fecha.split('-').reverse().join('/')} / ${cita.cita_hora || 'N/A'}`;
-        document.getElementById('modalEstado').textContent = cita.estado || 'Atendido';
-        document.getElementById('modalPatrocinio').textContent = cita.patrocinado ? 'Sí (Neto 100%)' : 'No (40/60)';
-        document.getElementById('btnAbrirEdicion').onclick = () => abrirModalEditar(idRuta);
-        document.getElementById('modalDetalle').style.display = 'flex';
-    }
-
-    function abrirModalEditar(idRuta) {
-        const cita = todasLasCitas.find(c => c.id_ruta === idRuta); if(!cita) return;
-        cerrarModal('modalDetalle');
-        document.getElementById('editIdRuta').value = cita.id_ruta; document.getElementById('editNombre').value = cita.cliente_nombre||''; document.getElementById('editTelefono').value = cita.cliente_telefono||''; document.getElementById('editServicio').value = cita.servicio||''; document.getElementById('editEstado').value = cita.estado||'Atendido';
-        document.getElementById('modalEditar').style.display = 'flex';
-    }
-
-    // ¡ARREGLO DEL SISTEMA DE LOGIN!: 
-    // Manejo correcto de errores HTTP 400 y de persistencia local
-    document.getElementById('btnIngresar').onclick = async () => {
-    const btn = document.getElementById('btnIngresar'); 
-    const errorDiv = document.getElementById('mensajeError');
-    const email = document.getElementById('campoEmail').value.trim();
-    const password = document.getElementById('campoClave').value;
-
-    if (!email || !password) {
-        errorDiv.textContent = 'Por favor, rellena todos los campos.';
-        errorDiv.style.display = 'block';
-        return;
-    }
-
-    btn.textContent = 'Verificando...';
-    btn.disabled = true;
-    errorDiv.style.display = 'none';
-
-    try {
-        const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY_FIREBASE}`, { 
-            method: 'POST', 
-            headers: { 'Content-Type': 'application/json' }, 
-            body: JSON.stringify({ email, password, returnSecureToken: true }) 
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            localStorage.setItem('tokenAdminVictor', data.idToken); 
-            tokenAuth = data.idToken; 
-            iniciarPanel(); 
-        } else {
-            // Manejo de errores de API (ej. credenciales incorrectas)
-            const msg = data.error?.message || 'Error desconocido';
-            throw new Error(msg);
-        }
-    } catch(err) { 
-        console.error("Error Auth:", err);
-        errorDiv.textContent = 'Acceso denegado: ' + err.message;
-        errorDiv.style.display = 'block'; 
-    } finally {
-        btn.textContent = 'Ingresar al Panel'; 
-        btn.disabled = false;
-    }
-};
-            const data = await res.json();
-            
-            // Evaluamos específicamente si res.ok es false o si existe un error en la respuesta
-            if (!res.ok || data.error) {
-                throw new Error(data.error ? data.error.message : 'Error al conectar');
-            }
-            
-            if(data.idToken) { 
-                localStorage.setItem('tokenAdminVictor', data.idToken); 
-                tokenAuth = data.idToken; 
-                iniciarPanel(); 
-            }
-        } catch(err) { 
-            console.error("Error Auth:", err);
-            errorDiv.textContent = 'Credenciales inválidas. Verifica tu correo y contraseña.';
-            errorDiv.style.display = 'block'; 
-        } finally {
-            btn.textContent = 'Ingresar al Panel'; 
-            btn.disabled = false;
-        }
-    };
-
-    document.getElementById('btnCerrarSesion').onclick = () => { 
-        localStorage.removeItem('tokenAdminVictor'); 
-        switchView('public'); 
-        location.reload(); 
-    };
-
-    function iniciarPanel() {
-        document.getElementById('pantallaLogin').style.display = 'none';
-        document.getElementById('btnCerrarSesion').style.display = 'block';
-        document.getElementById('btnVolverWeb').style.display = 'block';
-        document.getElementById('navegacionTabs').style.display = 'flex';
-        
-        const hoy = obtenerFechaVenezuelaStr();
-        document.getElementById('gFecha').value = hoy; document.getElementById('mFecha').value = hoy; document.getElementById('hFecha').value = hoy;
-        document.getElementById('mHora').value = `${String(new Date().getHours()).padStart(2,'0')}:${String(new Date().getMinutes()).padStart(2,'0')}`;
-        
-        cargarDatosDesdeServidor();
-        document.getElementById('filtroFechaAgenda').onchange = e => renderizarTablaAgenda(e.target.value);
-        document.getElementById('btnVerTodoAgenda').onclick = () => { document.getElementById('filtroFechaAgenda').value = ''; renderizarTablaAgenda(''); };
-    }
-
-    async function cargarDatosDesdeServidor() {
-        try {
-            const resCitas = await fetch(`${FIREBASE_URL}citas.json?auth=${tokenAuth}`); 
-            // Control de Token Expirado (401 Unauthorized)
-            if (resCitas.status === 401) throw new Error("SesiónExpirada");
-            
-            const citasData = await resCitas.json();
-            const resGastos = await fetch(`${FIREBASE_URL}gastos.json?auth=${tokenAuth}`); 
-            const gastosData = await resGastos.json();
-
-            todasLasCitas = [];
-            if(citasData) {
-                for(const f in citasData) { if(f.match(/^\d{4}-\d{2}-\d{2}$/)) { for(const h in citasData[f]) todasLasCitas.push({id_ruta:`${f}/${h}`,...citasData[f][h]}); } else todasLasCitas.push({id_ruta:f,...citasData[f]}); }
-            }
-            todasLasCitas.sort((a,b) => new Date(b.cita_fecha+'T'+(b.cita_hora||'00:00')) - new Date(a.cita_fecha+'T'+(a.cita_hora||'00:00')));
-            todosLosGastos = gastosData ? Object.keys(gastosData).map(id => ({id,...gastosData[id]})) : [];
-
-            renderizarTablaAgenda(document.getElementById('filtroFechaAgenda').value); procesarMetricasGlobales(); calcularFrecuencias();
-        } catch(e) {
-            if(e.message === "SesiónExpirada") {
-                alert("Tu sesión ha expirado por seguridad. Por favor ingresa nuevamente.");
-                document.getElementById('btnCerrarSesion').click();
-            }
-        }
-    }
-
-    function procesarMetricasGlobales() {
-        const fi = document.getElementById('fechaInicioGlobal').value, ff = document.getElementById('fechaFinGlobal').value;
-        const dI = fi ? new Date(fi+'T00:00:00') : new Date('2000-01-01T00:00:00'), dF = ff ? new Date(ff+'T23:59:59') : new Date('2100-01-01T23:59:59');
-        let cTot=0, iVic=0, gTot=0, fechas=new Set(), t={ 'Sencillo':0, 'Premium':0, 'Corte+Barba Sencillo':0, 'Corte+Barba Premium':0, 'Barba':0 };
-
-        todasLasCitas.forEach(c => {
-            if((c.estado||'Atendido')!=='Atendido') return; const dC = new Date(c.cita_fecha+'T12:00:00');
-            if(dC>=dI && dC<=dF) {
-                const p = c.servicio.includes('Bloqueo')?0:parseInt(c.servicio.match(/\((\d+)\$\)/)?.[1]||0);
-                if(p>0) { cTot++; fechas.add(c.cita_fecha); iVic += c.patrocinado ? p : (p*0.6); }
-                if(c.servicio.includes('Corte Sencillo')) t['Sencillo']++; else if(c.servicio.includes('Corte Premium')) t['Premium']++; else if(c.servicio.includes('y barba sencillo')) t['Corte+Barba Sencillo']++; else if(c.servicio.includes('y barba premium')) t['Corte+Barba Premium']++; else if(c.servicio.includes('Barba Sola')) t['Barba']++;
+        let actualizando = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (!actualizando) {
+                window.location.reload();
+                actualizando = true;
             }
         });
-        todosLosGastos.forEach(g => { const dG = new Date(g.fecha+'T12:00:00'); if(dG>=dI && dG<=dF) gTot+=parseFloat(g.monto||0); });
-
-        document.getElementById('cortesTotales').textContent=cTot; document.getElementById('promedioCortes').textContent=(fechas.size>0?cTot/fechas.size:0).toFixed(1);
-        document.getElementById('totalVictor').textContent=`$${iVic.toFixed(2)}`; document.getElementById('netoRealTotal').textContent=`$${(iVic-gTot).toFixed(2)}`;
-        actualizarGraficos(t, iVic, gTot);
-    }
-    function limpiarMetricasGlobales() { document.getElementById('fechaInicioGlobal').value=''; document.getElementById('fechaFinGlobal').value=''; procesarMetricasGlobales(); }
-
-    function actualizarGraficos(ds, iv, g) {
-        const lbs = Object.keys(ds).filter(k=>ds[k]>0), vals = Object.values(ds).filter(v=>v>0);
-        if(graficoServiciosObj) graficoServiciosObj.destroy();
-        graficoServiciosObj = new Chart(document.getElementById('graficoServicios').getContext('2d'), { type:'doughnut', data:{labels:lbs.length?lbs:['Sin datos'],datasets:[{data:vals.length?vals:[1],backgroundColor:vals.length?['#d4af37','#10b981','#3b82f6','#8b5cf6','#ef4444']:['#333'],borderWidth:0}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#f9fafb',font:{size:11}}}},cutout:'70%'} });
-        if(graficoFinanzasObj) graficoFinanzasObj.destroy();
-        graficoFinanzasObj = new Chart(document.getElementById('graficoFinanzas').getContext('2d'), { type:'bar', data:{labels:['Neto Bruto','Gastos','Neto Real'],datasets:[{data:[iv,g,iv-g],backgroundColor:['#10b981','#ef4444','#d4af37'],borderRadius:6}]}, options:{responsive:true,maintainAspectRatio:false,scales:{y:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{callback:v=>'$'+v}},x:{grid:{display:false}}},plugins:{legend:{display:false}}} });
     }
 
-    window.guardarCitaCentralizada = async e => {
-        e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); btn.textContent='Guardando...'; btn.disabled=true;
-        const f = document.getElementById('mFecha').value, h = document.getElementById('mHora').value;
-        const payload = { cliente_nombre:document.getElementById('mNombre').value, cliente_telefono:document.getElementById('mTelefono').value, servicio:document.getElementById('mServicio').value, cita_fecha:f, cita_hora:h, estado:document.getElementById('mEstado').value, patrocinado:document.getElementById('mPatrocinado').checked, origen:"admin_panel" };
-        try { await fetch(`${FIREBASE_URL}citas/${f}/${h.replace(':','-')}.json?auth=${tokenAuth}`, {method:'PUT',body:JSON.stringify(payload)}); document.getElementById('formManual').reset(); document.getElementById('mFecha').value=obtenerFechaVenezuelaStr(); cargarDatosDesdeServidor(); } catch(err) { alert("Error al registrar."); } finally { btn.textContent='Guardar y Bloquear'; btn.disabled=false; }
-    };
-
-    window.guardarEdicion = async e => {
-        e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); btn.textContent='Actualizando...';
-        await fetch(`${FIREBASE_URL}citas/${document.getElementById('editIdRuta').value}.json?auth=${tokenAuth}`, {method:'PATCH',body:JSON.stringify({cliente_nombre:document.getElementById('editNombre').value, cliente_telefono:document.getElementById('editTelefono').value, servicio:document.getElementById('editServicio').value, estado:document.getElementById('editEstado').value})});
-        cerrarModal('modalEditar'); btn.textContent='Actualizar Cambios'; cargarDatosDesdeServidor();
-    };
-
-    function renderizarTablaAgenda(fFiltro) {
-        const tbody = document.getElementById('tabla-citas-cuerpo'); tbody.innerHTML=''; const filt = fFiltro ? todasLasCitas.filter(c=>c.cita_fecha===fFiltro) : todasLasCitas;
-        if(!filt.length) { tbody.innerHTML='<tr><td colspan="4" style="text-align:center;">No hay registros.</td></tr>'; return; }
-        filt.forEach(c => { const tr = document.createElement('tr'); const col = c.estado==='Cancelado'?'var(--rojo-alerta)':c.estado==='Pendiente'?'var(--naranja-alerta)':'var(--verde-exito)'; tr.innerHTML = `<td data-label="Cliente"><strong>${c.cliente_nombre||'S/N'}</strong><br><span style="color:${col}; font-size:0.7rem;">● ${c.estado||'Atendido'}</span></td><td data-label="Servicio">${c.servicio}</td><td data-label="Fecha">${c.cita_fecha.split('-').reverse().join('/')} <br> ${c.cita_hora||''}</td><td data-label="Acción"><button class="btn-accion" onclick="abrirModalDetalle('${c.id_ruta}')">Ver</button></td>`; tbody.appendChild(tr); });
+    function aplicarActualizacion() {
+        if (nuevoServiceWorker) {
+            document.getElementById('alerta-actualizacion').style.display = 'none';
+            nuevoServiceWorker.postMessage({ action: 'skipWaiting' });
+        }
     }
-
-    function calcularFrecuencias() {
-        const m = {}; todasLasCitas.forEach(c => { if((c.estado||'Atendido')!=='Atendido'||c.servicio.includes('Bloqueo')) return; const t=c.cliente_telefono||'S/N'; if(!m[t]) m[t]={n:c.cliente_nombre, v:0, u:c.cita_fecha, id:c.id_ruta}; m[t].v++; if(new Date(c.cita_fecha)>new Date(m[t].u)) {m[t].u=c.cita_fecha; m[t].id=c.id_ruta;} });
-        const tbody = document.getElementById('tabla-frecuencia-cuerpo'); tbody.innerHTML='';
-        Object.values(m).sort((a,b)=>b.v-a.v).forEach(c => { tbody.innerHTML += `<tr><td data-label="Cliente"><strong>${c.n}</strong> ${c.v>2?'<span style="color:var(--dorado-acento);font-size:0.7rem;">★</span>':''}</td><td data-label="Visitas"><strong>${c.v}</strong></td><td data-label="Última">${c.u.split('-').reverse().join('/')}</td><td data-label="Acción"><button class="btn-accion" onclick="abrirModalDetalle('${c.id}')">Ver</button></td></tr>`; });
-    }
-
-    window.guardarGastoManual = async e => { e.preventDefault(); await fetch(`${FIREBASE_URL}gastos.json?auth=${tokenAuth}`, {method:'POST',body:JSON.stringify({concepto:document.getElementById('gConcepto').value,monto:parseFloat(document.getElementById('gMonto').value),fecha:document.getElementById('gFecha').value})}); document.getElementById('formGastos').reset(); document.getElementById('gFecha').value=obtenerFechaVenezuelaStr(); cargarDatosDesdeServidor(); };
-
-    async function cargarAjustesWeb() {
-        try {
-            const gal = await (await fetch(`${FIREBASE_URL}galeria.json?auth=${tokenAuth}`)).json();
-            const tb = document.getElementById('tabla-galeria-cuerpo'); tb.innerHTML='';
-            if(gal&&!gal.error) {
-                Object.keys(gal).map(k=>({id:k,...gal[k]})).forEach(i => { tb.innerHTML+=`<tr><td data-label="Imagen"><img src="${i.url}" class="galeria-miniatura"></td><td data-label="Título">${i.titulo||'S/T'}</td><td data-label="Acción"><button class="btn-accion btn-accion-rojo" onclick="eliminarDeGaleria('${i.id}','${i.nombreArchivo||''}')">Eliminar</button></td></tr>`; });
-            } else tb.innerHTML='<tr><td colspan="3" style="text-align:center;">No hay imágenes.</td></tr>';
-        } catch(e){}
-    }
-
-    window.guardarHorariosWeb = async e => {
-        e.preventDefault(); const btn = e.target.querySelector('button'); btn.textContent='Guardando...'; btn.disabled=true;
-        const f = document.getElementById('hFecha').value, hArr=[], [hI,mI]=document.getElementById('hInicio').value.split(':').map(Number), [hF,mF]=document.getElementById('hFin').value.split(':').map(Number);
-        let tA = new Date(); tA.setHours(hI,mI,0,0); let tF = new Date(); tF.setHours(hF,mF,0,0);
-        while(tA<=tF){ hArr.push(`${String(tA.getHours()).padStart(2,'0')}:${String(tA.getMinutes()).padStart(2,'0')}`); tA.setMinutes(tA.getMinutes()+parseInt(document.getElementById('hIntervalo').value,10)); }
-        try { await fetch(`${FIREBASE_URL}horarios_por_fecha/${f}.json?auth=${tokenAuth}`, {method:'PUT',body:JSON.stringify(hArr)}); alert(`Guardado:\n${hArr.join(', ')}`); } catch(er){} finally { btn.textContent='Generar y Actualizar Horarios'; btn.disabled=false; }
-    };
-
-    window.subirImagenGaleria = async e => {
-        e.preventDefault(); const btn = document.getElementById('btnSubirImg'), file = document.getElementById('galArchivo').files[0]; if(!file) return;
-        btn.textContent='Subiendo a Supabase...'; btn.disabled=true;
-        try {
-            const nom = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.\-_]/g,'')}`;
-            const {error} = await supabaseClient.storage.from('galeria').upload(nom, file, {cacheControl:'3600',upsert:false}); if(error) throw error;
-            const {data:urlData} = supabaseClient.storage.from('galeria').getPublicUrl(nom);
-            await fetch(`${FIREBASE_URL}galeria.json?auth=${tokenAuth}`, {method:'POST',body:JSON.stringify({titulo:document.getElementById('galTitulo').value,url:urlData.publicUrl,nombreArchivo:nom,fecha:new Date().toISOString()})});
-            document.getElementById('formGaleria').reset(); cargarAjustesWeb(); alert('Subida exitosa');
-        } catch(err) { alert(`Error al subir imagen.\nDetalle: ${err.message}`); } finally { btn.textContent='Subir Imagen'; btn.disabled=false; }
-    };
-
-    window.eliminarDeGaleria = async (id, nom) => {
-        if(!confirm("¿Seguro que deseas eliminar?")) return;
-        try {
-            if(nom) await supabaseClient.storage.from('galeria').remove([nom]);
-            await fetch(`${FIREBASE_URL}galeria/${id}.json?auth=${tokenAuth}`, {method:'DELETE'}); cargarAjustesWeb();
-        } catch(e) { alert("Error eliminando."); }
-    };
 </script>
 </body>
 </html>
