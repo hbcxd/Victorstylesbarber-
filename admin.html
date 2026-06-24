@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración | Víctor Styles</title>
+    <title>Panel de Administración Pro | Víctor Styles</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -59,6 +59,12 @@
         .tarjeta-contable h4 { font-size: 0.65rem; text-transform: uppercase; color: var(--gris-secundario); margin-bottom: 6px; font-weight: 600; letter-spacing: 1px;}
         .tarjeta-contable .dato-principal { font-size: 1.5rem; font-weight: 800; color: #ffffff; }
 
+        /* GRÁFICOS */
+        .contenedor-graficos { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 24px; }
+        .tarjeta-grafico { background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-radius: 16px; padding: 20px; box-shadow: var(--shadow-premium); display: flex; flex-direction: column; align-items: center; justify-content: center;}
+        .tarjeta-grafico h4 { font-size: 0.8rem; text-transform: uppercase; color: var(--gris-secundario); margin-bottom: 15px; font-weight: 700; letter-spacing: 1px; width: 100%; text-align: left; border-bottom: 1px solid var(--borde-sutil); padding-bottom: 10px;}
+        .canvas-container { position: relative; width: 100%; max-height: 250px; display: flex; justify-content: center;}
+
         /* FORMULARIOS Y TABLAS */
         .form-manual { display: flex; flex-direction: column; gap: 16px; }
         .form-grupo { display: flex; flex-direction: column; gap: 8px; }
@@ -76,14 +82,25 @@
         th, td { padding: 14px; border-bottom: 1px solid var(--borde-sutil); font-size: 0.85rem; }
         th { background-color: #1a1a1a; color: var(--gris-secundario); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px; }
 
-        /* GALERÍA PREVIEW */
+        /* MODALES */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 3000; display: none; justify-content: center; align-items: center; padding: 20px; }
+        .modal-box { background: var(--fondo-tarjeta); border: 1px solid var(--dorado-acento); border-radius: 16px; width: 100%; max-width: 400px; padding: 24px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.9); }
+        .modal-cerrar { position: absolute; top: 15px; right: 20px; background: transparent; border: none; color: var(--gris-secundario); font-size: 1.5rem; cursor: pointer; }
+        .modal-titulo { font-size: 1.2rem; color: #fff; border-bottom: 1px solid var(--borde-sutil); padding-bottom: 10px; margin-bottom: 15px; }
+        .modal-dato { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 5px;}
+        .modal-dato span:first-child { color: var(--gris-secundario); font-size: 0.8rem; text-transform: uppercase; font-weight: 600;}
+        .modal-dato span:last-child { color: #fff; font-weight: bold;}
+        
+        .filtros-rango { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; background: var(--fondo-input); padding: 15px; border-radius: 12px; border: 1px solid var(--borde-sutil); margin-bottom: 20px; }
+        .filtros-rango input { background: var(--fondo-tarjeta); color: #fff; border: 1px solid var(--borde-sutil); padding: 10px; border-radius: 6px; flex: 1; }
+        
         .galeria-miniatura { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid var(--borde-sutil); }
 
         @media (max-width: 768px) {
             table, thead, tbody, th, td, tr { display: block; width: 100%; border:none; }
             thead { display: none; }
             tr { border-bottom: 1px solid var(--dorado-acento); margin-bottom: 10px; padding: 10px; background: var(--fondo-input); border-radius: 8px;}
-            td { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);}
+            td { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);}
             td::before { content: attr(data-label); font-weight: 700; text-transform: uppercase; font-size: 0.7rem; color: var(--gris-secundario); }
         }
     </style>
@@ -114,46 +131,196 @@
     <button class="tab-btn" onclick="cambiarTab('tab-ajustes', this)">Ajustes Web</button>
 </nav>
 
-<div id="tab-dashboard" class="modulo-admin active"><h2>Panel de Rendimiento</h2></div>
+<div class="modal-overlay" id="modalDetalle">
+    <div class="modal-box">
+        <button class="modal-cerrar" onclick="cerrarModal('modalDetalle')">×</button>
+        <div class="modal-titulo" id="modalNombreCliente">Nombre Cliente</div>
+        <div class="modal-dato"><span>Teléfono</span><span id="modalTlf"></span></div>
+        <div class="modal-dato"><span>Servicio</span><span id="modalServicio"></span></div>
+        <div class="modal-dato"><span>Fecha / Hora</span><span id="modalFecha"></span></div>
+        <div class="modal-dato"><span>Estado</span><span id="modalEstado"></span></div>
+        <div class="modal-dato"><span>Patrocinado</span><span id="modalPatrocinio"></span></div>
+        <div style="margin-top: 20px; text-align: center;">
+            <button class="btn-accion" id="btnAbrirEdicion" style="width: 100%;">Editar Datos del Cliente</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modalEditar">
+    <div class="modal-box">
+        <button class="modal-cerrar" onclick="cerrarModal('modalEditar')">×</button>
+        <div class="modal-titulo">Editar Registro</div>
+        <form id="formEditar" onsubmit="guardarEdicion(event)">
+            <input type="hidden" id="editIdRuta">
+            <div class="form-grupo"><label>Nombre</label><input type="text" id="editNombre" required></div>
+            <div class="form-grupo"><label>Teléfono</label><input type="tel" id="editTelefono"></div>
+            <div class="form-grupo">
+                <label>Servicio</label>
+                <select id="editServicio" required>
+                    <option value="Corte Sencillo (10$)">Corte Sencillo (10$)</option>
+                    <option value="Corte Premium (13$)">Corte Premium (13$)</option>
+                    <option value="Corte y barba sencillo (16$)">Corte y barba sencillo (16$)</option>
+                    <option value="Corte y barba premium (19$)">Corte y barba premium (19$)</option>
+                    <option value="Barba Sola (6$)">Barba Sola (6$)</option>
+                    <option value="Bloqueo Administrativo (0$)">Bloqueo de Horario (0$)</option>
+                </select>
+            </div>
+            <div class="form-grupo">
+                <label>Estado de la Cita</label>
+                <select id="editEstado" required>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Atendido">Atendido</option>
+                    <option value="Cancelado">Cancelado</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-guardar" style="margin-top: 15px;">Actualizar Cambios</button>
+        </form>
+    </div>
+</div>
+
+<div id="tab-dashboard" class="modulo-admin active">
+    <h2>Panel de Rendimiento</h2>
+    
+    <div class="filtros-rango">
+        <span style="font-size: 0.8rem; color: var(--gris-secundario); font-weight: bold; text-transform: uppercase;">Desde:</span>
+        <input type="date" id="fechaInicioGlobal">
+        <span style="font-size: 0.8rem; color: var(--gris-secundario); font-weight: bold; text-transform: uppercase;">Hasta:</span>
+        <input type="date" id="fechaFinGlobal">
+        <button class="btn-accion" onclick="procesarMetricasGlobales()">Calcular</button>
+        <button class="btn-accion" onclick="limpiarMetricasGlobales()" style="border-color: var(--rojo-alerta); color: var(--rojo-alerta);">Ver Todo</button>
+    </div>
+
+    <div class="grid-contable">
+        <div class="tarjeta-contable"><h4>Total Cortes</h4><div class="dato-principal" id="cortesTotales">0</div></div>
+        <div class="tarjeta-contable"><h4>Promedio Diario</h4><div class="dato-principal" id="promedioCortes" style="color:var(--naranja-alerta);">0</div></div>
+        <div class="tarjeta-contable"><h4>Tu Neto Bruto</h4><div class="dato-principal" style="color:var(--verde-exito);" id="totalVictor">$0.00</div></div>
+        <div class="tarjeta-contable" style="border: 1px solid var(--dorado-acento); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);">
+            <h4 style="color: var(--dorado-acento);">Tu Neto Real</h4>
+            <div class="dato-principal" style="color:var(--dorado-acento);" id="netoRealTotal">$0.00</div>
+        </div>
+    </div>
+
+    <div class="contenedor-graficos">
+        <div class="tarjeta-grafico">
+            <h4>Distribución de Servicios</h4>
+            <div class="canvas-container">
+                <canvas id="graficoServicios"></canvas>
+            </div>
+        </div>
+        <div class="tarjeta-grafico">
+            <h4>Balance Financiero ($)</h4>
+            <div class="canvas-container">
+                <canvas id="graficoFinanzas"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div id="tab-agenda" class="modulo-admin">
     <h2>Agenda e Historial</h2>
     
     <div class="seccion-bloque">
-        <h3>Agendar Nueva Cita / Bloquear Hora</h3>
+        <h3>Registrar Cita / Bloquear Horario Web</h3>
         <p style="font-size: 0.8rem; color: var(--gris-secundario); margin-bottom: 15px;">
-            Al agendar un cliente desde aquí, la hora quedará automáticamente deshabilitada en la web pública.
+            Al registrar desde aquí, la hora quedará <b>bloqueada en la web pública</b>. Úsalo para agendar clientes manuales o apartar tu tiempo.
         </p>
-        <form class="form-manual" id="formAgendarAdmin" onsubmit="guardarCitaAdmin(event)">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                <div class="form-grupo">
+        <form class="form-manual" id="formManual" onsubmit="guardarCitaCentralizada(event)">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <div class="form-grupo" style="flex: 1; min-width: 200px;">
+                    <label>Nombre del Cliente (o Motivo de Bloqueo)</label>
+                    <input type="text" id="mNombre" placeholder="Ej: Juan Pérez / Hora de Almuerzo" required>
+                </div>
+                <div class="form-grupo" style="flex: 1; min-width: 150px;">
+                    <label>Teléfono (Opcional)</label>
+                    <input type="tel" id="mTelefono" placeholder="0414...">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <div class="form-grupo" style="flex: 2; min-width: 200px;">
+                    <label>Servicio</label>
+                    <select id="mServicio" required>
+                        <option value="Corte Sencillo (10$)">Corte Sencillo (10$)</option>
+                        <option value="Corte Premium (13$)">Corte Premium (13$)</option>
+                        <option value="Corte y barba sencillo (16$)">Corte y barba sencillo (16$)</option>
+                        <option value="Corte y barba premium (19$)">Corte y barba premium (19$)</option>
+                        <option value="Barba Sola (6$)">Barba Sola (6$)</option>
+                        <option value="Bloqueo Administrativo (0$)">Bloqueo de Horario (Sin Cliente)</option>
+                    </select>
+                </div>
+                <div class="form-grupo" style="flex: 1; min-width: 150px;">
+                    <label>Estado</label>
+                    <select id="mEstado" required>
+                        <option value="Atendido">Atendido</option>
+                        <option value="Pendiente">Pendiente</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <div class="form-grupo" style="flex: 1;">
                     <label>Fecha del Servicio</label>
-                    <input type="date" id="citaFecha" required>
+                    <input type="date" id="mFecha" required>
                 </div>
-                <div class="form-grupo">
-                    <label>Hora (Ej: 09:00, 14:30)</label>
-                    <input type="text" id="citaHora" placeholder="Ej: 09:00" required>
-                </div>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 5px;">
-                <div class="form-grupo">
-                    <label>Nombre del Cliente</label>
-                    <input type="text" id="citaCliente" placeholder="Nombre completo" required>
-                </div>
-                <div class="form-grupo">
-                    <label>Servicio / Nota Interna</label>
-                    <input type="text" id="citaServicio" placeholder="Ej: Degradado + Cejas (Reservado por Admin)">
+                <div class="form-grupo" style="flex: 1;">
+                    <label>Hora (Ej: 09:00)</label>
+                    <input type="time" id="mHora" required>
                 </div>
             </div>
+
+            <div style="display:flex; align-items:center; gap:10px; margin-top:5px;">
+                <input type="checkbox" id="mPatrocinado" style="width:18px; height:18px; accent-color:var(--dorado-acento);">
+                <label style="color:var(--gris-secundario); font-size:0.8rem;">¿Trabajo Patrocinado? (El 100% será para ti)</label>
+            </div>
             
-            <button type="submit" class="btn-guardar" id="btnAgendarAdmin" style="margin-top: 10px;">Bloquear Hora y Registrar Cita</button>
+            <button type="submit" class="btn-guardar" style="margin-top: 10px;">Guardar y Bloquear Horario</button>
+        </form>
+    </div>
+
+    <div class="seccion-bloque">
+        <h3>Historial Operativo</h3>
+        <div style="display:flex; gap:10px; margin-bottom:15px;">
+            <input type="date" id="filtroFechaAgenda" style="background:var(--fondo-input); color:#fff; padding:12px; border:1px solid var(--borde-sutil); border-radius:8px; width:100%;">
+            <button id="btnVerTodoAgenda" style="background:#1a1a1a; color:#fff; border:1px solid var(--borde-sutil); border-radius:8px; padding:0 15px; cursor:pointer;">Ver Todo</button>
+        </div>
+        <div class="contenedor-tabla">
+            <table>
+                <thead><tr><th>Cliente / Motivo</th><th>Servicio</th><th>Fecha / Hora</th><th>Acción</th></tr></thead>
+                <tbody id="tabla-citas-cuerpo">
+                    <tr><td colspan="4" style="text-align:center; padding:20px;">Cargando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="tab-finanzas" class="modulo-admin">
+    <h2>Gestión Financiera</h2>
+    <div class="seccion-bloque">
+        <h3>Registrar Gasto</h3>
+        <form class="form-manual" id="formGastos" onsubmit="guardarGastoManual(event)">
+            <div class="form-grupo"><label>Concepto</label><input type="text" id="gConcepto" required></div>
+            <div class="form-grupo"><label>Monto ($)</label><input type="number" id="gMonto" step="0.01" required></div>
+            <div class="form-grupo"><label>Fecha</label><input type="date" id="gFecha" required></div>
+            <button type="submit" class="btn-guardar" style="background:#333; color:#fff;">Registrar Gasto</button>
         </form>
     </div>
 </div>
 
-<div id="tab-finanzas" class="modulo-admin"><h2>Gestión Financiera</h2></div>
-<div id="tab-clientes" class="modulo-admin"><h2>Fidelidad de Clientes</h2></div>
+<div id="tab-clientes" class="modulo-admin">
+    <h2>Fidelidad de Clientes</h2>
+    <div class="seccion-bloque">
+        <p class="subtitulo" style="text-align:left; margin-bottom:10px;">Clientes ordenados por número de visitas.</p>
+        <div class="contenedor-tabla">
+            <table>
+                <thead><tr><th>Cliente</th><th>Visitas</th><th>Última Vez</th><th>Detalle</th></tr></thead>
+                <tbody id="tabla-frecuencia-cuerpo">
+                    <tr><td colspan="4" style="text-align:center; padding:20px;">Calculando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 <div id="tab-ajustes" class="modulo-admin">
     <h2>Ajustes de la Web</h2>
@@ -161,7 +328,7 @@
     <div class="seccion-bloque">
         <h3>Horarios de Cita Disponibles</h3>
         <p style="font-size: 0.8rem; color: var(--gris-secundario); margin-bottom: 15px;">
-            Define las horas que los clientes verán en el formulario web. Sepáralas por comas (,).
+            Define las horas base que los clientes verán en la web pública. Sepáralas por comas (,).
         </p>
         <form class="form-manual" id="formHorarios" onsubmit="guardarHorariosWeb(event)">
             <div class="form-grupo">
@@ -201,18 +368,25 @@
 </div>
 
 <script>
-    // --- VARIABLES GLOBALES FIREBASE Y SUPABASE ---
+    // =====================================================================
+    // VARIABLES GLOBALES (Ajusta los credenciales de Supabase)
+    // =====================================================================
     const API_KEY_FIREBASE = 'AIzaSyBKrJD4VAzOkvbCay-C8Dxsg3gsUkAt4EA'; 
     const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
-    
-    // REEMPLAZA ESTO CON TUS DATOS DE SUPABASE
-    const SUPABASE_URL = 'https://ghfugbvqleevtptqybgt.supabase.co'; 
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoZnVnYnZxbGVldnRwdHF5Ymd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMTAyNjMsImV4cCI6MjA5Nzg4NjI2M30.Hy2E6S8H7UTdowhN7z1_-7fLM7sRA3QlMEUd9SJH138'; 
+    const SUPABASE_URL = 'https://TU-PROYECTO.supabase.co'; 
+    const SUPABASE_ANON_KEY = 'TU_SUPABASE_ANON_KEY_AQUI'; 
 
     let tokenAuth = sessionStorage.getItem('tokenAdminVictor');
+    let todasLasCitas = [];
+    let todosLosGastos = [];
     let galeriaActual = [];
+    
+    let graficoServiciosObj = null;
+    let graficoFinanzasObj = null;
 
-    // --- LÓGICA DE PESTAÑAS ---
+    // =====================================================================
+    // LÓGICA DE INTERFAZ (TABS y MODALES)
+    // =====================================================================
     function cambiarTab(idTab, boton) {
         document.querySelectorAll('.modulo-admin').forEach(mod => mod.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -222,151 +396,357 @@
         if(idTab === 'tab-ajustes') cargarAjustesWeb();
     }
 
-    // =================================================================
-    // SCRIPT DE AUTENTICACIÓN Y CONTROL DE ACCESO
-    // =================================================================
+    function cerrarModal(idModal) { document.getElementById(idModal).style.display = 'none'; }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const btnIngresar = document.getElementById('btnIngresar');
-        if (btnIngresar) {
-            btnIngresar.addEventListener('click', ejecutarLogin);
-        }
-
-        const btnCerrarSesion = document.getElementById('btnCerrarSesion');
-        if (btnCerrarSesion) {
-            btnCerrarSesion.addEventListener('click', () => {
-                sessionStorage.removeItem('tokenAdminVictor');
-                window.location.reload();
-            });
-        }
+    function abrirModalDetalle(idRuta) {
+        const cita = todasLasCitas.find(c => c.id_ruta === idRuta);
+        if(!cita) return;
+        document.getElementById('modalNombreCliente').textContent = cita.cliente_nombre || 'Sin Nombre';
+        document.getElementById('modalTlf').textContent = cita.cliente_telefono || 'N/A';
+        document.getElementById('modalServicio').textContent = cita.servicio || 'N/A';
+        document.getElementById('modalFecha').textContent = `${cita.cita_fecha.split('-').reverse().join('/')} / ${cita.cita_hora || 'N/A'}`;
+        document.getElementById('modalEstado').textContent = cita.estado || 'Atendido';
+        document.getElementById('modalPatrocinio').textContent = cita.patrocinado ? 'Sí (Neto 100%)' : 'No (40/60)';
         
-        if (tokenAuth) {
-            mostrarPanelAdmin();
+        document.getElementById('btnAbrirEdicion').onclick = () => abrirModalEditar(idRuta);
+        document.getElementById('modalDetalle').style.display = 'flex';
+    }
+
+    function abrirModalEditar(idRuta) {
+        const cita = todasLasCitas.find(c => c.id_ruta === idRuta);
+        if(!cita) return;
+        cerrarModal('modalDetalle');
+        document.getElementById('editIdRuta').value = cita.id_ruta;
+        document.getElementById('editNombre').value = cita.cliente_nombre || '';
+        document.getElementById('editTelefono').value = cita.cliente_telefono || '';
+        document.getElementById('editServicio').value = cita.servicio || '';
+        document.getElementById('editEstado').value = cita.estado || 'Atendido';
+        document.getElementById('modalEditar').style.display = 'flex';
+    }
+
+    // =====================================================================
+    // AUTENTICACIÓN FIREBASE
+    // =====================================================================
+    document.getElementById('btnIngresar').addEventListener('click', async () => {
+        const email = document.getElementById('campoEmail').value;
+        const password = document.getElementById('campoClave').value;
+        const btn = document.getElementById('btnIngresar');
+        btn.textContent = 'Verificando...';
+        
+        try {
+            const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY_FIREBASE}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password, returnSecureToken: true })
+            });
+            const data = await res.json();
+            
+            if(data.idToken) {
+                sessionStorage.setItem('tokenAdminVictor', data.idToken);
+                tokenAuth = data.idToken;
+                iniciarPanel();
+            } else {
+                throw new Error("Datos incorrectos");
+            }
+        } catch(err) {
+            document.getElementById('mensajeError').style.display = 'block';
+            btn.textContent = 'Ingresar';
         }
     });
 
-    async function ejecutarLogin() {
-        const email = document.getElementById('campoEmail').value.trim();
-        const password = document.getElementById('campoClave').value;
-        const mensajeError = document.getElementById('mensajeError');
-        const btnIngresar = document.getElementById('btnIngresar');
+    document.getElementById('btnCerrarSesion').addEventListener('click', () => {
+        sessionStorage.removeItem('tokenAdminVictor');
+        location.reload();
+    });
 
-        if (!email || !password) {
-            mensajeError.innerText = "Por favor, escribe tu correo y contraseña.";
-            mensajeError.style.display = "block";
-            return;
-        }
+    window.onload = () => { 
+        Chart.defaults.color = '#a1a1aa';
+        Chart.defaults.font.family = "'-apple-system', sans-serif";
+        if(tokenAuth) iniciarPanel(); 
+    };
 
-        mensajeError.style.display = "none";
-        btnIngresar.textContent = "Verificando...";
-
-        try {
-            const urlAuth = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY_FIREBASE}`;
-            
-            const respuesta = await fetch(urlAuth, {
-                method: 'POST',
-                body: JSON.stringify({ email, password, returnSecureToken: true }),
-                headers: { 'Content-Type': 'application/json' }
-            });
-
-            const datos = await respuesta.json();
-
-            if (!respuesta.ok) {
-                throw new Error(datos.error?.message || "Error de autenticación");
-            }
-
-            sessionStorage.setItem('tokenAdminVictor', datos.idToken);
-            tokenAuth = datos.idToken;
-
-            mostrarPanelAdmin();
-            
-        } catch (error) {
-            console.error("Detalle del error de login:", error.message);
-            if (error.message === "INVALID_PASSWORD" || error.message === "EMAIL_NOT_FOUND" || error.message === "INVALID_LOGIN_CREDENTIALS") {
-                mensajeError.innerText = "El correo o la contraseña son incorrectos.";
-            } else if (error.message === "OPERATION_NOT_ALLOWED") {
-                mensajeError.innerText = "El inicio de sesión con Correo/Clave no está activado en tu Firebase.";
-            } else if (error.message === "INVALID_API_KEY") {
-                mensajeError.innerText = "La API Key escrita en el código no es correcta.";
-            } else {
-                mensajeError.innerText = "Error de conexión. Revisa que tu URL y API Key de Firebase estén bien.";
-            }
-            mensajeError.style.display = "block";
-        } finally {
-            btnIngresar.textContent = "Ingresar";
-        }
-    }
-
-    function mostrarPanelAdmin() {
+    function iniciarPanel() {
         document.getElementById('pantallaLogin').style.display = 'none';
         document.getElementById('btnCerrarSesion').style.display = 'block';
         document.getElementById('navegacionTabs').style.display = 'flex';
+        
+        document.getElementById('gFecha').value = obtenerFechaHoy();
+        document.getElementById('mFecha').value = obtenerFechaHoy();
+        
+        const ahora = new Date();
+        document.getElementById('mHora').value = `${String(ahora.getHours()).padStart(2,'0')}:${String(ahora.getMinutes()).padStart(2,'0')}`;
+        
+        cargarDatosDesdeServidor();
+        
+        document.getElementById('filtroFechaAgenda').addEventListener('change', e => renderizarTablaAgenda(e.target.value));
+        document.getElementById('btnVerTodoAgenda').addEventListener('click', () => {
+            document.getElementById('filtroFechaAgenda').value = '';
+            renderizarTablaAgenda('');
+        });
     }
 
-    // =================================================================
-    // NUEVA LÓGICA: GUARDAR CITA DESDE EL ADMIN (BLOQUEAR EN FIREBASE)
-    // =================================================================
-    window.guardarCitaAdmin = async function(e) {
-        e.preventDefault();
-        const btn = document.getElementById('btnAgendarAdmin');
-        const fecha = document.getElementById('citaFecha').value; // Formato: YYYY-MM-DD
-        const horaOriginal = document.getElementById('citaHora').value.trim();
-        
-        // Reemplazamos los dos puntos (:) por guión (-) para crear una ruta de Firebase limpia y segura.
-        // Ej: "09:00" se convierte en "09-00"
-        const horaKey = horaOriginal.replace(':', '-'); 
-        
-        const cliente = document.getElementById('citaCliente').value.trim();
-        const servicio = document.getElementById('citaServicio').value.trim();
+    function obtenerFechaHoy() {
+        const d = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Caracas"}));
+        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    }
 
-        if(!fecha || !horaKey) return;
-
-        btn.textContent = 'Bloqueando hora...';
-        btn.disabled = true;
-
-        // Estructura limpia de la cita que se almacena en la Base de Datos
-        const payloadCita = {
-            cliente: cliente,
-            servicio: servicio || "Bloqueado por Administrador",
-            fecha: fecha,
-            hora: horaOriginal,
-            origen: "admin_panel",
-            timestamp: new Date().toISOString()
-        };
-
+    // =====================================================================
+    // CARGA DE DATOS CENTRALIZADA (Soporta estructura anidada FECHA/HORA)
+    // =====================================================================
+    async function cargarDatosDesdeServidor() {
         try {
-            // Guardamos la cita estructurada por: citas -> FECHA -> HORA
-            // Endpoint resultante: https://.../citas/2026-06-24/09-00.json?auth=TOKEN
-            const res = await fetch(`${FIREBASE_URL}citas/${fecha}/${horaKey}.json?auth=${tokenAuth}`, {
-                method: 'PUT',
-                body: JSON.stringify(payloadCita)
-            });
+            const resCitas = await fetch(`${FIREBASE_URL}citas.json?auth=${tokenAuth}`);
+            const resGastos = await fetch(`${FIREBASE_URL}gastos.json?auth=${tokenAuth}`);
+            
+            const citasData = await resCitas.json();
+            const gastosData = await resGastos.json();
 
-            if(!res.ok) throw new Error("Error en Firebase al procesar el bloqueo.");
+            todasLasCitas = [];
+            if(citasData) {
+                // Iterar sobre estructura anidada: citas -> 2026-06-24 -> 09-00
+                for (const fecha in citasData) {
+                    if(fecha.match(/^\d{4}-\d{2}-\d{2}$/)) { 
+                        for (const horaKey in citasData[fecha]) {
+                            todasLasCitas.push({ id_ruta: `${fecha}/${horaKey}`, ...citasData[fecha][horaKey] });
+                        }
+                    } else {
+                        // Compatibilidad si tienes registros antiguos sueltos
+                        todasLasCitas.push({ id_ruta: fecha, ...citasData[fecha] });
+                    }
+                }
+            }
+            
+            todasLasCitas.sort((a,b) => new Date(b.cita_fecha + 'T' + (b.cita_hora||'00:00')) - new Date(a.cita_fecha + 'T' + (a.cita_hora||'00:00')));
+            todosLosGastos = gastosData ? Object.keys(gastosData).map(id => ({ id, ...gastosData[id] })) : [];
 
-            alert(`¡Éxito! La hora ${horaOriginal} para el día ${fecha} ha sido bloqueada y agendada correctamente.`);
-            document.getElementById('formAgendarAdmin').reset();
-
+            renderizarTablaAgenda(document.getElementById('filtroFechaAgenda').value);
+            procesarMetricasGlobales(); 
+            calcularFrecuencias();
         } catch (error) {
-            console.error("Error guardando cita admin:", error);
-            alert("Error al intentar bloquear la hora en Firebase. Revisa la consola.");
-        } finally {
-            btn.textContent = 'Bloquear Hora y Registrar Cita';
-            btn.disabled = false;
+            console.error("Error cargando datos", error);
         }
     }
 
-    // =================================================================
-    // LÓGICA: AJUSTES WEB Y GALERÍA 
-    // =================================================================
+    function extraerPrecio(str) {
+        if(!str || str.includes('Bloqueo')) return 0;
+        const match = str.match(/\((\d+)\$\)/);
+        return match ? parseInt(match[1], 10) : 0;
+    }
 
+    // =====================================================================
+    // MÓDULO FINANCIERO Y GRÁFICOS
+    // =====================================================================
+    function limpiarMetricasGlobales() {
+        document.getElementById('fechaInicioGlobal').value = '';
+        document.getElementById('fechaFinGlobal').value = '';
+        procesarMetricasGlobales();
+    }
+
+    function procesarMetricasGlobales() {
+        const strInicio = document.getElementById('fechaInicioGlobal').value;
+        const strFin = document.getElementById('fechaFinGlobal').value;
+        const fechaInicio = strInicio ? new Date(strInicio + 'T00:00:00') : new Date('2000-01-01T00:00:00');
+        const fechaFin = strFin ? new Date(strFin + 'T23:59:59') : new Date('2100-01-01T23:59:59');
+
+        let cTotal = 0, iVictor = 0, gTotal = 0;
+        let fechasRegistradas = new Set();
+        let conteoTipos = { 'Sencillo': 0, 'Premium': 0, 'Corte+Barba Sencillo': 0, 'Corte+Barba Premium': 0, 'Barba': 0 };
+
+        todasLasCitas.forEach(cita => {
+            if((cita.estado||'Atendido') !== 'Atendido') return;
+            const fCita = new Date(cita.cita_fecha + 'T12:00:00'); 
+            
+            if(fCita >= fechaInicio && fCita <= fechaFin) {
+                const precio = extraerPrecio(cita.servicio);
+                if(precio > 0) {
+                    cTotal++;
+                    fechasRegistradas.add(cita.cita_fecha); 
+                    iVictor += cita.patrocinado ? precio : (precio * 0.60);
+                }
+
+                if(cita.servicio.includes('Corte Sencillo')) conteoTipos['Sencillo']++;
+                else if(cita.servicio.includes('Corte Premium')) conteoTipos['Premium']++;
+                else if(cita.servicio.includes('y barba sencillo')) conteoTipos['Corte+Barba Sencillo']++;
+                else if(cita.servicio.includes('y barba premium')) conteoTipos['Corte+Barba Premium']++;
+                else if(cita.servicio.includes('Barba Sola')) conteoTipos['Barba']++;
+            }
+        });
+
+        todosLosGastos.forEach(g => {
+            const fGasto = new Date(g.fecha + 'T12:00:00');
+            if(fGasto >= fechaInicio && fGasto <= fechaFin) gTotal += parseFloat(g.monto || 0);
+        });
+
+        let diasTrabajados = fechasRegistradas.size;
+        let promedio = diasTrabajados > 0 ? (cTotal / diasTrabajados) : 0;
+
+        document.getElementById('cortesTotales').textContent = cTotal;
+        document.getElementById('promedioCortes').textContent = promedio.toFixed(1);
+        document.getElementById('totalVictor').textContent = `$${iVictor.toFixed(2)}`;
+        document.getElementById('netoRealTotal').textContent = `$${(iVictor - gTotal).toFixed(2)}`;
+
+        actualizarGraficos(conteoTipos, iVictor, gTotal);
+    }
+
+    function actualizarGraficos(datosServicios, ingresosVictor, gastos) {
+        const ctxServicios = document.getElementById('graficoServicios').getContext('2d');
+        const labelsServicios = Object.keys(datosServicios).filter(k => datosServicios[k] > 0);
+        const dataServicios = Object.values(datosServicios).filter(v => v > 0);
+
+        if(graficoServiciosObj) graficoServiciosObj.destroy();
+        graficoServiciosObj = new Chart(ctxServicios, {
+            type: 'doughnut',
+            data: {
+                labels: labelsServicios.length ? labelsServicios : ['Sin datos'],
+                datasets: [{
+                    data: dataServicios.length ? dataServicios : [1],
+                    backgroundColor: dataServicios.length ? ['#d4af37', '#10b981', '#3b82f6', '#8b5cf6', '#ef4444'] : ['#333'],
+                    borderWidth: 0, hoverOffset: 4
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#f9fafb', font: { size: 11 } } } }, cutout: '70%' }
+        });
+
+        const ctxFinanzas = document.getElementById('graficoFinanzas').getContext('2d');
+        if(graficoFinanzasObj) graficoFinanzasObj.destroy();
+        graficoFinanzasObj = new Chart(ctxFinanzas, {
+            type: 'bar',
+            data: {
+                labels: ['Neto Bruto', 'Gastos', 'Neto Real'],
+                datasets: [{ label: 'Monto ($)', data: [ingresosVictor, gastos, ingresosVictor - gastos], backgroundColor: ['#10b981', '#ef4444', '#d4af37'], borderRadius: 6 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { callback: v => '$'+v } }, x: { grid: { display: false } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => '$'+c.parsed.y.toFixed(2) } } } }
+        });
+    }
+
+    // =====================================================================
+    // GUARDADO DE DATOS (AGENDA/BLOQUEO y EDICIÓN)
+    // =====================================================================
+    window.guardarCitaCentralizada = async function(e) {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.textContent = 'Guardando...'; btn.disabled = true;
+
+        const fecha = document.getElementById('mFecha').value;
+        const horaOriginal = document.getElementById('mHora').value;
+        const horaKey = horaOriginal.replace(':', '-'); // Crea el formato 09-00
+
+        const payloadCita = {
+            cliente_nombre: document.getElementById('mNombre').value,
+            cliente_telefono: document.getElementById('mTelefono').value,
+            servicio: document.getElementById('mServicio').value,
+            cita_fecha: fecha,
+            cita_hora: horaOriginal,
+            estado: document.getElementById('mEstado').value,
+            patrocinado: document.getElementById('mPatrocinado').checked,
+            origen: "admin_panel"
+        };
+
+        try {
+            // Guarda en la estructura estructurada por fechas para bloquear la web
+            await fetch(`${FIREBASE_URL}citas/${fecha}/${horaKey}.json?auth=${tokenAuth}`, { 
+                method: 'PUT', 
+                body: JSON.stringify(payloadCita) 
+            });
+            
+            document.getElementById('formManual').reset();
+            document.getElementById('mFecha').value = obtenerFechaHoy();
+            
+            cargarDatosDesdeServidor();
+        } catch (error) {
+            alert("Hubo un error al registrar en Firebase.");
+        } finally {
+            btn.textContent = 'Guardar y Bloquear Horario'; btn.disabled = false;
+        }
+    }
+
+    window.guardarEdicion = async function(e) {
+        e.preventDefault();
+        const idRuta = document.getElementById('editIdRuta').value; // Ej: "2026-06-24/09-00"
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.textContent = 'Actualizando...';
+        
+        const payload = {
+            cliente_nombre: document.getElementById('editNombre').value,
+            cliente_telefono: document.getElementById('editTelefono').value,
+            servicio: document.getElementById('editServicio').value,
+            estado: document.getElementById('editEstado').value
+        };
+
+        await fetch(`${FIREBASE_URL}citas/${idRuta}.json?auth=${tokenAuth}`, { 
+            method: 'PATCH', 
+            body: JSON.stringify(payload) 
+        });
+
+        cerrarModal('modalEditar');
+        btn.textContent = 'Actualizar Cambios';
+        cargarDatosDesdeServidor();
+    }
+
+    // =====================================================================
+    // UTILIDADES (AGENDA RENDER, FIDELIDAD, GASTOS)
+    // =====================================================================
+    function renderizarTablaAgenda(fechaFiltro) {
+        const tbody = document.getElementById('tabla-citas-cuerpo');
+        tbody.innerHTML = '';
+        const filtradas = fechaFiltro ? todasLasCitas.filter(c => c.cita_fecha === fechaFiltro) : todasLasCitas;
+
+        if(filtradas.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px;">No hay registros.</td></tr>'; return;
+        }
+
+        filtradas.forEach(cita => {
+            const tr = document.createElement('tr');
+            let colorEstado = cita.estado === 'Cancelado' ? 'var(--rojo-alerta)' : (cita.estado === 'Pendiente' ? 'var(--naranja-alerta)' : 'var(--verde-exito)');
+            tr.innerHTML = `
+                <td data-label="Cliente / Motivo"><strong>${cita.cliente_nombre || 'Sin nombre'}</strong><br><span style="color:${colorEstado}; font-size:0.7rem;">● ${cita.estado||'Atendido'}</span></td>
+                <td data-label="Servicio">${cita.servicio}</td>
+                <td data-label="Fecha / Hora">${cita.cita_fecha.split('-').reverse().join('/')} <br> ${cita.cita_hora||''}</td>
+                <td data-label="Acción"><button class="btn-accion" onclick="abrirModalDetalle('${cita.id_ruta}')">Opciones</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function calcularFrecuencias() {
+        const map = {};
+        todasLasCitas.forEach(c => {
+            if((c.estado||'Atendido')!=='Atendido' || c.servicio.includes('Bloqueo')) return;
+            const tlf = c.cliente_telefono || 'S/N';
+            if(!map[tlf]) map[tlf] = { nombre: c.cliente_nombre, visitas: 0, ultima: c.cita_fecha, idRuta: c.id_ruta };
+            map[tlf].visitas++;
+            if(new Date(c.cita_fecha) > new Date(map[tlf].ultima)) { map[tlf].ultima = c.cita_fecha; map[tlf].idRuta = c.id_ruta; }
+        });
+
+        const arr = Object.values(map).sort((a,b) => b.visitas - a.visitas);
+        const tbody = document.getElementById('tabla-frecuencia-cuerpo');
+        tbody.innerHTML = '';
+        arr.forEach(c => {
+            tbody.innerHTML += `<tr>
+                <td data-label="Cliente"><strong>${c.nombre}</strong> ${c.visitas>2?'<span style="color:var(--dorado-acento); font-size:0.7rem;">★</span>':''}</td>
+                <td data-label="Visitas" style="font-weight:bold;">${c.visitas}</td>
+                <td data-label="Última Vez">${c.ultima.split('-').reverse().join('/')}</td>
+                <td data-label="Detalle"><button class="btn-accion" onclick="abrirModalDetalle('${c.idRuta}')">Ver</button></td>
+            </tr>`;
+        });
+    }
+
+    window.guardarGastoManual = async function(e) {
+        e.preventDefault();
+        const obj = { concepto: document.getElementById('gConcepto').value, monto: parseFloat(document.getElementById('gMonto').value), fecha: document.getElementById('gFecha').value };
+        await fetch(`${FIREBASE_URL}gastos.json?auth=${tokenAuth}`, { method: 'POST', body: JSON.stringify(obj) });
+        document.getElementById('formGastos').reset(); document.getElementById('gFecha').value = obtenerFechaHoy();
+        cargarDatosDesdeServidor();
+    }
+
+    // =====================================================================
+    // MÓDULO: AJUSTES WEB (Horarios y Galería Supabase)
+    // =====================================================================
     async function cargarAjustesWeb() {
         try {
             const resHorarios = await fetch(`${FIREBASE_URL}configuracion/horarios.json?auth=${tokenAuth}`);
             const horarios = await resHorarios.json();
-            if(horarios) {
-                document.getElementById('hListado').value = horarios.join(', ');
-            }
+            if(horarios) document.getElementById('hListado').value = horarios.join(', ');
 
             const resGaleria = await fetch(`${FIREBASE_URL}galeria.json?auth=${tokenAuth}`);
             const galeriaData = await resGaleria.json();
@@ -376,115 +756,63 @@
             
             if(galeriaData && !galeriaData.error) {
                 galeriaActual = Object.keys(galeriaData).map(id => ({ id, ...galeriaData[id] }));
-                
                 galeriaActual.forEach(img => {
-                    tbody.innerHTML += `
-                        <tr>
-                            <td data-label="Imagen"><img src="${img.url}" class="galeria-miniatura"></td>
-                            <td data-label="Título">${img.titulo || 'Sin título'}</td>
-                            <td data-label="Acción"><button class="btn-accion btn-accion-rojo" onclick="eliminarDeGaleria('${img.id}', '${img.nombreArchivo}')">Eliminar</button></td>
-                        </tr>
-                    `;
+                    tbody.innerHTML += `<tr>
+                        <td data-label="Imagen"><img src="${img.url}" class="galeria-miniatura"></td>
+                        <td data-label="Título">${img.titulo || 'Sin título'}</td>
+                        <td data-label="Acción"><button class="btn-accion btn-accion-rojo" onclick="eliminarDeGaleria('${img.id}', '${img.nombreArchivo}')">Eliminar</button></td>
+                    </tr>`;
                 });
             } else {
-                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">No hay imágenes en la galería o falta permisos.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">No hay imágenes en la galería.</td></tr>';
             }
-
-        } catch (error) {
-            console.error("Error cargando ajustes web:", error);
-        }
+        } catch (error) { console.error("Error ajustes:", error); }
     }
 
     window.guardarHorariosWeb = async function(e) {
         e.preventDefault();
-        const btn = e.target.querySelector('button');
-        btn.textContent = 'Guardando...';
-        
-        const stringHoras = document.getElementById('hListado').value;
-        const arrayHoras = stringHoras.split(',').map(h => h.trim()).filter(h => h !== '');
+        const btn = e.target.querySelector('button'); btn.textContent = 'Guardando...';
+        const arrayHoras = document.getElementById('hListado').value.split(',').map(h => h.trim()).filter(h => h !== '');
 
         try {
-            await fetch(`${FIREBASE_URL}configuracion/horarios.json?auth=${tokenAuth}`, { 
-                method: 'PUT',
-                body: JSON.stringify(arrayHoras) 
-            });
-            alert('Horarios actualizados correctamente.');
-        } catch(error) {
-            alert('Error al guardar horarios.');
-        } finally {
-            btn.textContent = 'Actualizar Horarios Web';
-        }
+            await fetch(`${FIREBASE_URL}configuracion/horarios.json?auth=${tokenAuth}`, { method: 'PUT', body: JSON.stringify(arrayHoras) });
+            alert('Horarios actualizados.');
+        } catch(e) { alert('Error guardando horarios.'); } finally { btn.textContent = 'Actualizar Horarios Web'; }
     }
 
     window.subirImagenGaleria = async function(e) {
         e.preventDefault();
         const btn = document.getElementById('btnSubirImg');
-        const fileInput = document.getElementById('galArchivo');
-        const titulo = document.getElementById('galTitulo').value;
-        
-        const file = fileInput.files[0];
+        const file = document.getElementById('galArchivo').files[0];
         if(!file) return;
 
-        btn.textContent = 'Subiendo a Supabase...';
-        btn.disabled = true;
+        btn.textContent = 'Subiendo...'; btn.disabled = true;
 
         try {
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${Date.now()}_victor.${fileExt}`;
-
+            const fileName = `${Date.now()}_victor.${file.name.split('.').pop()}`;
             const uploadRes = await fetch(`${SUPABASE_URL}/storage/v1/object/galeria/${fileName}`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                    'Content-Type': file.type
-                },
-                body: file
+                method: 'POST', headers: { 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': file.type }, body: file
             });
 
-            if(!uploadRes.ok) throw new Error("Error en Supabase");
+            if(!uploadRes.ok) throw new Error("Error Supabase");
 
             const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/galeria/${fileName}`;
-
-            btn.textContent = 'Guardando en Base de Datos...';
-            const nuevoRegistro = {
-                titulo: titulo,
-                url: publicUrl,
-                nombreArchivo: fileName,
-                fecha: new Date().toISOString()
-            };
-
             await fetch(`${FIREBASE_URL}galeria.json?auth=${tokenAuth}`, { 
                 method: 'POST', 
-                body: JSON.stringify(nuevoRegistro) 
+                body: JSON.stringify({ titulo: document.getElementById('galTitulo').value, url: publicUrl, nombreArchivo: fileName, fecha: new Date().toISOString() }) 
             });
 
-            document.getElementById('formGaleria').reset();
-            cargarAjustesWeb();
-
-        } catch (error) {
-            console.error(error);
-            alert("Error subiendo la imagen. Verifica tus credenciales de Supabase.");
-        } finally {
-            btn.textContent = 'Subir Imagen';
-            btn.disabled = false;
-        }
+            document.getElementById('formGaleria').reset(); cargarAjustesWeb();
+        } catch (error) { alert("Error al subir la imagen."); } finally { btn.textContent = 'Subir Imagen'; btn.disabled = false; }
     }
 
     window.eliminarDeGaleria = async function(idFirebase, nombreArchivo) {
-        if(!confirm("¿Seguro que deseas eliminar esta imagen de la galería?")) return;
-
+        if(!confirm("¿Seguro que deseas eliminar esta imagen?")) return;
         try {
             await fetch(`${FIREBASE_URL}galeria/${idFirebase}.json?auth=${tokenAuth}`, { method: 'DELETE' });
-
-            await fetch(`${SUPABASE_URL}/storage/v1/object/galeria/${nombreArchivo}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
-            });
-
+            await fetch(`${SUPABASE_URL}/storage/v1/object/galeria/${nombreArchivo}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } });
             cargarAjustesWeb();
-        } catch (error) {
-            alert("Error al eliminar la imagen.");
-        }
+        } catch (error) { alert("Error eliminando imagen."); }
     }
 </script>
 </body>
