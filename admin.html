@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración Pro | Víctor Styles</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --fondo-oscuro: #0a0a0a;
@@ -392,6 +393,14 @@
     // =====================================================================
     const API_KEY_FIREBASE = 'AIzaSyBKrJD4VAzOkvbCay-C8Dxsg3gsUkAt4EA'; 
     const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
+// Agrega esto donde tienes tus constantes de Firebase
+const SUPABASE_URL = 'https://ghfugbvqleevtptqybgt.supabase.co/rest/v1/';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoZnVnYnZxbGVldnRwdHF5Ymd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMTAyNjMsImV4cCI6MjA5Nzg4NjI2M30.Hy2E6S8H7UTdowhN7z1_-7fLM7sRA3QlMEUd9SJH138';
+
+// Inicializa Supabase
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+
 
     let tokenAuth = sessionStorage.getItem('tokenAdminVictor');
     let todasLasCitas = [];
@@ -824,46 +833,51 @@
 
     // NUEVO SISTEMA DE SUBIDA DE IMÁGENES AUTOMÁTICO (Convierte a Base64 y achica la foto)
     window.subirImagenGaleria = async function(e) {
-        e.preventDefault();
-        const btn = document.getElementById('btnSubirImg');
-        const file = document.getElementById('galArchivo').files[0];
-        if(!file) return;
+    e.preventDefault();
+    const btn = document.getElementById('btnSubirImg');
+    const file = document.getElementById('galArchivo').files[0];
+    if(!file) return;
 
-        btn.textContent = 'Optimizando y Subiendo...'; btn.disabled = true;
+    btn.textContent = 'Subiendo a Supabase...'; 
+    btn.disabled = true;
 
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = function(event) {
-            const img = new Image();
-            img.src = event.target.result;
-            img.onload = async function() {
-                // Redimensionar para no saturar tu base de datos
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                const MAX_WIDTH = 800;
-                const scaleSize = MAX_WIDTH / img.width;
-                canvas.width = MAX_WIDTH;
-                canvas.height = img.height * scaleSize;
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                
-                const base64Url = canvas.toDataURL('image/jpeg', 0.8);
-                
-                try {
-                    await fetch(`${FIREBASE_URL}galeria.json?auth=${tokenAuth}`, { 
-                        method: 'POST', 
-                        body: JSON.stringify({ titulo: document.getElementById('galTitulo').value, url: base64Url, fecha: new Date().toISOString() }) 
-                    });
+    try {
+        // 1. Crear nombre único
+        const nombreArchivo = `${Date.now()}_${file.name}`;
 
-                    document.getElementById('formGaleria').reset(); 
-                    cargarAjustesWeb();
-                } catch (error) { 
-                    alert(`Error al guardar en Firebase.`); 
-                } finally { 
-                    btn.textContent = 'Subir Imagen'; btn.disabled = false; 
-                }
-            }
-        };
+        // 2. Subir a Supabase (Asegúrate de tener un bucket llamado 'galeria')
+        const { data, error } = await supabase.storage
+            .from('galeria') 
+            .upload(nombreArchivo, file);
+
+        if (error) throw error;
+
+        // 3. Obtener la URL pública
+        const { data: publicUrlData } = supabase.storage
+            .from('galeria')
+            .getPublicUrl(nombreArchivo);
+
+        // 4. Guardar SOLO la URL en tu base de datos de Firebase
+        await fetch(`${FIREBASE_URL}galeria.json?auth=${tokenAuth}`, { 
+            method: 'POST', 
+            body: JSON.stringify({ 
+                titulo: document.getElementById('galTitulo').value, 
+                url: publicUrlData.publicUrl, // Aquí guardamos el link de Supabase
+                fecha: new Date().toISOString() 
+            }) 
+        });
+
+        document.getElementById('formGaleria').reset(); 
+        cargarAjustesWeb();
+        
+    } catch (error) { 
+        console.error(error);
+        alert(`Error al subir a Supabase: ${error.message}`); 
+    } finally { 
+        btn.textContent = 'Subir Imagen'; 
+        btn.disabled = false; 
     }
+};
 
     window.eliminarDeGaleria = async function(idFirebase) {
         if(!confirm("¿Seguro que deseas eliminar esta imagen?")) return;
