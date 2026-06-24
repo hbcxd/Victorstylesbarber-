@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sistema-v3.2';
+const CACHE_NAME = 'sistema-v3.3';
 const ASSETS = [
   '/',
   '/index.html',
