@@ -692,7 +692,7 @@
 </div>
 
 <script>
-    // Inicialización de Firebase (Asegúrate de colocar tu configuración real aquí para la base de datos)
+    // Inicialización de Firebase
     const firebaseConfig = {
         databaseURL: "https://barberia-victor-default-rtdb.firebaseio.com/"
     };
@@ -781,6 +781,7 @@
         }
     });
 
+    // NUEVA LÓGICA: Consulta de horas disponibles usando nodo público
     inputFecha.addEventListener('change', function() {
         const fechaSeleccionadaStr = this.value; 
         const fechaSeleccionada = new Date(fechaSeleccionadaStr + 'T00:00:00');
@@ -789,12 +790,13 @@
         selectHora.innerHTML = '<option value="" disabled selected>Cargando horas disponibles...</option>';
         selectHora.disabled = true;
         
-        fetch(`${FIREBASE_URL}citas.json`)
+        // Consultamos SOLO los horarios ocupados de esa fecha específica
+        fetch(`${FIREBASE_URL}horarios_ocupados/${fechaSeleccionadaStr}.json`)
             .then(response => response.json())
-            .then(citasEnLaNube => {
+            .then(horasEnLaNube => {
                 selectHora.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
                 const horario = horariosBarberia[diaSemana];
-                const citasOcupadas = citasEnLaNube ? Object.values(citasEnLaNube) : [];
+                const horasOcupadas = horasEnLaNube || {}; // Objeto con las horas ocupadas (ej. {"10:00 AM": "CODIGO"})
 
                 if (horario) {
                     selectHora.disabled = false;
@@ -837,12 +839,9 @@
                         let minutosHace30Str = minutesHace30.toString().padStart(2, '0');
                         let textoHoraHace30DeComparacion = `${horas12Hace30}:${minutosHace30Str} ${ampmHace30}`;
 
-                        const estaOcupadaAhora = citasOcupadas.some(cita => 
-                            cita.cita_fecha === fechaSeleccionadaStr && cita.cita_hora === textoHoraDeComparacion
-                        );
-                        const estaOcupadaAntes = citasOcupadas.some(cita => 
-                            cita.cita_fecha === fechaSeleccionadaStr && cita.cita_hora === textoHoraHace30DeComparacion
-                        );
+                        // Verificamos de forma instantánea si la hora existe en el nodo ocupado
+                        const estaOcupadaAhora = !!horasOcupadas[textoHoraDeComparacion];
+                        const estaOcupadaAntes = !!horasOcupadas[textoHoraHace30DeComparacion];
 
                         if (estaOcupadaAhora || estaOcupadaAntes) {
                             tiempoActual += 30;
@@ -876,6 +875,7 @@
             });
     });
 
+    // NUEVA LÓGICA: Guardado doble (nodo privado y nodo público)
     document.getElementById('formulario-cita').addEventListener('submit', function(event) {
         event.preventDefault();
 
@@ -897,11 +897,22 @@
         localStorage.setItem('barberia_nombre', nombreInput);
         localStorage.setItem('barberia_telefono', telefonoInput);
 
-        fetch(`${FIREBASE_URL}citas.json`, {
-            method: 'POST',
+        // 1. Guardar la cita PRIVADA usando el código generado como su ID en la base de datos
+        fetch(`${FIREBASE_URL}citas/${codigoCitaGenerado}.json`, {
+            method: 'PUT', // Usamos PUT para nombrar la carpeta con el código exacto
             body: JSON.stringify(datosCita)
         })
         .then(() => {
+            // 2. Registrar la hora como PÚBLICA (asociada al código)
+            let actualizacionHora = {};
+            actualizacionHora[horaTexto] = codigoCitaGenerado; 
+            return fetch(`${FIREBASE_URL}horarios_ocupados/${fechaValue}.json`, {
+                method: 'PATCH',
+                body: JSON.stringify(actualizacionHora)
+            });
+        })
+        .then(() => {
+            // 3. Disparar el correo con EmailJS
             return emailjs.send('service_vsrbt7k', 'template_8j4r6p2', datosCita);
         })
         .then(function() {
@@ -927,25 +938,19 @@
         document.getElementById('telefono').value = telefonoInput;
     });
 
-    btnCerrarTicket.addEventListener('click', () => {
-        modalCita.classList.remove('show');
-    });
+    // Funciones del Modal Ticket
+    btnCerrarTicket.addEventListener('click', () => { modalCita.classList.remove('show'); });
 
     btnCopiarTicket.addEventListener('click', () => {
-        navigator.clipboard.writeText(textoCitaGlobalParaCopiar)
-            .then(() => {
-                btnCopiarTicket.textContent = "¡Copiado con éxito!";
-                setTimeout(() => { btnCopiarTicket.textContent = "Copiar Datos de Cita"; }, 2000);
-            })
-            .catch(err => console.error("Error al copiar texto: ", err));
+        navigator.clipboard.writeText(textoCitaGlobalParaCopiar).then(() => {
+            btnCopiarTicket.textContent = "¡Copiado con éxito!";
+            setTimeout(() => { btnCopiarTicket.textContent = "Copiar Datos de Cita"; }, 2000);
+        }).catch(err => console.error("Error al copiar texto: ", err));
     });
 
     btnGuardarTicket.addEventListener('click', () => {
         if (navigator.share) {
-            navigator.share({
-                title: 'Mi Cita - Víctor Styles',
-                text: textoCitaGlobalParaCopiar
-            }).catch(err => console.log(err));
+            navigator.share({ title: 'Mi Cita - Víctor Styles', text: textoCitaGlobalParaCopiar }).catch(err => console.log(err));
         } else {
             const blob = new Blob([textoCitaGlobalParaCopiar], { type: 'text/plain;charset=utf-8' });
             const enlaceDescarga = document.createElement('a');
@@ -955,6 +960,7 @@
         }
     });
 
+    // NUEVA LÓGICA: Buscar cita por código directamente sin comprometer seguridad
     btnGestionar.addEventListener('click', () => {
         const codigoIngresado = inputCodigoGestion.value.trim().toUpperCase();
         if (!codigoIngresado) {
@@ -965,25 +971,24 @@
         btnGestionar.textContent = "Buscando...";
         btnGestionar.disabled = true;
 
-        fetch(`${FIREBASE_URL}citas.json`)
+        // Buscamos directamente el código específico, respetando las reglas de seguridad
+        fetch(`${FIREBASE_URL}citas/${codigoIngresado}.json`)
             .then(response => response.json())
-            .then(citas => {
-                let citaEncontradaClave = null;
-                let citaDatos = null;
-
-                if (citas) {
-                    Object.keys(citas).forEach(clave => {
-                        if (citas[clave].codigo_gestion === codigoIngresado) {
-                            citaEncontradaClave = clave;
-                            citaDatos = citas[clave];
-                        }
-                    });
-                }
-
-                if (citaEncontradaClave) {
+            .then(citaDatos => {
+                if (citaDatos) {
                     const confirmacion = confirm(`Cita localizada a nombre de ${citaDatos.cliente_nombre}.\n¿Deseas cancelarla para proceder a reagendar un nuevo espacio?`);
                     if (confirmacion) {
-                        fetch(`${FIREBASE_URL}citas/${citaEncontradaClave}.json`, { method: 'DELETE' })
+                        // 1. Eliminamos la cita privada
+                        fetch(`${FIREBASE_URL}citas/${codigoIngresado}.json`, { method: 'DELETE' })
+                            .then(() => {
+                                // 2. Liberamos la hora en el nodo público (seteamos esa hora en null)
+                                let liberarHora = {};
+                                liberarHora[citaDatos.cita_hora] = null;
+                                return fetch(`${FIREBASE_URL}horarios_ocupados/${citaDatos.cita_fecha}.json`, { 
+                                    method: 'PATCH',
+                                    body: JSON.stringify(liberarHora)
+                                });
+                            })
                             .then(() => {
                                 alert("Tu espacio anterior ha sido liberado. El formulario está listo para que elijas tu nueva fecha y hora.");
                                 document.getElementById('nombre').value = citaDatos.cliente_nombre;
