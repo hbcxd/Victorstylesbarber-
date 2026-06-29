@@ -5,28 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Víctor Styles | Barbería Mundialista</title>
     <link rel="manifest" href="manifest.json">
-    <!-- Scripts necesarios para EmailJS y Firebase (Votación) -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
-        /* Variables de color adaptadas a la identidad (Dorado Viejo, Bronce y Negro Premium) */
+        /* Variables de color adaptadas (Estética Corporativa, Suave y Tornasol) */
         :root {
-            --fondo-oscuro: #0a0a0a;
-            --fondo-tarjeta: #121212;
-            --fondo-input: #181818;
-            --gris-texto: #e5e5e5;
-            --gris-secundario: #a6a6a6;
+            --fondo-oscuro: #0c0c0e; /* Negro más suave, tipo grafito oscuro */
+            --fondo-tarjeta: #151518;
+            --fondo-input: #1a1a1f;
+            --gris-texto: #e2e2e5;
+            --gris-secundario: #a1a1aa;
             
-            --dorado-acento: #b8924e; 
-            --dorado-brillante: #dfba6b;
-            --bronce-oscuro: #866428;
+            --dorado-acento: #c5a059; 
+            --dorado-brillante: #e8c77a;
+            --bronce-oscuro: #947032;
             
-            --borde-sutil: rgba(184, 146, 78, 0.08);
-            --borde-enfoque: rgba(184, 146, 78, 0.35);
-            --shadow-premium: 0 15px 45px -12px rgba(0, 0, 0, 0.9);
-            --gradiente-metal: linear-gradient(135deg, #866428 0%, #dfba6b 50%, #b8924e 100%);
+            --borde-sutil: rgba(197, 160, 89, 0.15);
+            --borde-enfoque: rgba(232, 199, 122, 0.4);
+            --shadow-premium: 0 12px 35px -10px rgba(0, 0, 0, 0.6);
+            
+            /* Gradiente tornasol corporativo con la paleta de 3 colores */
+            --gradiente-metal: linear-gradient(135deg, var(--bronce-oscuro) 0%, var(--dorado-brillante) 45%, var(--dorado-acento) 75%, var(--bronce-oscuro) 100%);
         }
 
         /* Configuración General */
@@ -45,19 +46,18 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Patrón sutil de balón de fútbol para secciones */
         .bg-mundial-hex {
-            background-image: url("data:image/svg+xml,%3Csvg width='40' height='69' viewBox='0 0 40 69' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0L40 11.5v23L20 46 0 34.5v-23L20 0zm0 13L6.928 20.5v15L20 43l13.072-7.5v-15L20 13z' fill='%23b8924e' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='69' viewBox='0 0 40 69' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0L40 11.5v23L20 46 0 34.5v-23L20 0zm0 13L6.928 20.5v15L20 43l13.072-7.5v-15L20 13z' fill='%23c5a059' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
         }
 
         h2 {
             text-align: center;
             font-size: 1.6rem;
             color: #ffffff;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             text-transform: uppercase;
             font-weight: 800;
-            background: linear-gradient(180deg, #ffffff 30%, var(--dorado-acento) 100%);
+            background: linear-gradient(180deg, #ffffff 20%, var(--dorado-acento) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -65,25 +65,23 @@
         .subtitulo {
             text-align: center;
             color: var(--gris-secundario);
-            margin-top: 6px;
+            margin-top: 8px;
             margin-bottom: 35px;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
             font-weight: 400;
         }
 
-        /* ==========================================================================
-           BARRA DE NAVEGACIÓN Y MENÚ DESPLEGABLE (GLASSMORPHISM)
-           ========================================================================== */
+        /* BARRA DE NAVEGACIÓN */
         header {
             display: flex;
             flex-direction: row; 
             justify-content: space-between;
             align-items: center;        
             padding: 0 5%;          
-            background-color: rgba(10, 10, 10, 0.85);  
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background-color: rgba(12, 12, 14, 0.75);  
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             position: fixed;            
             width: 100%;
             top: 0;
@@ -91,6 +89,7 @@
             z-index: 1000;
             border-bottom: 1px solid var(--borde-sutil);
             height: 75px;
+            transition: all 0.3s ease;
         }
 
         .header-decoracion-mundial {
@@ -106,16 +105,16 @@
         .header-badge {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
             font-size: 0.7rem;
             font-weight: 800;
             color: var(--dorado-brillante);
             text-transform: uppercase;
             letter-spacing: 1px;
-            border: 1px solid rgba(184, 146, 78, 0.3);
-            padding: 4px 10px;
+            border: 1px solid var(--borde-sutil);
+            padding: 5px 12px;
             border-radius: 20px;
-            background: rgba(184, 146, 78, 0.05);
+            background: rgba(197, 160, 89, 0.08);
         }
 
         .menu-hamburguesa {
@@ -148,10 +147,10 @@
             left: -290px; 
             width: 290px;
             height: 100vh;
-            background-color: #0e0e0e;
-            background-image: url("data:image/svg+xml,%3Csvg width='40' height='69' viewBox='0 0 40 69' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0L40 11.5v23L20 46 0 34.5v-23L20 0zm0 13L6.928 20.5v15L20 43l13.072-7.5v-15L20 13z' fill='%23b8924e' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
+            background-color: var(--fondo-tarjeta);
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='69' viewBox='0 0 40 69' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0L40 11.5v23L20 46 0 34.5v-23L20 0zm0 13L6.928 20.5v15L20 43l13.072-7.5v-15L20 13z' fill='%23c5a059' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
             border-right: 1px solid var(--borde-sutil);
-            box-shadow: 20px 0 40px rgba(0, 0, 0, 0.9);
+            box-shadow: 20px 0 40px rgba(0, 0, 0, 0.8);
             z-index: 1050;
             display: flex;
             flex-direction: column;
@@ -159,20 +158,18 @@
             transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .menu-desplegable.open {
-            left: 0; 
-        }
+        .menu-desplegable.open { left: 0; }
 
         .menu-desplegable a {
             color: var(--gris-texto);
             text-decoration: none;
             font-size: 0.9rem;
-            font-weight: 600;
-            letter-spacing: 1.5px;
+            font-weight: 500;
+            letter-spacing: 1.2px;
             text-transform: uppercase;
             padding: 18px 0;
-            border-bottom: 1px solid rgba(184, 146, 78, 0.05);
-            transition: color 0.2s ease;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.08);
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -180,31 +177,29 @@
 
         .menu-desplegable a:active, .menu-desplegable a:hover {
             color: var(--dorado-brillante);
-            padding-left: 5px;
+            padding-left: 8px;
         }
 
         .menu-desplegable .link-admin-menu {
             margin-top: auto; 
             color: var(--dorado-acento);
             font-size: 0.8rem;
-            border: 1px solid rgba(184, 146, 78, 0.2);
-            border-radius: 8px;
+            border: 1px solid var(--borde-sutil);
+            border-radius: 10px;
             text-align: center;
             padding: 14px;
-            background-color: rgba(184, 146, 78, 0.02);
+            background-color: rgba(197, 160, 89, 0.03);
             transition: all 0.25s ease;
             display: block;
         }
 
         .logo { display: flex; align-items: center; flex-shrink: 0; }
-        .logo img { height: 55px; width: auto; display: block; filter: drop-shadow(0 2px 10px rgba(0,0,0,0.6)); }
+        .logo img { height: 50px; width: auto; display: block; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)); }
 
-        .menu-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.8); z-index: 1040; display: none; backdrop-filter: blur(4px); }
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.7); z-index: 1040; display: none; backdrop-filter: blur(5px); }
         .menu-overlay.show { display: block; }
 
-        /* ==========================================================================
-           BANDERINES DEL MUNDIAL 2026
-           ========================================================================== */
+        /* BANDERINES */
         .banderines-top {
             position: absolute;
             top: 75px; 
@@ -214,24 +209,13 @@
             z-index: 500;
             pointer-events: none;
         }
+        .banderines-top span { width: 18px; height: 28px; clip-path: polygon(50% 100%, 0 0, 100% 0); opacity: 0.8; box-shadow: 0 4px 6px rgba(0,0,0,0.4); }
+        .banderines-top span:nth-child(4n+1) { background: #006847; margin-top: -5px; }
+        .banderines-top span:nth-child(4n+2) { background: var(--dorado-acento); }
+        .banderines-top span:nth-child(4n+3) { background: #CE1126; margin-top: -8px; }
+        .banderines-top span:nth-child(4n+4) { background: #0033A0; margin-top: -2px; }
 
-        .banderines-top span {
-            width: 20px;
-            height: 30px;
-            clip-path: polygon(50% 100%, 0 0, 100% 0);
-            opacity: 0.85;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.5);
-        }
-
-        /* Colores de los anfitriones y la marca */
-        .banderines-top span:nth-child(4n+1) { background: #006847; margin-top: -5px; } /* Verde México */
-        .banderines-top span:nth-child(4n+2) { background: var(--dorado-acento); } /* Dorado Víctor Styles */
-        .banderines-top span:nth-child(4n+3) { background: #CE1126; margin-top: -8px; } /* Rojo Canadá/USA/Mex */
-        .banderines-top span:nth-child(4n+4) { background: #0033A0; margin-top: -2px; } /* Azul USA */
-
-        /* ==========================================================================
-           SECCIÓN DE BIENVENIDA (HERO PANEL)
-           ========================================================================== */
+        /* HERO PANEL */
         .hero-container {
             position: relative;
             width: 100%;
@@ -240,13 +224,13 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            background-color: #000000; 
+            background-color: var(--fondo-oscuro); 
             margin-top: 75px;
         }
 
         .hero-media { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-        .hero-img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
-        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(10, 10, 10, 0.4) 0%, rgba(10, 10, 10, 0.98) 100%); }
+        .hero-img { width: 100%; height: 100%; object-fit: cover; object-position: center; opacity: 0.8; }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(12, 12, 14, 0.3) 0%, var(--fondo-oscuro) 100%); }
 
         .hero-content {
             position: relative;
@@ -257,72 +241,68 @@
         }
 
         .hero-title {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-weight: 900;
             color: #ffffff;
-            letter-spacing: 5px; 
-            margin-bottom: 8px;
+            letter-spacing: 4px; 
+            margin-bottom: 12px;
             text-transform: uppercase;
-            background: linear-gradient(180deg, #ffffff 40%, var(--dorado-acento) 100%);
+            background: linear-gradient(180deg, #ffffff 30%, var(--dorado-acento) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.6));
+            filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.7));
         }
 
         .badge-mundial {
             display: inline-block;
-            padding: 6px 14px;
-            background: linear-gradient(90deg, #0a0a0a, #1a1a1a);
-            border: 1px solid var(--dorado-acento);
+            padding: 8px 16px;
+            background: rgba(20, 20, 22, 0.8);
+            border: 1px solid var(--borde-sutil);
             color: var(--dorado-brillante);
-            font-size: 0.7rem;
-            font-weight: 900;
+            font-size: 0.75rem;
+            font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 2px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(184, 146, 78, 0.3);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.15);
         }
 
         .hero-subtitle {
-            font-size: 1rem;
-            color: #d1d1d6;
-            margin-bottom: 25px;
+            font-size: 1.05rem;
+            color: #e2e2e5;
+            margin-bottom: 30px;
             font-weight: 300;
-            letter-spacing: 1.2px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+            letter-spacing: 1px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
         }
 
-        /* ==========================================================================
-           BANNER PROMOCIONAL BARAJITAS (PREMIUM & NO INVASIVO)
-           ========================================================================== */
+        /* BANNER PROMOCIONAL BARAJITAS */
         .banner-mundial {
-            background: linear-gradient(135deg, rgba(18, 18, 18, 0.8) 0%, rgba(184, 146, 78, 0.15) 100%);
-            border: 1px solid rgba(184, 146, 78, 0.3);
-            border-left: 4px solid var(--dorado-brillante);
-            border-radius: 12px;
-            padding: 15px 20px;
+            background: linear-gradient(135deg, rgba(21, 21, 24, 0.85) 0%, rgba(197, 160, 89, 0.1) 100%);
+            border: 1px solid var(--borde-sutil);
+            border-left: 4px solid var(--dorado-acento);
+            border-radius: 16px;
+            padding: 16px 22px;
             margin: 0 auto 35px auto;
             display: flex;
             align-items: center;
-            gap: 16px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            gap: 18px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: var(--shadow-premium);
             text-align: left;
-            max-width: 450px;
+            max-width: 480px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .banner-mundial:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(184, 146, 78, 0.2);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(197, 160, 89, 0.2);
         }
 
-        .banner-mundial-icon {
-            font-size: 2.2rem;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-        }
+        .banner-mundial-icon { font-size: 2.4rem; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4)); }
 
         .banner-mundial-text h4 {
             color: var(--dorado-brillante);
@@ -330,112 +310,110 @@
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
-        .banner-mundial-text p {
-            color: #e5e5e5;
-            font-size: 0.8rem;
-            line-height: 1.4;
-            font-weight: 400;
-        }
-
-        .banner-mundial-text strong {
-            color: #ffffff;
-            font-weight: 700;
-        }
+        .banner-mundial-text p { color: var(--gris-texto); font-size: 0.85rem; line-height: 1.5; font-weight: 400; }
+        .banner-mundial-text strong { color: #ffffff; font-weight: 700; }
 
         .hero-btn {
             display: inline-block;
-            padding: 16px 36px;
+            padding: 18px 40px;
             background: var(--gradiente-metal);
-            color: #0a0a0a;
+            background-size: 200% auto;
+            color: #0c0c0e;
             text-decoration: none;
             font-weight: 800;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             letter-spacing: 2px;
-            border-radius: 8px;
+            border-radius: 12px;
             text-transform: uppercase;
-            box-shadow: 0 8px 30px rgba(184, 146, 78, 0.25);
-            transition: transform 0.2s ease, box-shadow 0.25s ease;
+            box-shadow: 0 10px 30px rgba(197, 160, 89, 0.3);
+            transition: all 0.3s ease;
         }
 
-        .hero-btn:active { transform: scale(0.97); box-shadow: 0 4px 12px rgba(184, 146, 78, 0.15); }
+        .hero-btn:hover { background-position: right center; box-shadow: 0 15px 40px rgba(197, 160, 89, 0.4); transform: translateY(-2px); }
+        .hero-btn:active { transform: scale(0.97); }
 
-        /* ==========================================================================
-           SECCIONES RESTANTES
-           ========================================================================== */
-        .encuesta-section { padding: 40px 5%; text-align: center; background-color: #0e0e0e; border-top: 1px solid var(--borde-sutil); }
-        .btn-equipo { background: #181818; border: 1px solid var(--dorado-acento); color: #ffffff; padding: 12px 5px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.8rem; transition: all 0.3s ease; }
-        .btn-equipo:hover { background: var(--dorado-acento); color: #0a0a0a; }
-        .barra-progreso { height: 6px; background: #181818; border-radius: 4px; margin-bottom: 12px; overflow: hidden; border: 1px solid rgba(184, 146, 78, 0.1); }
-        .progreso-relleno { height: 100%; background: var(--gradiente-metal); width: 0%; transition: width 1s ease-in-out; }
+        /* SECCIONES RESTANTES */
+        .encuesta-section { padding: 50px 5%; text-align: center; background-color: var(--fondo-tarjeta); border-top: 1px solid var(--borde-sutil); }
+        .btn-equipo { background: var(--fondo-input); border: 1px solid var(--borde-sutil); color: #ffffff; padding: 14px 8px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s ease; }
+        .btn-equipo:hover { background: var(--borde-sutil); border-color: var(--dorado-acento); color: var(--dorado-brillante); }
+        .barra-progreso { height: 8px; background: var(--fondo-input); border-radius: 6px; margin-bottom: 15px; overflow: hidden; border: 1px solid var(--borde-sutil); }
+        .progreso-relleno { height: 100%; background: var(--gradiente-metal); width: 0%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
 
-        .galeria-section { padding: 70px 5%; max-width: 1150px; margin: 0 auto; }
-        .grid-galeria { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-        .tarjeta-galeria { background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-radius: 14px; overflow: hidden; text-align: center; padding-bottom: 20px; box-shadow: var(--shadow-premium); }
-        .tarjeta-galeria img { width: 100%; height: 360px; object-fit: cover; filter: grayscale(40%); transition: filter 0.4s, transform 0.4s; }
-        .tarjeta-galeria:hover img { filter: grayscale(0%); transform: scale(1.02); }
-        .tarjeta-galeria p { margin-top: 18px; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--dorado-brillante); }
+        .galeria-section { padding: 80px 5%; max-width: 1200px; margin: 0 auto; }
+        .grid-galeria { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px; }
+        .tarjeta-galeria { background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-radius: 18px; overflow: hidden; text-align: center; padding-bottom: 24px; box-shadow: var(--shadow-premium); transition: transform 0.3s ease; }
+        .tarjeta-galeria:hover { transform: translateY(-5px); }
+        .tarjeta-galeria img { width: 100%; height: 380px; object-fit: cover; filter: grayscale(30%) contrast(1.1); transition: filter 0.5s ease; }
+        .tarjeta-galeria:hover img { filter: grayscale(0%) contrast(1); }
+        .tarjeta-galeria p { margin-top: 20px; font-weight: 700; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--dorado-brillante); }
 
-        .precios-section { padding: 70px 5%; background-color: #060606; color: #ffffff; }
-        .precios-grid { display: flex; flex-direction: column; gap: 16px; max-width: 550px; margin: 0 auto; }
-        .precio-tarjeta { display: flex; justify-content: space-between; align-items: center; padding: 22px; background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-left: 4px solid #2a2a2a; border-radius: 12px; box-shadow: var(--shadow-premium); }
-        .precio-tarjeta.destacado { border-left: 4px solid var(--dorado-acento); background: linear-gradient(90deg, #121212 0%, #1a1610 100%); }
-        .servicio-info h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; color: #ffffff; }
+        .precios-section { padding: 80px 5%; background-color: var(--fondo-oscuro); color: #ffffff; }
+        .precios-grid { display: flex; flex-direction: column; gap: 20px; max-width: 600px; margin: 0 auto; }
+        .precio-tarjeta { display: flex; justify-content: space-between; align-items: center; padding: 24px; background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-left: 4px solid #2a2a2f; border-radius: 16px; box-shadow: var(--shadow-premium); transition: all 0.3s ease; }
+        .precio-tarjeta:hover { border-color: var(--borde-enfoque); }
+        .precio-tarjeta.destacado { border-left: 4px solid var(--dorado-acento); background: linear-gradient(90deg, var(--fondo-tarjeta) 0%, #1e1b16 100%); }
+        .servicio-info h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; color: #ffffff; letter-spacing: 0.5px; }
         .precio-tarjeta.destacado .servicio-info h3 { color: var(--dorado-brillante); }
-        .servicio-info p { font-size: 0.82rem; color: var(--gris-secundario); padding-right: 14px; line-height: 1.4; }
-        .servicio-costo { font-size: 1.25rem; font-weight: 800; color: #ffffff; background-color: #1e1e1e; padding: 8px 16px; border-radius: 8px; min-width: 68px; text-align: center; border: 1px solid var(--borde-sutil); }
-        .precio-tarjeta.destacado .servicio-costo { background: var(--gradiente-metal); color: #0a0a0a; border-color: transparent; }
+        .servicio-info p { font-size: 0.85rem; color: var(--gris-secundario); padding-right: 15px; line-height: 1.5; }
+        .servicio-costo { font-size: 1.3rem; font-weight: 800; color: #ffffff; background-color: var(--fondo-input); padding: 10px 18px; border-radius: 10px; min-width: 75px; text-align: center; border: 1px solid var(--borde-sutil); }
+        .precio-tarjeta.destacado .servicio-costo { background: var(--gradiente-metal); color: #0c0c0e; border-color: transparent; }
 
-        .agenda-section { padding: 70px 5%; background-color: #0e0e0e; }
-        .form-agenda { max-width: 520px; margin: 0 auto; background-color: var(--fondo-tarjeta); padding: 32px 26px; border-radius: 16px; border: 1px solid var(--borde-sutil); box-shadow: var(--shadow-premium); }
-        .grupo-input { margin-bottom: 22px; display: flex; flex-direction: column; gap: 8px; }
-        .grupo-input label { color: var(--dorado-acento); font-size: 0.72rem; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
-        .grupo-input input, .grupo-input select, .select-servicio { width: 100%; padding: 14px 16px; background-color: var(--fondo-input); border: 1px solid rgba(255, 255, 255, 0.05); color: #ffffff; border-radius: 10px; outline: none; font-size: 0.92rem; font-weight: 500; appearance: none; -webkit-appearance: none; }
-        .grupo-input input:focus, .grupo-input select:focus { border-color: var(--dorado-acento); box-shadow: 0 0 0 3px var(--borde-enfoque); }
+        .agenda-section { padding: 80px 5%; background-color: var(--fondo-tarjeta); border-top: 1px solid var(--borde-sutil); }
+        .form-agenda { max-width: 550px; margin: 0 auto; background-color: var(--fondo-oscuro); padding: 35px 30px; border-radius: 20px; border: 1px solid var(--borde-sutil); box-shadow: var(--shadow-premium); }
+        .grupo-input { margin-bottom: 24px; display: flex; flex-direction: column; gap: 10px; }
+        .grupo-input label { color: var(--dorado-acento); font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+        .grupo-input input, .grupo-input select, .select-servicio { width: 100%; padding: 16px 18px; background-color: var(--fondo-input); border: 1px solid var(--borde-sutil); color: #ffffff; border-radius: 12px; outline: none; font-size: 0.95rem; font-weight: 500; appearance: none; -webkit-appearance: none; transition: all 0.3s ease; }
+        .grupo-input input:focus, .grupo-input select:focus { border-color: var(--dorado-acento); box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.15); }
         
-        /* Modales, botones y utilidades que tenías antes... (Se mantienen iguales) */
-        .btn-submit { width: 100%; padding: 15px; background: var(--gradiente-metal); color: #0a0a0a; border: none; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; border-radius: 10px; cursor: pointer; box-shadow: 0 6px 20px rgba(184, 146, 78, 0.2); }
-        .contenedor-reagendar { margin-top: 30px; padding-top: 25px; border-top: 1px dashed rgba(184, 146, 78, 0.15); }
-        .titulo-reagendar { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #ffffff; margin-bottom: 12px; text-align: center; }
-        .fila-reagendar { display: flex; gap: 10px; }
-        .input-codigo { flex: 1; text-transform: uppercase; letter-spacing: 2px; text-align: center; }
-        .btn-reagendar { padding: 0 20px; background-color: #1e1e1e; color: #ffffff; border: 1px solid var(--borde-sutil); border-radius: 10px; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; cursor: pointer; }
+        .btn-submit { width: 100%; padding: 18px; background: var(--gradiente-metal); background-size: 200% auto; color: #0c0c0e; border: none; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; font-size: 0.9rem; border-radius: 12px; cursor: pointer; box-shadow: 0 8px 25px rgba(197, 160, 89, 0.25); transition: all 0.3s ease; }
+        .btn-submit:hover { background-position: right center; transform: translateY(-2px); }
         
-        .ubicacion-section { padding: 60px 5%; background-color: #060606; border-top: 1px solid var(--borde-sutil); text-align: center; }
-        .contenedor-direccion { max-width: 550px; margin: 0 auto; background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-radius: 14px; padding: 24px; box-shadow: var(--shadow-premium); }
-        .direccion-texto { font-size: 0.95rem; color: #ffffff; line-height: 1.5; font-weight: 500; margin-bottom: 15px; }
-        .btn-mapa { display: inline-flex; align-items: center; gap: 8px; color: var(--dorado-acento); text-decoration: none; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .contenedor-reagendar { margin-top: 35px; padding-top: 25px; border-top: 1px dashed rgba(197, 160, 89, 0.2); }
+        .titulo-reagendar { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #ffffff; margin-bottom: 15px; text-align: center; }
+        .fila-reagendar { display: flex; gap: 12px; }
+        .input-codigo { flex: 1; text-transform: uppercase; letter-spacing: 3px; text-align: center; border-radius: 10px; }
+        .btn-reagendar { padding: 0 22px; background-color: var(--fondo-input); color: #ffffff; border: 1px solid var(--borde-sutil); border-radius: 10px; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; cursor: pointer; transition: all 0.2s ease; }
+        .btn-reagendar:hover { background-color: rgba(197, 160, 89, 0.1); border-color: var(--dorado-acento); }
         
-        footer { text-align: center; padding: 35px; background-color: var(--fondo-oscuro); color: #333333; font-size: 0.8rem; font-weight: 500; border-top: 1px solid var(--borde-sutil); }
-        .contenedor-admin-abajo { display: flex; justify-content: center; margin-top: 35px; margin-bottom: 5px; }
-        .btn-admin-inferior { color: #555555; text-decoration: none; font-size: 0.75rem; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; padding: 10px 20px; border: 1px solid var(--borde-sutil); border-radius: 8px; }
+        .ubicacion-section { padding: 70px 5%; background-color: var(--fondo-oscuro); border-top: 1px solid var(--borde-sutil); text-align: center; }
+        .contenedor-direccion { max-width: 580px; margin: 0 auto; background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-radius: 18px; padding: 30px; box-shadow: var(--shadow-premium); }
+        .direccion-texto { font-size: 1rem; color: #ffffff; line-height: 1.6; font-weight: 400; margin-bottom: 20px; }
+        .btn-mapa { display: inline-flex; align-items: center; gap: 10px; color: var(--dorado-brillante); text-decoration: none; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; transition: color 0.2s ease; }
+        .btn-mapa:hover { color: #ffffff; }
         
-        /* Modal VIP */
-        .modal-cita-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.9); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; backdrop-filter: blur(8px); transition: opacity 0.3s; }
+        footer { text-align: center; padding: 40px; background-color: var(--fondo-oscuro); color: var(--gris-secundario); font-size: 0.85rem; font-weight: 500; border-top: 1px solid var(--borde-sutil); }
+        .contenedor-admin-abajo { display: flex; justify-content: center; margin-top: 40px; margin-bottom: 10px; }
+        .btn-admin-inferior { color: var(--gris-secundario); text-decoration: none; font-size: 0.75rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 12px 24px; border: 1px solid var(--borde-sutil); border-radius: 10px; transition: all 0.3s ease; }
+        .btn-admin-inferior:hover { background: var(--fondo-input); color: #ffffff; border-color: var(--dorado-acento); }
+        
+        /* MODAL VIP (Suavizado) */
+        .modal-cita-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.85); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; backdrop-filter: blur(10px); transition: opacity 0.3s ease; }
         .modal-cita-overlay.show { opacity: 1; pointer-events: auto; }
-        .ticket-vip { background-color: #121212; border: 1px solid rgba(184, 146, 78, 0.15); border-radius: 20px; width: 100%; max-width: 400px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9); transform: scale(0.9); transition: transform 0.3s; }
+        .ticket-vip { background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-radius: 24px; width: 100%; max-width: 420px; box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.9); transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .modal-cita-overlay.show .ticket-vip { transform: scale(1); }
-        .ticket-header { background: linear-gradient(135deg, #181818 0%, #0a0a0a 100%); padding: 24px; text-align: center; border-bottom: 2px dashed rgba(184, 146, 78, 0.2); position: relative; }
-        .ticket-header h3 { font-size: 1.1rem; letter-spacing: 3px; color: var(--dorado-brillante); text-transform: uppercase; font-weight: 800; margin-bottom: 4px; }
-        .ticket-header p { font-size: 0.75rem; color: var(--gris-secundario); text-transform: uppercase; letter-spacing: 1px; }
-        .ticket-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
-        .ticket-dato { display: flex; flex-direction: column; gap: 4px; }
-        .ticket-label { font-size: 0.65rem; text-transform: uppercase; color: var(--dorado-acento); letter-spacing: 1px; font-weight: 600; }
-        .ticket-valor { font-size: 0.95rem; color: #ffffff; font-weight: 600; }
-        .ticket-codigo-box { background-color: #0a0a0a; border: 1px dashed rgba(184, 146, 78, 0.4); border-radius: 10px; padding: 14px; text-align: center; margin-top: 5px; }
-        .ticket-codigo-num { font-size: 1.5rem; font-weight: 900; color: var(--dorado-brillante); letter-spacing: 4px; }
-        .ticket-footer { padding: 0 24px 24px 24px; display: flex; flex-direction: column; gap: 10px; }
-        .btn-ticket-accion { width: 100%; padding: 12px; border-radius: 10px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; cursor: pointer; text-align: center; text-decoration: none; border: none; }
-        .btn-ticket-primario { background: var(--gradiente-metal); color: #0a0a0a; }
-        .btn-ticket-secundario { background-color: transparent; color: var(--gris-texto); border: 1px solid rgba(184, 146, 78, 0.2); }
+        .ticket-header { background: linear-gradient(135deg, var(--fondo-input) 0%, var(--fondo-oscuro) 100%); padding: 28px; text-align: center; border-bottom: 2px dashed rgba(197, 160, 89, 0.25); border-radius: 24px 24px 0 0; position: relative; }
+        .ticket-header h3 { font-size: 1.2rem; letter-spacing: 3px; color: var(--dorado-brillante); text-transform: uppercase; font-weight: 800; margin-bottom: 6px; }
+        .ticket-header p { font-size: 0.8rem; color: var(--gris-secundario); text-transform: uppercase; letter-spacing: 1.5px; }
+        .ticket-body { padding: 28px; display: flex; flex-direction: column; gap: 20px; }
+        .ticket-dato { display: flex; flex-direction: column; gap: 6px; }
+        .ticket-label { font-size: 0.7rem; text-transform: uppercase; color: var(--dorado-acento); letter-spacing: 1px; font-weight: 700; }
+        .ticket-valor { font-size: 1rem; color: #ffffff; font-weight: 600; }
+        .ticket-codigo-box { background-color: var(--fondo-oscuro); border: 1px dashed rgba(197, 160, 89, 0.4); border-radius: 12px; padding: 16px; text-align: center; margin-top: 8px; }
+        .ticket-codigo-num { font-size: 1.6rem; font-weight: 900; color: var(--dorado-brillante); letter-spacing: 5px; }
+        .ticket-footer { padding: 0 28px 28px 28px; display: flex; flex-direction: column; gap: 12px; }
+        .btn-ticket-accion { width: 100%; padding: 14px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; cursor: pointer; text-align: center; text-decoration: none; border: none; transition: all 0.2s; }
+        .btn-ticket-primario { background: var(--gradiente-metal); color: #0c0c0e; }
+        .btn-ticket-secundario { background-color: var(--fondo-input); color: var(--gris-texto); border: 1px solid var(--borde-sutil); }
+        .btn-ticket-secundario:hover { border-color: var(--dorado-acento); }
     </style>
 </head>
 <body>
-<div id="alerta-actualizacion" style="display: none; position: fixed; bottom: 20px; right: 20px; background-color: var(--fondo-tarjeta); color: var(--gris-texto); padding: 16px 24px; border-radius: 8px; box-shadow: var(--shadow-premium); border: 1px solid var(--dorado-acento); z-index: 9999; text-align: center;">
+<div id="alerta-actualizacion" style="display: none; position: fixed; bottom: 20px; right: 20px; background-color: var(--fondo-tarjeta); color: var(--gris-texto); padding: 16px 24px; border-radius: 12px; box-shadow: var(--shadow-premium); border: 1px solid var(--dorado-acento); z-index: 9999; text-align: center;">
     <p style="margin: 0 0 10px 0; font-size: 0.9rem; font-weight: bold; color: var(--dorado-brillante);">¡Nueva versión disponible!</p>
-    <button onclick="aplicarActualizacion()" style="background: var(--gradiente-metal); color: #0a0a0a; border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; width: 100%; text-transform: uppercase; font-size: 0.8rem;">Actualizar ahora</button>
+    <button onclick="aplicarActualizacion()" style="background: var(--gradiente-metal); color: #0c0c0e; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; text-transform: uppercase; font-size: 0.8rem;">Actualizar ahora</button>
 </div>
 
 <div class="menu-overlay" id="menuOverlay"></div>
@@ -483,7 +461,6 @@
         <div class="badge-mundial">Edición Mundialista 26</div>
         <p class="hero-subtitle">Estilo, precisión y elegancia en cada corte.</p>
         
-        <!-- Nuevo Banner de Barajitas Mundial -->
         <div class="banner-mundial">
             <div class="banner-mundial-icon">⚽🎫</div>
             <div class="banner-mundial-text">
@@ -497,9 +474,9 @@
 </section>
 
 <section id="encuesta" class="encuesta-section bg-mundial-hex">
-    <h2 style="font-size: 1.2rem; color: #ffffff; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;">¿Quién es tu favorito al título?</h2>
+    <h2 style="font-size: 1.2rem; color: #ffffff; margin-bottom: 24px; text-transform: uppercase; letter-spacing: 2px;">¿Quién es tu favorito al título?</h2>
     
-    <div id="contenedor-votos" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 400px; margin: 0 auto;">
+    <div id="contenedor-votos" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 420px; margin: 0 auto;">
         <button class="btn-equipo" onclick="votar('Brasil')">🇧🇷 Brasil</button>
         <button class="btn-equipo" onclick="votar('España')">🇪🇸 España</button>
         <button class="btn-equipo" onclick="votar('Francia')">🇫🇷 Francia</button>
@@ -508,8 +485,8 @@
         <button class="btn-equipo" onclick="votar('Otro')">🌍 Otro</button>
     </div>
 
-    <div id="resultados-encuesta" style="margin-top: 20px; display: none; max-width: 400px; margin-left: auto; margin-right: auto;">
-        <p style="color: var(--gris-secundario); font-size: 0.8rem; margin-bottom: 15px;">Resultados en tiempo real:</p>
+    <div id="resultados-encuesta" style="margin-top: 25px; display: none; max-width: 420px; margin-left: auto; margin-right: auto;">
+        <p style="color: var(--gris-secundario); font-size: 0.85rem; margin-bottom: 18px;">Resultados en tiempo real:</p>
         <div id="barras-resultados"></div>
     </div>
 </section>
@@ -647,7 +624,7 @@
             Estado Carabobo, Venezuela.
         </p>
         <a href="https://maps.google.com" target="_blank" class="btn-mapa">
-            <svg width="14" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <svg width="16" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
             Ver en Google Maps
         </a>
     </div>
@@ -686,387 +663,8 @@
         <div class="ticket-footer">
             <button class="btn-ticket-accion btn-ticket-primario" id="btnGuardarTicket">Guardar / Compartir Pase</button>
             <button class="btn-ticket-accion btn-ticket-secundario" id="btnCopiarTicket">Copiar Datos de Cita</button>
-            <button class="btn-ticket-accion btn-ticket-secundario" style="border:none; margin-top:5px; color:#aaa;" id="btnCerrarTicket">Cerrar</button>
+            <button class="btn-ticket-accion btn-ticket-secundario" style="border:none; margin-top:5px; color:var(--gris-secundario);" id="btnCerrarTicket">Cerrar</button>
         </div>
     </div>
 </div>
 
-<script>
-    // Inicialización de Firebase (Asegúrate de colocar tu configuración real aquí para la base de datos)
-    const firebaseConfig = {
-        databaseURL: "https://barberia-victor-default-rtdb.firebaseio.com/"
-    };
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-
-    const btnHamburguesa = document.getElementById('btnHamburguesa');
-    const menuLateral = document.getElementById('menuLateral');
-    const menuOverlay = document.getElementById('menuOverlay');
-    const linksMenu = document.querySelectorAll('.menu-desplegable a');
-
-    function toggleMenu() {
-        btnHamburguesa.classList.toggle('open');
-        menuLateral.classList.toggle('open');
-        menuOverlay.classList.toggle('show');
-    }
-
-    btnHamburguesa.addEventListener('click', toggleMenu);
-    menuOverlay.addEventListener('click', toggleMenu);
-
-    linksMenu.forEach(link => {
-        link.addEventListener('click', toggleMenu);
-    });
-
-    const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
-    emailjs.init('qVvgWBz_cfropwyVU');
-
-    const horariosBarberia = {
-        1: { inicio: "09:00", fin: "16:00" }, // Lunes
-        2: { inicio: "09:00", fin: "16:00" }, // Martes
-        3: { inicio: "09:00", fin: "14:30" }, // Miércoles
-        4: { inicio: "09:00", fin: "20:30" }, // Jueves
-        5: { inicio: "09:00", fin: "20:30" }, // Viernes
-        6: { inicio: "09:00", fin: "20:30" }, // Sábado
-        0: { inicio: "14:00", fin: "18:00" }  // Domingo
-    };
-
-    const inputFecha = document.getElementById('fecha');
-    const selectHora = document.getElementById('hora');
-
-    const modalCita = document.getElementById('modalCita');
-    const lblTicketCliente = document.getElementById('lblTicketCliente');
-    const lblTicketServicio = document.getElementById('lblTicketServicio');
-    const lblTicketFechaHora = document.getElementById('lblTicketFechaHora');
-    const lblTicketCodigo = document.getElementById('lblTicketCodigo');
-    const btnGuardarTicket = document.getElementById('btnGuardarTicket');
-    const btnCopiarTicket = document.getElementById('btnCopiarTicket');
-    const btnCerrarTicket = document.getElementById('btnCerrarTicket');
-    const inputCodigoGestion = document.getElementById('codigoGestion');
-    const btnGestionar = document.getElementById('btnGestionar');
-
-    let textoCitaGlobalParaCopiar = "";
-
-    function obtenerFechaVenezuelaObj() {
-        const cadenaCaracas = new Date().toLocaleString("en-US", { timeZone: "America/Caracas" });
-        return new Date(cadenaCaracas);
-    }
-
-    function obtenerFechaVenezuelaStr(objetoFecha) {
-        const d = objetoFecha || obtenerFechaVenezuelaObj();
-        const año = d.getFullYear();
-        const mes = String(d.getMonth() + 1).padStart(2, '0');
-        const dia = String(d.getDate()).padStart(2, '0');
-        return `${año}-${mes}-${dia}`;
-    }
-
-    function generarCodigoUnicoCita() {
-        const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let resultado = '';
-        for (let i = 0; i < 6; i++) {
-            resultado += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
-        }
-        return resultado;
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const hoyVzlaStr = obtenerFechaVenezuelaStr();
-        inputFecha.min = hoyVzlaStr;
-
-        const nombreGuardado = localStorage.getItem('barberia_nombre');
-        const telefonoGuardado = localStorage.getItem('barberia_telefono');
-        if (nombreGuardado && telefonoGuardado) {
-            document.getElementById('nombre').value = nombreGuardado;
-            document.getElementById('telefono').value = telefonoGuardado;
-        }
-    });
-
-    inputFecha.addEventListener('change', function() {
-        const fechaSeleccionadaStr = this.value; 
-        const fechaSeleccionada = new Date(fechaSeleccionadaStr + 'T00:00:00');
-        const diaSemana = fechaSeleccionada.getDay(); 
-
-        selectHora.innerHTML = '<option value="" disabled selected>Cargando horas disponibles...</option>';
-        selectHora.disabled = true;
-        
-        fetch(`${FIREBASE_URL}citas.json`)
-            .then(response => response.json())
-            .then(citasEnLaNube => {
-                selectHora.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
-                const horario = horariosBarberia[diaSemana];
-                const citasOcupadas = citasEnLaNube ? Object.values(citasEnLaNube) : [];
-
-                if (horario) {
-                    selectHora.disabled = false;
-                    
-                    let [hInicio, mInicio] = horario.inicio.split(':').map(Number);
-                    let [hFin, mFin] = horario.fin.split(':').map(Number);
-                    
-                    let tiempoActual = hInicio * 60 + mInicio;
-                    const tiempoFin = hFin * 60 + mFin;
-
-                    const ahoraVzla = obtenerFechaVenezuelaObj();
-                    const hoyVzlaStr = obtenerFechaVenezuelaStr(ahoraVzla);
-                    const esHoy = (fechaSeleccionadaStr === hoyVzlaStr);
-                    const minutosTranscurridosHoy = ahoraVzla.getHours() * 60 + ahoraVzla.getMinutes();
-
-                    let banderaOpcionesDisponibles = false;
-
-                    while (tiempoActual <= tiempoFin) {
-                        let horas = Math.floor(tiempoActual / 60);
-                        let minutos = tiempoActual % 60;
-                        
-                        let horasStr = horas.toString().padStart(2, '0');
-                        let minutosStr = minutos.toString().padStart(2, '0');
-                        let horaFormato24 = `${horasStr}:${minutosStr}`;
-                        
-                        if (esHoy && tiempoActual <= minutosTranscurridosHoy) {
-                            tiempoActual += 30;
-                            continue;
-                        }
-
-                        let ampmComp = horas >= 12 ? 'PM' : 'AM';
-                        let horas12Comp = horas % 12 || 12;
-                        let textoHoraDeComparacion = `${horas12Comp}:${minutosStr} ${ampmComp}`;
-
-                        let tiempoHace30 = tiempoActual - 30;
-                        let horasHace30 = Math.floor(tiempoHace30 / 60);
-                        let minutesHace30 = tiempoHace30 % 60;
-                        let ampmHace30 = horasHace30 >= 12 ? 'PM' : 'AM';
-                        let horas12Hace30 = horasHace30 % 12 || 12;
-                        let minutosHace30Str = minutesHace30.toString().padStart(2, '0');
-                        let textoHoraHace30DeComparacion = `${horas12Hace30}:${minutosHace30Str} ${ampmHace30}`;
-
-                        const estaOcupadaAhora = citasOcupadas.some(cita => 
-                            cita.cita_fecha === fechaSeleccionadaStr && cita.cita_hora === textoHoraDeComparacion
-                        );
-                        const estaOcupadaAntes = citasOcupadas.some(cita => 
-                            cita.cita_fecha === fechaSeleccionadaStr && cita.cita_hora === textoHoraHace30DeComparacion
-                        );
-
-                        if (estaOcupadaAhora || estaOcupadaAntes) {
-                            tiempoActual += 30;
-                            continue; 
-                        }
-                        
-                        let ampm = horas >= 12 ? 'PM' : 'AM';
-                        let horas12 = horas % 12 || 12;
-                        let textoHora = `${horas12}:${minutosStr} ${ampm}`;
-
-                        let nuevaOpcion = document.createElement('option');
-                        nuevaOpcion.value = horaFormato24;
-                        nuevaOpcion.textContent = textoHora;
-                        selectHora.appendChild(nuevaOpcion);
-
-                        banderaOpcionesDisponibles = true;
-                        tiempoActual += 30;
-                    }
-
-                    if (!banderaOpcionesDisponibles) {
-                        selectHora.innerHTML = '<option value="" disabled selected>No quedan horas libres para hoy</option>';
-                        selectHora.disabled = true;
-                    }
-                } else {
-                    selectHora.innerHTML = '<option value="" disabled selected>Barbería cerrada este día</option>';
-                }
-            })
-            .catch(error => {
-                console.error("Error al consultar la nube:", error);
-                selectHora.innerHTML = '<option value="" disabled selected>Error de conexión</option>';
-            });
-    });
-
-    document.getElementById('formulario-cita').addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        const fechaValue = inputFecha.value;
-        const horaTexto = selectHora.options[selectHora.selectedIndex].text;
-        const nombreInput = document.getElementById('nombre').value.trim();
-        const telefonoInput = document.getElementById('telefono').value.trim();
-        const codigoCitaGenerado = generarCodigoUnicoCita();
-        
-        const datosCita = {
-            cliente_nombre: nombreInput,
-            cliente_telefono: telefonoInput,
-            servicio: document.getElementById('servicio').value,
-            cita_fecha: fechaValue,
-            cita_hora: horaTexto,
-            codigo_gestion: codigoCitaGenerado
-        };
-
-        localStorage.setItem('barberia_nombre', nombreInput);
-        localStorage.setItem('barberia_telefono', telefonoInput);
-
-        fetch(`${FIREBASE_URL}citas.json`, {
-            method: 'POST',
-            body: JSON.stringify(datosCita)
-        })
-        .then(() => {
-            return emailjs.send('service_vsrbt7k', 'template_8j4r6p2', datosCita);
-        })
-        .then(function() {
-            lblTicketCliente.textContent = datosCita.cliente_nombre;
-            lblTicketServicio.textContent = datosCita.servicio;
-            lblTicketFechaHora.textContent = `${datosCita.cita_fecha} a las ${datosCita.cita_hora}`;
-            lblTicketCodigo.textContent = datosCita.codigo_gestion;
-
-            textoCitaGlobalParaCopiar = `💈 VÍCTOR STYLES BARBERÍA 💈\n\nPase de Cita Confirmada\n\n👤 Cliente: ${datosCita.cliente_nombre}\n✂️ Servicio: ${datosCita.servicio}\n📅 Fecha: ${datosCita.cita_fecha}\n⏰ Hora: ${datosCita.cita_hora}\n🔑 Código de Gestión: ${datosCita.codigo_gestion}\n\n📍 Ubicación: Víctor Styles Barbería, Urb. La Gaviota, San Diego, Carabobo.\n\n*Usa tu código para reagendar si lo necesitas.`;
-
-            modalCita.classList.add('show');
-        })
-        .catch(error => {
-            console.error('Error en el flujo de automatización:', error);
-            alert('Hubo un problema al guardar tu turno en internet.');
-        });
-
-        this.reset();
-        selectHora.disabled = true;
-        selectHora.innerHTML = '<option value="" disabled selected>Primero selecciona un día</option>';
-        
-        document.getElementById('nombre').value = nombreInput;
-        document.getElementById('telefono').value = telefonoInput;
-    });
-
-    btnCerrarTicket.addEventListener('click', () => {
-        modalCita.classList.remove('show');
-    });
-
-    btnCopiarTicket.addEventListener('click', () => {
-        navigator.clipboard.writeText(textoCitaGlobalParaCopiar)
-            .then(() => {
-                btnCopiarTicket.textContent = "¡Copiado con éxito!";
-                setTimeout(() => { btnCopiarTicket.textContent = "Copiar Datos de Cita"; }, 2000);
-            })
-            .catch(err => console.error("Error al copiar texto: ", err));
-    });
-
-    btnGuardarTicket.addEventListener('click', () => {
-        if (navigator.share) {
-            navigator.share({
-                title: 'Mi Cita - Víctor Styles',
-                text: textoCitaGlobalParaCopiar
-            }).catch(err => console.log(err));
-        } else {
-            const blob = new Blob([textoCitaGlobalParaCopiar], { type: 'text/plain;charset=utf-8' });
-            const enlaceDescarga = document.createElement('a');
-            enlaceDescarga.href = URL.createObjectURL(blob);
-            enlaceDescarga.download = `Cita_VictorStyles_${lblTicketCodigo.textContent}.txt`;
-            enlaceDescarga.click();
-        }
-    });
-
-    btnGestionar.addEventListener('click', () => {
-        const codigoIngresado = inputCodigoGestion.value.trim().toUpperCase();
-        if (!codigoIngresado) {
-            alert("Por favor, ingresa un código válido.");
-            return;
-        }
-
-        btnGestionar.textContent = "Buscando...";
-        btnGestionar.disabled = true;
-
-        fetch(`${FIREBASE_URL}citas.json`)
-            .then(response => response.json())
-            .then(citas => {
-                let citaEncontradaClave = null;
-                let citaDatos = null;
-
-                if (citas) {
-                    Object.keys(citas).forEach(clave => {
-                        if (citas[clave].codigo_gestion === codigoIngresado) {
-                            citaEncontradaClave = clave;
-                            citaDatos = citas[clave];
-                        }
-                    });
-                }
-
-                if (citaEncontradaClave) {
-                    const confirmacion = confirm(`Cita localizada a nombre de ${citaDatos.cliente_nombre}.\n¿Deseas cancelarla para proceder a reagendar un nuevo espacio?`);
-                    if (confirmacion) {
-                        fetch(`${FIREBASE_URL}citas/${citaEncontradaClave}.json`, { method: 'DELETE' })
-                            .then(() => {
-                                alert("Tu espacio anterior ha sido liberado. El formulario está listo para que elijas tu nueva fecha y hora.");
-                                document.getElementById('nombre').value = citaDatos.cliente_nombre;
-                                document.getElementById('telefono').value = citaDatos.cliente_telefono;
-                                document.getElementById('servicio').value = citaDatos.servicio;
-                                document.getElementById('nombre').scrollIntoView({ behavior: 'smooth' });
-                                inputCodigoGestion.value = "";
-                            });
-                    }
-                } else {
-                    alert("No se encontró ninguna cita registrada con ese código. Verifica e intenta de nuevo.");
-                }
-            })
-            .catch(error => {
-                console.error("Error al gestionar la cita:", error);
-                alert("Error de conexión al buscar el código.");
-            })
-            .finally(() => {
-                btnGestionar.textContent = "Buscar";
-                btnGestionar.disabled = false;
-            });
-    });
-
-    const equipos = ["Brasil", "España", "Francia", "Portugal", "Argentina", "Otro"];
-
-    function votar(equipo) {
-        const dbRef = firebase.database().ref('votos_mundial/' + equipo);
-        dbRef.transaction(current => (current || 0) + 1);
-        
-        document.getElementById('contenedor-votos').style.display = 'none';
-        document.getElementById('resultados-encuesta').style.display = 'block';
-    }
-
-    firebase.database().ref('votos_mundial').on('value', (snapshot) => {
-        const data = snapshot.val() || {};
-        const total = Object.values(data).reduce((a, b) => a + b, 0);
-        const barras = document.getElementById('barras-resultados');
-        barras.innerHTML = '';
-
-        equipos.forEach(equipo => {
-            const votos = data[equipo] || 0;
-            const porcentaje = total > 0 ? Math.round((votos / total) * 100) : 0;
-            
-            barras.innerHTML += `
-                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 4px; color: #ffffff;">
-                    <span>${equipo}</span>
-                    <span>${porcentaje}%</span>
-                </div>
-                <div class="barra-progreso"><div class="progreso-relleno" style="width: ${porcentaje}%"></div></div>
-            `;
-        });
-    });
-
-    let nuevoServiceWorker;
-
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').then(registro => {
-            registro.addEventListener('updatefound', () => {
-                nuevoServiceWorker = registro.installing;
-                
-                nuevoServiceWorker.addEventListener('statechange', () => {
-                    if (nuevoServiceWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                        document.getElementById('alerta-actualizacion').style.display = 'block';
-                    }
-                });
-            });
-        }).catch(error => console.error('Error al registrar el Service Worker:', error));
-
-        let actualizando = false;
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
-            if (!actualizando) {
-                window.location.reload();
-                actualizando = true;
-            }
-        });
-    }
-
-    function aplicarActualizacion() {
-        if (nuevoServiceWorker) {
-            document.getElementById('alerta-actualizacion').style.display = 'none';
-            nuevoServiceWorker.postMessage({ action: 'skipWaiting' });
-        }
-    }
-</script>
-</body>
-</html>
