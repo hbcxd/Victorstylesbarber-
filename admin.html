@@ -115,7 +115,7 @@
 </div>
 
 <header>
-    <div class="logo"><img src="LOGO.png" alt="Víctor Styles"></div>
+    <div class="logo"><h2>VÍCTOR STYLES</h2></div> <!-- Ajustado por si no tienes imagen de logo -->
     <button class="btn-cerrar-sesion" id="btnCerrarSesion" style="display:none;">Salir</button>
 </header>
 
@@ -126,6 +126,7 @@
     <button class="tab-btn" onclick="cambiarTab('tab-clientes', this)">Clientes</button>
 </nav>
 
+<!-- MODAL DETALLE -->
 <div class="modal-overlay" id="modalDetalle">
     <div class="modal-box">
         <button class="modal-cerrar" onclick="cerrarModal('modalDetalle')">×</button>
@@ -141,6 +142,7 @@
     </div>
 </div>
 
+<!-- MODAL EDICIÓN -->
 <div class="modal-overlay" id="modalEditar">
     <div class="modal-box">
         <button class="modal-cerrar" onclick="cerrarModal('modalEditar')">×</button>
@@ -172,6 +174,7 @@
     </div>
 </div>
 
+<!-- TABS DE CONTENIDO -->
 <div id="tab-dashboard" class="modulo-admin active">
     <h2>Panel de Rendimiento</h2>
     
@@ -343,8 +346,8 @@
         document.getElementById('modalNombreCliente').textContent = cita.cliente_nombre || 'Sin Nombre';
         document.getElementById('modalTlf').textContent = cita.cliente_telefono || 'N/A';
         document.getElementById('modalServicio').textContent = cita.servicio || 'N/A';
-        document.getElementById('modalFecha').textContent = `${cita.cita_fecha} / ${cita.cita_hora || ''}`;
-        document.getElementById('modalEstado').textContent = cita.estado || 'Atendido';
+        document.getElementById('modalFecha').textContent = `${cita.cita_fecha || ''} / ${cita.cita_hora || ''}`;
+        document.getElementById('modalEstado').textContent = cita.estado || 'Pendiente';
         document.getElementById('modalPatrocinio').textContent = cita.patrocinado ? 'Sí (Neto 100%)' : 'No (40/60)';
         
         document.getElementById('btnAbrirEdicion').onclick = () => abrirModalEditar(idCita);
@@ -358,8 +361,8 @@
         document.getElementById('editId').value = cita.id;
         document.getElementById('editNombre').value = cita.cliente_nombre || '';
         document.getElementById('editTelefono').value = cita.cliente_telefono || '';
-        document.getElementById('editServicio').value = cita.servicio || '';
-        document.getElementById('editEstado').value = cita.estado || 'Atendido';
+        document.getElementById('editServicio').value = cita.servicio || 'Corte Sencillo (10$)';
+        document.getElementById('editEstado').value = cita.estado || 'Pendiente';
         document.getElementById('modalEditar').style.display = 'flex';
     }
 
@@ -424,7 +427,7 @@
     }
 
     function obtenerFechaHoy() {
-        const d = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Caracas"}));
+        const d = new Date();
         return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     }
 
@@ -437,7 +440,13 @@
             const citasData = await resCitas.json();
             const gastosData = await resGastos.json();
 
-            todasLasCitas = citasData ? Object.keys(citasData).map(id => ({ id, ...citasData[id] })).sort((a,b)=>new Date(b.cita_fecha)-new Date(a.cita_fecha)) : [];
+            // Ordenamos por fecha asegurándonos de que cita_fecha exista
+            todasLasCitas = citasData ? Object.keys(citasData).map(id => ({ id, ...citasData[id] })).sort((a,b) => {
+                const dateA = a.cita_fecha ? new Date(a.cita_fecha) : new Date(0);
+                const dateB = b.cita_fecha ? new Date(b.cita_fecha) : new Date(0);
+                return dateB - dateA;
+            }) : [];
+            
             todosLosGastos = gastosData ? Object.keys(gastosData).map(id => ({ id, ...gastosData[id] })) : [];
 
             renderizarTablaAgenda(document.getElementById('filtroFechaAgenda').value);
@@ -472,15 +481,13 @@
         let fechasRegistradas = new Set();
         
         let conteoTipos = {
-            'Sencillo': 0,
-            'Premium': 0,
-            'Corte+Barba Sencillo': 0,
-            'Corte+Barba Premium': 0,
-            'Barba': 0
+            'Sencillo': 0, 'Premium': 0, 'Corte+Barba Sencillo': 0, 'Corte+Barba Premium': 0, 'Barba': 0
         };
 
         todasLasCitas.forEach(cita => {
-            if((cita.estado||'Atendido') !== 'Atendido') return;
+            if((cita.estado || 'Pendiente') !== 'Atendido') return; // Solo suma lo atendido
+            if(!cita.cita_fecha) return;
+
             const fCita = new Date(cita.cita_fecha + 'T12:00:00'); 
             
             if(fCita >= fechaInicio && fCita <= fechaFin) {
@@ -491,7 +498,6 @@
                 if(cita.patrocinado) iVictor += precio; 
                 else { iBarberia += precio * 0.40; iVictor += precio * 0.60; }
 
-                // Identificar el servicio para el gráfico
                 if(cita.servicio.includes('Corte Sencillo')) conteoTipos['Sencillo']++;
                 else if(cita.servicio.includes('Corte Premium')) conteoTipos['Premium']++;
                 else if(cita.servicio.includes('y barba sencillo')) conteoTipos['Corte+Barba Sencillo']++;
@@ -501,6 +507,7 @@
         });
 
         todosLosGastos.forEach(g => {
+            if(!g.fecha) return;
             const fGasto = new Date(g.fecha + 'T12:00:00');
             if(fGasto >= fechaInicio && fGasto <= fechaFin) {
                 gTotal += parseFloat(g.monto || 0);
@@ -510,19 +517,16 @@
         let diasTrabajados = fechasRegistradas.size;
         let promedio = diasTrabajados > 0 ? (cTotal / diasTrabajados) : 0;
 
-        // Actualizar Tarjetas HTML
         document.getElementById('cortesTotales').textContent = cTotal;
         document.getElementById('promedioCortes').textContent = promedio.toFixed(1);
         document.getElementById('totalVictor').textContent = `$${iVictor.toFixed(2)}`;
         document.getElementById('netoRealTotal').textContent = `$${(iVictor - gTotal).toFixed(2)}`;
 
-        // Renderizar/Actualizar Gráficos
         actualizarGraficos(conteoTipos, iVictor, gTotal);
     }
 
     // --- FUNCIÓN PARA DIBUJAR LOS GRÁFICOS ---
     function actualizarGraficos(datosServicios, ingresosVictor, gastos) {
-        // Gráfico de Servicios (Doughnut)
         const ctxServicios = document.getElementById('graficoServicios').getContext('2d');
         const labelsServicios = Object.keys(datosServicios).filter(k => datosServicios[k] > 0);
         const dataServicios = Object.values(datosServicios).filter(v => v > 0);
@@ -536,21 +540,16 @@
                 datasets: [{
                     data: dataServicios.length ? dataServicios : [1],
                     backgroundColor: dataServicios.length ? ['#d4af37', '#10b981', '#3b82f6', '#8b5cf6', '#ef4444'] : ['#333'],
-                    borderWidth: 0,
-                    hoverOffset: 4
+                    borderWidth: 0, hoverOffset: 4
                 }]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom', labels: { color: '#f9fafb', font: { size: 11, family: "'-apple-system', sans-serif" }, padding: 15 } }
-                },
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom', labels: { color: '#f9fafb', font: { size: 11 } } } },
                 cutout: '70%'
             }
         });
 
-        // Gráfico Financiero (Barras)
         const ctxFinanzas = document.getElementById('graficoFinanzas').getContext('2d');
         if(graficoFinanzasObj) graficoFinanzasObj.destroy();
 
@@ -559,24 +558,14 @@
             data: {
                 labels: ['Neto Bruto', 'Gastos', 'Neto Real'],
                 datasets: [{
-                    label: 'Monto ($)',
-                    data: [ingresosVictor, gastos, ingresosVictor - gastos],
-                    backgroundColor: ['#10b981', '#ef4444', '#d4af37'],
-                    borderRadius: 6,
-                    borderWidth: 0
+                    label: 'Monto ($)', data: [ingresosVictor, gastos, ingresosVictor - gastos],
+                    backgroundColor: ['#10b981', '#ef4444', '#d4af37'], borderRadius: 6, borderWidth: 0
                 }]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { callback: function(value) { return '$' + value; } } },
-                    x: { grid: { display: false } }
-                },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: { callbacks: { label: function(context) { return '$' + context.parsed.y.toFixed(2); } } }
-                }
+                responsive: true, maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { callback: function(value) { return '$' + value; } } }, x: { grid: { display: false } } },
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { return '$' + context.parsed.y.toFixed(2); } } } }
             }
         });
     }
@@ -594,11 +583,15 @@
 
         filtradas.forEach(cita => {
             const tr = document.createElement('tr');
-            let colorEstado = cita.estado === 'Cancelado' ? 'var(--rojo-alerta)' : (cita.estado === 'Pendiente' ? 'var(--naranja-alerta)' : 'var(--verde-exito)');
+            const estadoActual = cita.estado || 'Pendiente';
+            let colorEstado = estadoActual === 'Cancelado' ? 'var(--rojo-alerta)' : (estadoActual === 'Pendiente' ? 'var(--naranja-alerta)' : 'var(--verde-exito)');
+            
+            const fechaParseada = cita.cita_fecha ? cita.cita_fecha.split('-').reverse().join('/') : 'S/F';
+
             tr.innerHTML = `
-                <td data-label="Cliente"><strong>${cita.cliente_nombre || 'Sin nombre'}</strong><br><span style="color:${colorEstado}; font-size:0.7rem;">● ${cita.estado||'Atendido'}</span></td>
-                <td data-label="Servicio">${cita.servicio}</td>
-                <td data-label="Hora">${cita.cita_fecha.split('-').reverse().join('/')} <br> ${cita.cita_hora||''}</td>
+                <td data-label="Cliente"><strong>${cita.cliente_nombre || 'Sin nombre'}</strong><br><span style="color:${colorEstado}; font-size:0.7rem;">● ${estadoActual}</span></td>
+                <td data-label="Servicio">${cita.servicio || 'No especificado'}</td>
+                <td data-label="Hora">${fechaParseada} <br> ${cita.cita_hora||''}</td>
                 <td data-label="Acción"><button class="btn-accion" onclick="abrirModalDetalle('${cita.id}')">Opciones</button></td>
             `;
             tbody.appendChild(tr);
@@ -609,7 +602,7 @@
     function calcularFrecuencias() {
         const map = {};
         todasLasCitas.forEach(c => {
-            if((c.estado||'Atendido')!=='Atendido') return;
+            if((c.estado || 'Pendiente') !== 'Atendido') return;
             const tlf = c.cliente_telefono || 'S/N';
             if(!map[tlf]) map[tlf] = { nombre: c.cliente_nombre, visitas: 0, ultima: c.cita_fecha, id: c.id };
             map[tlf].visitas++;
@@ -623,7 +616,7 @@
             tbody.innerHTML += `<tr>
                 <td data-label="Cliente"><strong>${c.nombre}</strong> ${c.visitas>2?'<span style="color:var(--dorado-acento); font-size:0.7rem;">★</span>':''}</td>
                 <td data-label="Visitas" style="font-weight:bold;">${c.visitas}</td>
-                <td data-label="Última Vez">${c.ultima.split('-').reverse().join('/')}</td>
+                <td data-label="Última Vez">${c.ultima ? c.ultima.split('-').reverse().join('/') : 'S/F'}</td>
                 <td data-label="Detalle"><button class="btn-accion" onclick="abrirModalDetalle('${c.id}')">Ver/Editar</button></td>
             </tr>`;
         });
@@ -641,7 +634,6 @@
     window.guardarClienteManual = async function(e) {
         e.preventDefault();
         
-        // Cambiar texto del botón para feedback visual
         const btn = e.target.querySelector('button[type="submit"]');
         const textoOriginal = btn.textContent;
         btn.textContent = 'Registrando...';
@@ -664,8 +656,6 @@
             });
             
             document.getElementById('formManual').reset();
-            
-            // Volver a colocar la fecha y hora actuales por si se va a registrar a otro de inmediato
             document.getElementById('mFecha').value = obtenerFechaHoy();
             const ahora = new Date();
             document.getElementById('mHora').value = `${String(ahora.getHours()).padStart(2,'0')}:${String(ahora.getMinutes()).padStart(2,'0')}`;
