@@ -668,3 +668,31 @@
     </div>
 </div>
 
+<script>
+    // Este es el script añadido para hacer funcionar el menú hamburguesa
+    document.addEventListener('DOMContentLoaded', () => {
+        const btnHamburguesa = document.getElementById('btnHamburguesa');
+        const menuLateral = document.getElementById('menuLateral');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const menuLinks = document.querySelectorAll('.menu-link');
+
+        // Función para abrir/cerrar el menú
+        const toggleMenu = () => {
+            btnHamburguesa.classList.toggle('open');
+            menuLateral.classList.toggle('open');
+            menuOverlay.classList.toggle('show');
+        };
+
+        // Eventos de clic
+        btnHamburguesa.addEventListener('click', toggleMenu);
+        menuOverlay.addEventListener('click', toggleMenu);
+
+        // Cerrar el menú al hacer clic en cualquier enlace
+        menuLinks.forEach(link => {
+            link.addEventListener('click', toggleMenu);
+        });
+    });
+</script>
+
+</body>
+</html>
