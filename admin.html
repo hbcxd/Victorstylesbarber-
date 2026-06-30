@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            /* Estética corporativa sincronizada con el frontend */
+            /* Estética corporativa (Variables dinámicas para los temas) */
             --fondo-oscuro: #0c0c0e; 
             --fondo-tarjeta: #151518;
             --fondo-input: #1a1a1f;
@@ -31,6 +31,7 @@
             --shadow-premium: 0 12px 35px -10px rgba(0, 0, 0, 0.6);
             
             --gradiente-metal: linear-gradient(135deg, var(--bronce-oscuro) 0%, var(--dorado-brillante) 45%, var(--dorado-acento) 75%, var(--bronce-oscuro) 100%);
+            transition: all 0.3s ease; /* Transición suave al cambiar temas */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif; }
@@ -41,7 +42,7 @@
         h3 { font-size: 1rem; font-weight: 700; border-bottom: 1px solid var(--borde-sutil); padding-bottom: 16px; margin-bottom: 16px; color: rgba(255, 255, 255, 0.9); text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center;}
         
         /* HEADER Y MENÚ */
-        header { display: flex; justify-content: center; align-items: center; padding: 0 5%; background-color: rgba(12, 12, 14, 0.85); backdrop-filter: blur(25px); position: fixed; width: 100%; top: 0; left: 0; z-index: 1000; border-bottom: 1px solid var(--borde-sutil); height: 75px; }
+        header { display: flex; justify-content: center; align-items: center; padding: 0 5%; background-color: var(--fondo-oscuro); opacity: 0.95; backdrop-filter: blur(25px); position: fixed; width: 100%; top: 0; left: 0; z-index: 1000; border-bottom: 1px solid var(--borde-sutil); height: 75px; }
         .logo img { height: 40px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)); }
         .btn-cerrar-sesion { position: absolute; right: 5%; background: var(--fondo-input); border: 1px solid var(--borde-sutil); color: var(--dorado-acento); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; transition: all 0.2s; }
         .btn-cerrar-sesion:hover { border-color: var(--dorado-acento); color: var(--dorado-brillante); }
@@ -96,7 +97,7 @@
         .contenedor-tabla { width: 100%; overflow-x: auto; margin-top: 15px; border: 1px solid var(--borde-sutil); border-radius: 16px; }
         table { width: 100%; border-collapse: collapse; text-align: left; background: var(--fondo-input); }
         th, td { padding: 16px; border-bottom: 1px solid var(--borde-sutil); font-size: 0.9rem; }
-        th { background-color: #1a1a1f; color: var(--gris-secundario); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1.5px; }
+        th { background-color: var(--fondo-tarjeta); color: var(--gris-secundario); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1.5px; }
 
         /* MODALES */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(12, 12, 14, 0.85); backdrop-filter: blur(8px); z-index: 3000; display: none; justify-content: center; align-items: center; padding: 20px; }
@@ -134,7 +135,7 @@
 </div>
 
 <header>
-    <div class="logo"><img src="LOGO.png" alt="Víctor Styles"></div>
+    <div class="logo"><img src="LOGO.png" alt="Víctor Styles" onerror="this.src='https://via.placeholder.com/150x50?text=Victor+Styles'"></div>
     <button class="btn-cerrar-sesion" id="btnCerrarSesion" style="display:none;">Salir</button>
 </header>
 
@@ -143,6 +144,8 @@
     <button class="tab-btn" onclick="cambiarTab('tab-agenda', this)">Agenda</button>
     <button class="tab-btn" onclick="cambiarTab('tab-finanzas', this)">Finanzas</button>
     <button class="tab-btn" onclick="cambiarTab('tab-clientes', this)">Clientes</button>
+    <!-- NUEVA PESTAÑA: AJUSTES -->
+    <button class="tab-btn" onclick="cambiarTab('tab-ajustes', this)">Ajustes</button> 
 </nav>
 
 <div class="modal-overlay" id="modalDetalle">
@@ -207,7 +210,7 @@
         <div class="tarjeta-contable"><h4>Total Cortes</h4><div class="dato-principal" id="cortesTotales">0</div></div>
         <div class="tarjeta-contable"><h4>Promedio Diario</h4><div class="dato-principal" id="promedioCortes" style="color:var(--naranja-alerta);">0</div></div>
         <div class="tarjeta-contable"><h4>Tu Neto Bruto</h4><div class="dato-principal" style="color:var(--verde-exito);" id="totalVictor">$0.00</div></div>
-        <div class="tarjeta-contable" style="border: 1px solid var(--dorado-acento); box-shadow: 0 0 20px rgba(197, 160, 89, 0.15); background: linear-gradient(180deg, var(--fondo-input), #221c12);">
+        <div class="tarjeta-contable" style="border: 1px solid var(--dorado-acento); box-shadow: 0 0 20px rgba(197, 160, 89, 0.15); background: linear-gradient(180deg, var(--fondo-input), rgba(0,0,0,0.4));">
             <h4 style="color: var(--dorado-brillante);">Tu Neto Real</h4>
             <div class="dato-principal" style="color:var(--dorado-brillante);" id="netoRealTotal">$0.00</div>
         </div>
@@ -318,13 +321,11 @@
     </div>
 </div>
 
-<!-- SECCIÓN MODIFICADA: FIDELIDAD DE CLIENTES -->
 <div id="tab-clientes" class="modulo-admin">
     <h2>Fidelidad de Clientes</h2>
     <div class="seccion-bloque">
         <h3>Base de Datos de Clientes</h3>
         
-        <!-- Nuevo buscador -->
         <div class="form-grupo" style="margin-bottom: 20px;">
             <input type="text" id="buscadorClientes" placeholder="Buscar por nombre o número de teléfono..." onkeyup="filtrarClientesFidelidad()" style="padding-left: 20px; border-radius: 20px; font-weight: 500;">
         </div>
@@ -340,18 +341,79 @@
     </div>
 </div>
 
+<!-- NUEVA SECCIÓN: AJUSTES -->
+<div id="tab-ajustes" class="modulo-admin">
+    <h2>Ajustes del Sistema</h2>
+    <div class="seccion-bloque">
+        <h3>Personalización Visual</h3>
+        <p style="color:var(--gris-secundario); font-size: 0.85rem; margin-bottom: 20px;">Elige una combinación de colores para tu panel. Todas las opciones respetan tu imagen corporativa.</p>
+        
+        <div class="form-grupo">
+            <label>Esquema de Colores</label>
+            <select id="selectorTema" onchange="aplicarTema(this.value)">
+                <option value="original">Clásico: Gris y Dorado (Por defecto)</option>
+                <option value="noche">Noche Premium: Negro Profundo</option>
+                <option value="carbon">Carbón: Gris Oscuro Mate</option>
+            </select>
+        </div>
+        
+        <div style="margin-top:25px; padding: 15px; border-radius: 12px; background: var(--fondo-input); border: 1px solid var(--borde-sutil); text-align: center;">
+            <h4 style="color: var(--dorado-brillante); font-size: 0.9rem;">Vista Previa de Colores</h4>
+            <div style="display:flex; justify-content:center; gap:10px; margin-top:10px;">
+                <div style="width:30px; height:30px; border-radius:50%; background:var(--fondo-oscuro); border:1px solid #fff;"></div>
+                <div style="width:30px; height:30px; border-radius:50%; background:var(--fondo-tarjeta); border:1px solid #fff;"></div>
+                <div style="width:30px; height:30px; border-radius:50%; background:var(--dorado-acento); border:1px solid #fff;"></div>
+                <div style="width:30px; height:30px; border-radius:50%; background:var(--dorado-brillante); border:1px solid #fff;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     // --- VARIABLES GLOBALES ---
     const API_KEY_FIREBASE = 'AIzaSyBKrJD4VAzOkvbCay-C8Dxsg3gsUkAt4EA'; 
     const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
     let todasLasCitas = [];
     let todosLosGastos = [];
-    let clientesFidelidadData = []; // NUEVA variable para almacenar la base de datos de clientes
+    let clientesFidelidadData = []; 
     let tokenAuth = sessionStorage.getItem('tokenAdminVictor');
     
     // Variables para los gráficos
     let graficoServiciosObj = null;
     let graficoFinanzasObj = null;
+
+    // --- NUEVO: SISTEMA DE TEMAS DE COLOR ---
+    const esquemasColor = {
+        original: {
+            '--fondo-oscuro': '#0c0c0e', '--fondo-tarjeta': '#151518', '--fondo-input': '#1a1a1f',
+            '--dorado-acento': '#c5a059', '--dorado-brillante': '#e8c77a', '--bronce-oscuro': '#947032',
+            '--borde-sutil': 'rgba(197, 160, 89, 0.15)'
+        },
+        noche: {
+            '--fondo-oscuro': '#000000', '--fondo-tarjeta': '#080808', '--fondo-input': '#121212',
+            '--dorado-acento': '#d4af37', '--dorado-brillante': '#f9d71c', '--bronce-oscuro': '#996515',
+            '--borde-sutil': 'rgba(212, 175, 55, 0.2)'
+        },
+        carbon: {
+            '--fondo-oscuro': '#18181b', '--fondo-tarjeta': '#27272a', '--fondo-input': '#3f3f46',
+            '--dorado-acento': '#dcb46a', '--dorado-brillante': '#fde08b', '--bronce-oscuro': '#b48a43',
+            '--borde-sutil': 'rgba(220, 180, 106, 0.2)'
+        }
+    };
+
+    function aplicarTema(nombreTema) {
+        const tema = esquemasColor[nombreTema] || esquemasColor.original;
+        for (let variable in tema) {
+            document.documentElement.style.setProperty(variable, tema[variable]);
+        }
+        localStorage.setItem('temaVictorStyles', nombreTema);
+    }
+
+    function inicializarTema() {
+        const temaGuardado = localStorage.getItem('temaVictorStyles') || 'original';
+        document.getElementById('selectorTema').value = temaGuardado;
+        aplicarTema(temaGuardado);
+    }
 
     // --- LÓGICA DE PESTAÑAS (TABS) ---
     function cambiarTab(idTab, boton) {
@@ -387,11 +449,12 @@
         if(!cita) return;
         
         const horaLimpia = estandarizarHora(cita.cita_hora);
+        const fechaMostrar = cita.cita_fecha ? cita.cita_fecha : 'Sin fecha';
 
         document.getElementById('modalNombreCliente').textContent = cita.cliente_nombre || 'Sin Nombre';
         document.getElementById('modalTlf').textContent = cita.cliente_telefono || 'N/A';
         document.getElementById('modalServicio').textContent = cita.servicio || 'N/A';
-        document.getElementById('modalFecha').textContent = `${cita.cita_fecha} / ${horaLimpia}`;
+        document.getElementById('modalFecha').textContent = `${fechaMostrar} / ${horaLimpia}`;
         document.getElementById('modalEstado').textContent = cita.estado || 'Atendido';
         document.getElementById('modalPatrocinio').textContent = cita.patrocinado ? 'Sí (Neto 100%)' : 'No (40/60)';
         
@@ -446,6 +509,7 @@
     });
 
     window.onload = () => { 
+        inicializarTema(); // Carga el tema guardado
         Chart.defaults.color = '#a1a1aa';
         Chart.defaults.font.family = "'-apple-system', sans-serif";
         if(tokenAuth) iniciarPanel(); 
@@ -479,12 +543,18 @@
     async function cargarDatosDesdeServidor() {
         try {
             const resCitas = await fetch(`${FIREBASE_URL}citas.json?auth=${tokenAuth}`);
+            if (!resCitas.ok) throw new Error("Fallo de autenticación o red en Citas");
             const resGastos = await fetch(`${FIREBASE_URL}gastos.json?auth=${tokenAuth}`);
             
             const citasData = await resCitas.json();
             const gastosData = await resGastos.json();
 
-            todasLasCitas = citasData ? Object.keys(citasData).map(id => ({ id, ...citasData[id] })).sort((a,b)=>new Date(b.cita_fecha)-new Date(a.cita_fecha)) : [];
+            // Validación de array vacío si Firebase devuelve null
+            todasLasCitas = citasData ? Object.keys(citasData).map(id => ({ id, ...citasData[id] })).sort((a,b)=> {
+                let fechaA = a.cita_fecha ? new Date(a.cita_fecha) : new Date(0);
+                let fechaB = b.cita_fecha ? new Date(b.cita_fecha) : new Date(0);
+                return fechaB - fechaA;
+            }) : [];
             todosLosGastos = gastosData ? Object.keys(gastosData).map(id => ({ id, ...gastosData[id] })) : [];
 
             renderizarTablaAgenda(document.getElementById('filtroFechaAgenda').value);
@@ -492,6 +562,9 @@
             calcularFrecuencias();
         } catch (error) {
             console.error("Error cargando datos protegidos", error);
+            // Mostrar error visual en lugar de dejar el "Calculando" atascado
+            document.getElementById('tabla-citas-cuerpo').innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--rojo-alerta);">Error de conexión. Recarga la página.</td></tr>';
+            document.getElementById('tabla-frecuencia-cuerpo').innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--rojo-alerta);">Error al calcular. Revisa tu conexión.</td></tr>';
         }
     }
 
@@ -519,15 +592,13 @@
         let fechasRegistradas = new Set();
         
         let conteoTipos = {
-            'Sencillo': 0,
-            'Premium': 0,
-            'Corte+Barba Sencillo': 0,
-            'Corte+Barba Premium': 0,
-            'Barba': 0
+            'Sencillo': 0, 'Premium': 0, 'Corte+Barba Sencillo': 0, 'Corte+Barba Premium': 0, 'Barba': 0
         };
 
         todasLasCitas.forEach(cita => {
             if((cita.estado||'Atendido') !== 'Atendido') return;
+            if(!cita.cita_fecha) return; // Evitar errores con datos sin fecha
+
             const fCita = new Date(cita.cita_fecha + 'T12:00:00'); 
             
             if(fCita >= fechaInicio && fCita <= fechaFin) {
@@ -547,6 +618,7 @@
         });
 
         todosLosGastos.forEach(g => {
+            if(!g.fecha) return;
             const fGasto = new Date(g.fecha + 'T12:00:00');
             if(fGasto >= fechaInicio && fGasto <= fechaFin) {
                 gTotal += parseFloat(g.monto || 0);
@@ -578,17 +650,19 @@
                 labels: labelsServicios.length ? labelsServicios : ['Sin datos'],
                 datasets: [{
                     data: dataServicios.length ? dataServicios : [1],
-                    backgroundColor: dataServicios.length ? ['#e8c77a', '#c5a059', '#947032', '#6b5123', '#4a3818'] : ['#333'],
+                    // Los colores toman el valor computado actual de CSS
+                    backgroundColor: dataServicios.length ? 
+                        [getComputedStyle(document.documentElement).getPropertyValue('--dorado-brillante').trim(), 
+                         getComputedStyle(document.documentElement).getPropertyValue('--dorado-acento').trim(), 
+                         getComputedStyle(document.documentElement).getPropertyValue('--bronce-oscuro').trim(), 
+                         '#6b5123', '#4a3818'] : ['#333'],
                     borderWidth: 0,
                     hoverOffset: 4
                 }]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom', labels: { color: '#e2e2e5', font: { size: 11, family: "'-apple-system', sans-serif" }, padding: 15 } }
-                },
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom', labels: { color: '#e2e2e5', font: { size: 11 } } } },
                 cutout: '75%'
             }
         });
@@ -603,30 +677,28 @@
                 datasets: [{
                     label: 'Monto ($)',
                     data: [ingresosVictor, gastos, ingresosVictor - gastos],
-                    backgroundColor: ['#10b981', '#ef4444', '#e8c77a'],
-                    borderRadius: 8,
-                    borderWidth: 0
+                    backgroundColor: [
+                        getComputedStyle(document.documentElement).getPropertyValue('--verde-exito').trim(), 
+                        getComputedStyle(document.documentElement).getPropertyValue('--rojo-alerta').trim(), 
+                        getComputedStyle(document.documentElement).getPropertyValue('--dorado-brillante').trim()
+                    ],
+                    borderRadius: 8, borderWidth: 0
                 }]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
+                responsive: true, maintainAspectRatio: false,
                 scales: {
                     y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { callback: function(value) { return '$' + value; } } },
                     x: { grid: { display: false } }
                 },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: { callbacks: { label: function(context) { return '$' + context.parsed.y.toFixed(2); } } }
-                }
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { return '$' + context.parsed.y.toFixed(2); } } } }
             }
         });
     }
 
-    // --- RENDERIZADO DE AGENDA ---
+    // --- RENDERIZADO OPTIMIZADO DE AGENDA ---
     function renderizarTablaAgenda(fechaFiltro) {
         const tbody = document.getElementById('tabla-citas-cuerpo');
-        tbody.innerHTML = '';
         const filtradas = fechaFiltro ? todasLasCitas.filter(c => c.cita_fecha === fechaFiltro) : todasLasCitas;
 
         if(filtradas.length === 0) {
@@ -634,52 +706,79 @@
             return;
         }
 
+        // OPTIMIZACIÓN: Construir string HTML una sola vez y no en cada ciclo
+        let contenidoHTML = '';
         filtradas.forEach(cita => {
-            const tr = document.createElement('tr');
             let colorEstado = cita.estado === 'Cancelado' ? 'var(--rojo-alerta)' : (cita.estado === 'Pendiente' ? 'var(--naranja-alerta)' : 'var(--verde-exito)');
-            
             const horaLimpia = estandarizarHora(cita.cita_hora);
+            const fechaLimpia = cita.cita_fecha ? cita.cita_fecha.split('-').reverse().join('/') : 'N/A';
 
-            tr.innerHTML = `
-                <td data-label="Cliente"><strong>${cita.cliente_nombre || 'Sin nombre'}</strong><br><span style="color:${colorEstado}; font-size:0.75rem; font-weight: 600;">● ${cita.estado||'Atendido'}</span></td>
-                <td data-label="Servicio">${cita.servicio}</td>
-                <td data-label="Hora">${cita.cita_fecha.split('-').reverse().join('/')} <br> <span style="color:var(--dorado-acento); font-weight:bold;">${horaLimpia}</span></td>
-                <td data-label="Acción"><button class="btn-accion" onclick="abrirModalDetalle('${cita.id}')">Opciones</button></td>
+            contenidoHTML += `
+                <tr>
+                    <td data-label="Cliente"><strong>${cita.cliente_nombre || 'Sin nombre'}</strong><br><span style="color:${colorEstado}; font-size:0.75rem; font-weight: 600;">● ${cita.estado||'Atendido'}</span></td>
+                    <td data-label="Servicio">${cita.servicio}</td>
+                    <td data-label="Hora">${fechaLimpia} <br> <span style="color:var(--dorado-acento); font-weight:bold;">${horaLimpia}</span></td>
+                    <td data-label="Acción"><button class="btn-accion" onclick="abrirModalDetalle('${cita.id}')">Opciones</button></td>
+                </tr>
             `;
-            tbody.appendChild(tr);
         });
+        
+        tbody.innerHTML = contenidoHTML; // Se asigna al DOM 1 sola vez
     }
 
-    // --- NUEVO: LÓGICA DE FIDELIDAD Y BÚSQUEDA ---
+    // --- CÁLCULO DE FIDELIDAD CORREGIDO (BUG FIX "Calculando...") ---
     function calcularFrecuencias() {
-        const map = {};
-        todasLasCitas.forEach(c => {
-            if((c.estado||'Atendido')!=='Atendido') return;
-            const tlf = c.cliente_telefono || 'S/N';
-            if(!map[tlf]) map[tlf] = { nombre: c.cliente_nombre, tlf: tlf, visitas: 0, ultima: c.cita_fecha, id: c.id };
-            map[tlf].visitas++;
-            if(new Date(c.cita_fecha) > new Date(map[tlf].ultima)) { map[tlf].ultima = c.cita_fecha; map[tlf].id = c.id; }
-        });
+        try {
+            const map = {};
+            todasLasCitas.forEach(c => {
+                if((c.estado||'Atendido')!=='Atendido') return;
+                const tlf = c.cliente_telefono || 'S/N';
+                
+                if(!map[tlf]) {
+                    // Prevenir error si la fecha de Firebase viene nula o indefinida
+                    map[tlf] = { nombre: c.cliente_nombre, tlf: tlf, visitas: 0, ultima: c.cita_fecha || '', id: c.id };
+                }
+                
+                map[tlf].visitas++;
+                
+                // Si la fecha actual de iteración es válida, comprobamos si es más reciente
+                if(c.cita_fecha) {
+                    if (map[tlf].ultima === '') {
+                        map[tlf].ultima = c.cita_fecha;
+                        map[tlf].id = c.id;
+                    } else {
+                        // Comparación segura
+                        if(new Date(c.cita_fecha) > new Date(map[tlf].ultima)) { 
+                            map[tlf].ultima = c.cita_fecha; 
+                            map[tlf].id = c.id; 
+                        }
+                    }
+                }
+            });
 
-        // Almacenar globalmente para poder filtrar sin volver a calcular
-        clientesFidelidadData = Object.values(map).sort((a,b) => b.visitas - a.visitas);
-        renderizarFidelidad(clientesFidelidadData);
+            clientesFidelidadData = Object.values(map).sort((a,b) => b.visitas - a.visitas);
+            renderizarFidelidad(clientesFidelidadData);
+        } catch (error) {
+            console.error("Error al calcular fidelidad:", error);
+            document.getElementById('tabla-frecuencia-cuerpo').innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--rojo-alerta);">Error al organizar clientes. Verifica datos en BD.</td></tr>';
+        }
     }
 
+    // --- RENDERIZADO OPTIMIZADO FIDELIDAD ---
     function renderizarFidelidad(datos) {
         const tbody = document.getElementById('tabla-frecuencia-cuerpo');
-        tbody.innerHTML = '';
         
         if (datos.length === 0) {
             tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--gris-secundario);">No se encontraron resultados en la base de datos.</td></tr>';
             return;
         }
 
+        // OPTIMIZACIÓN: Construimos la tabla en memoria
+        let contenidoHTML = '';
         datos.forEach(c => {
             let badge = '';
             let colorNombre = '#fff';
             
-            // Asignación de rangos visuales
             if (c.visitas >= 10) { 
                 badge = '<span style="background:var(--dorado-brillante); color:#000; padding:3px 8px; border-radius:6px; font-size:0.6rem; font-weight:800; margin-left:8px; text-transform:uppercase;">VIP ORO</span>'; 
                 colorNombre = 'var(--dorado-brillante)'; 
@@ -689,7 +788,10 @@
                 badge = '<span style="background:var(--bronce-oscuro); color:#fff; padding:3px 8px; border-radius:6px; font-size:0.6rem; font-weight:800; margin-left:8px; text-transform:uppercase;">FRECUENTE</span>'; 
             }
 
-            tbody.innerHTML += `<tr>
+            // Evitar error split() si `c.ultima` está vacío
+            let fechaMostrar = c.ultima ? c.ultima.split('-').reverse().join('/') : 'N/A';
+
+            contenidoHTML += `<tr>
                 <td data-label="Cliente">
                     <strong style="color:${colorNombre}; font-size: 1.05rem;">${c.nombre || 'Desconocido'}</strong> ${badge}<br>
                     <span style="color:var(--gris-secundario); font-size:0.8rem;">${c.tlf !== 'S/N' ? c.tlf : 'Sin teléfono registrado'}</span>
@@ -700,13 +802,15 @@
                     </div>
                 </td>
                 <td data-label="Última Vez" style="color:var(--gris-texto); font-weight: 500;">
-                    ${c.ultima.split('-').reverse().join('/')}
+                    ${fechaMostrar}
                 </td>
                 <td data-label="Acción">
                     <button class="btn-accion" style="border-color:var(--dorado-acento); width:100%;" onclick="abrirModalDetalle('${c.id}')">Ver Perfil</button>
                 </td>
             </tr>`;
         });
+        
+        tbody.innerHTML = contenidoHTML; // DOM actualizado 1 sola vez
     }
 
     function filtrarClientesFidelidad() {
