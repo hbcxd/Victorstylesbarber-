@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Víctor Styles | Barbería Premium</title>
+    <title>Victorstyles Barber | Barbería Premium</title>
     <link rel="manifest" href="manifest.json">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
@@ -91,7 +91,7 @@
             left: 0;
             z-index: 1000;
             border-bottom: 1px solid var(--borde-sutil);
-            height: 75px;
+            height: 85px;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
         }
 
@@ -168,8 +168,15 @@
             background: linear-gradient(135deg, rgba(197, 160, 89, 0.1) 0%, transparent 100%);
         }
 
-        .logo img { height: 45px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)); transition: transform 0.3s; }
-        .logo:hover img { transform: scale(1.05); }
+        /* MODIFICACIÓN: Logo más grande, con brillo y a la derecha */
+        .logo { display: flex; align-items: center; }
+        .logo img { 
+            height: 65px; 
+            object-fit: contain;
+            filter: drop-shadow(0 0 12px rgba(197, 160, 89, 0.3)); 
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+        .logo:hover img { transform: scale(1.08) rotate(2deg); filter: drop-shadow(0 0 18px rgba(197, 160, 89, 0.6));}
 
         .menu-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.8); z-index: 1040; display: none; backdrop-filter: blur(4px); opacity: 0; transition: opacity 0.3s; }
         .menu-overlay.show { display: block; opacity: 1; }
@@ -183,7 +190,7 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            margin-top: 75px;
+            margin-top: 85px;
         }
 
         .hero-media { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
@@ -197,14 +204,14 @@
             z-index: 2; 
             text-align: center;
             padding: 0 24px;
-            max-width: 800px;
+            max-width: 850px;
         }
 
         .hero-title {
-            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-size: clamp(2.2rem, 6vw, 4rem);
             font-weight: 900;
             color: #ffffff;
-            letter-spacing: 5px; 
+            letter-spacing: 4px; 
             margin-bottom: 12px;
             text-transform: uppercase;
             background: linear-gradient(180deg, #ffffff 20%, var(--dorado-acento) 100%);
@@ -221,44 +228,46 @@
             letter-spacing: 1px;
         }
 
-        /* NUEVO BANNER PROFESIONAL */
+        /* MODIFICACIÓN: Banner Elegante mejorado */
         .banner-elegante {
-            background: rgba(21, 21, 24, 0.6);
-            border: 1px solid var(--borde-sutil);
+            background: linear-gradient(135deg, rgba(21, 21, 24, 0.8) 0%, rgba(35, 35, 40, 0.6) 100%);
+            border: 1px solid rgba(197, 160, 89, 0.3);
             border-left: 4px solid var(--dorado-acento);
-            border-radius: 16px;
-            padding: 20px 24px;
+            border-radius: 12px;
+            padding: 24px 28px;
             margin: 0 auto 40px auto;
             display: flex;
             align-items: center;
-            gap: 20px;
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            box-shadow: var(--shadow-premium);
+            gap: 24px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(197, 160, 89, 0.05);
             text-align: left;
-            max-width: 500px;
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            max-width: 550px;
+            transition: all 0.4s ease;
         }
 
         .banner-elegante:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(197, 160, 89, 0.25);
-            border-color: var(--dorado-acento);
+            box-shadow: 0 20px 40px rgba(197, 160, 89, 0.25), inset 0 0 20px rgba(197, 160, 89, 0.1);
+            border-color: var(--dorado-brillante);
+            border-left: 4px solid var(--dorado-brillante);
         }
 
-        .banner-elegante-icon { font-size: 2.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); }
+        .banner-elegante-icon { font-size: 2.8rem; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.6)); }
 
         .banner-elegante-text h4 {
             color: var(--dorado-brillante);
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
-        .banner-elegante-text p { color: var(--gris-texto); font-size: 0.9rem; line-height: 1.6; font-weight: 400; }
-        .banner-elegante-text strong { color: #ffffff; font-weight: 700; }
+        .banner-elegante-text p { color: var(--gris-texto); font-size: 0.95rem; line-height: 1.7; font-weight: 300; }
+        .banner-elegante-text strong { color: #ffffff; font-weight: 700; border-bottom: 1px solid var(--dorado-acento); padding-bottom: 2px;}
 
         .hero-btn {
             display: inline-block;
@@ -408,9 +417,9 @@
         <span></span><span></span><span></span>
     </button>
     <div class="logo"> 
-        <img src="LOGO.png" alt="Logo Víctor Styles">
+        <img src="LOGO.png" alt="Logo Victorstyles Barber">
     </div>
-    <div style="width: 24px;"></div> </header>
+</header>
 
 <nav class="menu-desplegable" id="menuLateral">
     <a href="#inicio" class="menu-link">🏠 Inicio</a>
@@ -423,19 +432,19 @@
 
 <section id="inicio" class="hero-container">
     <div class="hero-media">
-        <img src="Hero.jpg" alt="Fondo Víctor Styles" class="hero-img">
+        <img src="Hero.jpg" alt="Fondo Victorstyles Barber" class="hero-img">
         <div class="hero-overlay"></div>
     </div>
     
     <div class="hero-content reveal">
-        <h1 class="hero-title">VÍCTOR STYLES</h1>
+        <h1 class="hero-title">VICTORSTYLES BARBER</h1>
         <p class="hero-subtitle">Estilo, precisión y elegancia en cada corte.</p>
         
         <div class="banner-elegante">
             <div class="banner-elegante-icon">💈</div>
             <div class="banner-elegante-text">
                 <h4>Experiencia Premium</h4>
-                <p>En <strong>Spartanos Barber Shop</strong> definimos tu estilo. Disfruta de un ambiente exclusivo y resultados impecables. Reserva tu espacio y compruébalo.</p>
+                <p>En <strong>Victorstyles Barber</strong> definimos tu estilo. Disfruta de un ambiente exclusivo y resultados impecables. Reserva tu espacio y compruébalo.</p>
             </div>
         </div>
 
@@ -545,7 +554,7 @@
     <p class="subtitulo">Visítanos y vive la experiencia premium</p>
     <div class="contenedor-direccion">
         <p class="direccion-texto">
-            <strong>Spartanos Barber Shop</strong><br><br>
+            <strong>Victorstyles Barber</strong><br><br>
             Urb. La Gaviota, San Diego,<br>
             Estado Carabobo, Venezuela.
         </p>
@@ -557,7 +566,7 @@
 </section>
 
 <footer>
-    <p>© 2026 Víctor Styles. Todos los derechos reservados.</p>
+    <p>© 2026 Victorstyles Barber. Todos los derechos reservados.</p>
 </footer>
 
 <script>
@@ -590,7 +599,7 @@
         reveal(); 
     });
 
-    // --- Lógica de Firebase para Horas Disponibles ---
+    // --- Lógica de Firebase para Horas Disponibles (Dinámico) ---
     const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
     const fechaInput = document.getElementById('fecha');
     const horaSelect = document.getElementById('hora');
@@ -604,36 +613,46 @@
         horaSelect.disabled = true;
 
         try {
-            const res = await fetch(`${FIREBASE_URL}citas.json`);
-            const data = await res.json();
+            // Obtenemos citas ocupadas y la configuración de horario en paralelo
+            const [resCitas, resConfig] = await Promise.all([
+                fetch(`${FIREBASE_URL}citas.json`),
+                fetch(`${FIREBASE_URL}configuracion/horario.json`)
+            ]);
+            
+            const dataCitas = await resCitas.json();
+            const dataConfig = await resConfig.json();
             
             let horasOcupadas = [];
-            if (data) {
-                Object.values(data).forEach(cita => {
-                    // Solo bloqueamos las horas de la fecha seleccionada que no estén canceladas
+            if (dataCitas) {
+                Object.values(dataCitas).forEach(cita => {
                     if (cita.cita_fecha === fechaSeleccionada && cita.estado !== 'Cancelado') {
                         horasOcupadas.push(cita.cita_hora);
                     }
                 });
             }
-            generarOpcionesHora(horasOcupadas);
+
+            // Valores por defecto si no hay configuración
+            const horaInicio = dataConfig?.apertura !== undefined ? parseInt(dataConfig.apertura) : 9;
+            const horaFin = dataConfig?.cierre !== undefined ? parseInt(dataConfig.cierre) : 18;
+
+            generarOpcionesHora(horasOcupadas, horaInicio, horaFin);
         } catch (error) {
             horaSelect.innerHTML = '<option value="" disabled selected>Error de conexión</option>';
+            console.error(error);
         }
     });
 
-    function generarOpcionesHora(horasOcupadas) {
+    function generarOpcionesHora(horasOcupadas, inicio, fin) {
         horaSelect.innerHTML = '<option value="" disabled selected>-- Elige una hora disponible --</option>';
         let hayDisponibles = false;
 
-        // Horario de ejemplo: de 9:00 AM a 5:00 PM (17:00) con intervalos de 1 hora
-        for (let i = 9; i <= 18; i++) {
+        // Bucle dinámico basado en Firebase
+        for (let i = inicio; i <= fin; i++) {
             const ampm = i >= 12 ? 'PM' : 'AM';
             let hora12 = i % 12;
             hora12 = hora12 ? hora12 : 12;
             const horaStr = `${hora12}:00 ${ampm}`;
 
-            // Si la hora NO está en el arreglo de horas ocupadas, la mostramos
             if (!horasOcupadas.includes(horaStr)) {
                 const option = document.createElement('option');
                 option.value = horaStr;
