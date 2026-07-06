@@ -11,7 +11,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            /* Estética corporativa (Variables dinámicas para los temas) */
             --fondo-oscuro: #0c0c0e; 
             --fondo-tarjeta: #151518;
             --fondo-input: #1a1a1f;
@@ -31,7 +30,7 @@
             --shadow-premium: 0 12px 35px -10px rgba(0, 0, 0, 0.6);
             
             --gradiente-metal: linear-gradient(135deg, var(--bronce-oscuro) 0%, var(--dorado-brillante) 45%, var(--dorado-acento) 75%, var(--bronce-oscuro) 100%);
-            transition: all 0.3s ease; /* Transición suave al cambiar temas */
+            transition: all 0.3s ease;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif; }
@@ -144,7 +143,6 @@
     <button class="tab-btn" onclick="cambiarTab('tab-agenda', this)">Agenda</button>
     <button class="tab-btn" onclick="cambiarTab('tab-finanzas', this)">Finanzas</button>
     <button class="tab-btn" onclick="cambiarTab('tab-clientes', this)">Clientes</button>
-    <!-- NUEVA PESTAÑA: AJUSTES -->
     <button class="tab-btn" onclick="cambiarTab('tab-ajustes', this)">Ajustes</button> 
 </nav>
 
@@ -157,8 +155,9 @@
         <div class="modal-dato"><span>Fecha</span><span id="modalFecha"></span></div>
         <div class="modal-dato"><span>Estado</span><span id="modalEstado"></span></div>
         <div class="modal-dato"><span>Patrocinado</span><span id="modalPatrocinio"></span></div>
-        <div style="margin-top: 25px; text-align: center;">
+        <div style="margin-top: 25px; text-align: center; display: flex; flex-direction: column; gap: 10px;">
             <button class="btn-guardar" id="btnAbrirEdicion" style="width: 100%;">Editar Datos del Cliente</button>
+            <button class="btn-accion" id="btnWhatsApp" style="border-color: var(--verde-exito); color: var(--verde-exito); width: 100%;">Contactar por WhatsApp</button>
         </div>
     </div>
 </div>
@@ -189,7 +188,10 @@
                     <option value="Cancelado">Cancelado</option>
                 </select>
             </div>
-            <button type="submit" class="btn-guardar" style="margin-top: 20px;">Actualizar Cambios</button>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button type="button" class="btn-guardar" style="background: transparent; color: var(--rojo-alerta); border: 1px solid var(--rojo-alerta); flex: 1;" id="btnEliminarCita">Eliminar</button>
+                <button type="submit" class="btn-guardar" style="flex: 2;">Actualizar Cambios</button>
+            </div>
         </form>
     </div>
 </div>
@@ -341,7 +343,6 @@
     </div>
 </div>
 
-<!-- NUEVA SECCIÓN: AJUSTES -->
 <div id="tab-ajustes" class="modulo-admin">
     <h2>Ajustes del Sistema</h2>
     <div class="seccion-bloque">
@@ -382,7 +383,7 @@
     let graficoServiciosObj = null;
     let graficoFinanzasObj = null;
 
-    // --- NUEVO: SISTEMA DE TEMAS DE COLOR ---
+    // --- SISTEMA DE TEMAS DE COLOR ---
     const esquemasColor = {
         original: {
             '--fondo-oscuro': '#0c0c0e', '--fondo-tarjeta': '#151518', '--fondo-input': '#1a1a1f',
@@ -426,7 +427,6 @@
     // --- LÓGICA DE MODALES ---
     function cerrarModal(idModal) { document.getElementById(idModal).style.display = 'none'; }
 
-    // --- FUNCIÓN PARA ESTANDARIZAR LA HORA ---
     function estandarizarHora(horaStr) {
         if (!horaStr) return '';
         if (horaStr.toUpperCase().includes('AM') || horaStr.toUpperCase().includes('PM')) {
@@ -459,6 +459,19 @@
         document.getElementById('modalPatrocinio').textContent = cita.patrocinado ? 'Sí (Neto 100%)' : 'No (40/60)';
         
         document.getElementById('btnAbrirEdicion').onclick = () => abrirModalEditar(idCita);
+        
+        // --- INTEGRACIÓN WHATSAPP VENEZUELA ---
+        document.getElementById('btnWhatsApp').onclick = () => {
+            let numLimpio = cita.cliente_telefono ? cita.cliente_telefono.replace(/\D/g, '') : '';
+            if (numLimpio.startsWith('0')) { numLimpio = '58' + numLimpio.substring(1); }
+            if (numLimpio.length > 5) {
+                const msj = encodeURIComponent(`¡Hola ${cita.cliente_nombre}! Te escribimos de Víctor Styles...`);
+                window.open(`https://wa.me/${numLimpio}?text=${msj}`, '_blank');
+            } else {
+                alert("El número de teléfono no parece ser válido.");
+            }
+        };
+
         document.getElementById('modalDetalle').style.display = 'flex';
     }
 
@@ -471,7 +484,29 @@
         document.getElementById('editTelefono').value = cita.cliente_telefono || '';
         document.getElementById('editServicio').value = cita.servicio || '';
         document.getElementById('editEstado').value = cita.estado || 'Atendido';
+        
+        document.getElementById('btnEliminarCita').onclick = () => eliminarCita(idCita);
+        
         document.getElementById('modalEditar').style.display = 'flex';
+    }
+
+    // --- ELIMINAR CITA (NUEVA INTEGRACIÓN) ---
+    window.eliminarCita = async function(id) {
+        if(confirm('¿Seguro que quieres eliminar este registro de la base de datos? Esta acción no se puede deshacer.')) {
+            const btn = document.getElementById('btnEliminarCita');
+            btn.textContent = 'Borrando...';
+            btn.disabled = true;
+            try {
+                await fetch(`${FIREBASE_URL}citas/${id}.json?auth=${tokenAuth}`, { method: 'DELETE' });
+                cerrarModal('modalEditar');
+                cargarDatosDesdeServidor();
+            } catch (error) {
+                alert("Error al eliminar. Revisa la conexión.");
+            } finally {
+                btn.textContent = 'Eliminar';
+                btn.disabled = false;
+            }
+        }
     }
 
     // --- AUTENTICACIÓN FIREBASE ---
@@ -480,6 +515,7 @@
         const email = document.getElementById('campoEmail').value;
         const password = document.getElementById('campoClave').value;
         btnIngresar.textContent = 'Verificando...';
+        btnIngresar.disabled = true;
         
         try {
             const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY_FIREBASE}`, {
@@ -495,11 +531,12 @@
                 iniciarPanel();
             } else {
                 document.getElementById('mensajeError').style.display = 'block';
-                btnIngresar.textContent = 'Ingresar';
             }
         } catch(err) {
             document.getElementById('mensajeError').style.display = 'block';
+        } finally {
             btnIngresar.textContent = 'Ingresar';
+            btnIngresar.disabled = false;
         }
     });
 
@@ -509,7 +546,7 @@
     });
 
     window.onload = () => { 
-        inicializarTema(); // Carga el tema guardado
+        inicializarTema(); 
         Chart.defaults.color = '#a1a1aa';
         Chart.defaults.font.family = "'-apple-system', sans-serif";
         if(tokenAuth) iniciarPanel(); 
@@ -549,7 +586,6 @@
             const citasData = await resCitas.json();
             const gastosData = await resGastos.json();
 
-            // Validación de array vacío si Firebase devuelve null
             todasLasCitas = citasData ? Object.keys(citasData).map(id => ({ id, ...citasData[id] })).sort((a,b)=> {
                 let fechaA = a.cita_fecha ? new Date(a.cita_fecha) : new Date(0);
                 let fechaB = b.cita_fecha ? new Date(b.cita_fecha) : new Date(0);
@@ -562,7 +598,6 @@
             calcularFrecuencias();
         } catch (error) {
             console.error("Error cargando datos protegidos", error);
-            // Mostrar error visual en lugar de dejar el "Calculando" atascado
             document.getElementById('tabla-citas-cuerpo').innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--rojo-alerta);">Error de conexión. Recarga la página.</td></tr>';
             document.getElementById('tabla-frecuencia-cuerpo').innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--rojo-alerta);">Error al calcular. Revisa tu conexión.</td></tr>';
         }
@@ -574,7 +609,6 @@
         return match ? parseInt(match[1], 10) : 0;
     }
 
-    // --- CÁLCULO MÉTRICAS GLOBALES CON RANGO DE FECHAS ---
     function limpiarMetricasGlobales() {
         document.getElementById('fechaInicioGlobal').value = '';
         document.getElementById('fechaFinGlobal').value = '';
@@ -597,7 +631,7 @@
 
         todasLasCitas.forEach(cita => {
             if((cita.estado||'Atendido') !== 'Atendido') return;
-            if(!cita.cita_fecha) return; // Evitar errores con datos sin fecha
+            if(!cita.cita_fecha) return; 
 
             const fCita = new Date(cita.cita_fecha + 'T12:00:00'); 
             
@@ -636,7 +670,6 @@
         actualizarGraficos(conteoTipos, iVictor, gTotal);
     }
 
-    // --- FUNCIÓN PARA DIBUJAR LOS GRÁFICOS ---
     function actualizarGraficos(datosServicios, ingresosVictor, gastos) {
         const ctxServicios = document.getElementById('graficoServicios').getContext('2d');
         const labelsServicios = Object.keys(datosServicios).filter(k => datosServicios[k] > 0);
@@ -650,7 +683,6 @@
                 labels: labelsServicios.length ? labelsServicios : ['Sin datos'],
                 datasets: [{
                     data: dataServicios.length ? dataServicios : [1],
-                    // Los colores toman el valor computado actual de CSS
                     backgroundColor: dataServicios.length ? 
                         [getComputedStyle(document.documentElement).getPropertyValue('--dorado-brillante').trim(), 
                          getComputedStyle(document.documentElement).getPropertyValue('--dorado-acento').trim(), 
@@ -696,7 +728,6 @@
         });
     }
 
-    // --- RENDERIZADO OPTIMIZADO DE AGENDA ---
     function renderizarTablaAgenda(fechaFiltro) {
         const tbody = document.getElementById('tabla-citas-cuerpo');
         const filtradas = fechaFiltro ? todasLasCitas.filter(c => c.cita_fecha === fechaFiltro) : todasLasCitas;
@@ -706,7 +737,6 @@
             return;
         }
 
-        // OPTIMIZACIÓN: Construir string HTML una sola vez y no en cada ciclo
         let contenidoHTML = '';
         filtradas.forEach(cita => {
             let colorEstado = cita.estado === 'Cancelado' ? 'var(--rojo-alerta)' : (cita.estado === 'Pendiente' ? 'var(--naranja-alerta)' : 'var(--verde-exito)');
@@ -723,10 +753,9 @@
             `;
         });
         
-        tbody.innerHTML = contenidoHTML; // Se asigna al DOM 1 sola vez
+        tbody.innerHTML = contenidoHTML;
     }
 
-    // --- CÁLCULO DE FIDELIDAD CORREGIDO (BUG FIX "Calculando...") ---
     function calcularFrecuencias() {
         try {
             const map = {};
@@ -735,19 +764,16 @@
                 const tlf = c.cliente_telefono || 'S/N';
                 
                 if(!map[tlf]) {
-                    // Prevenir error si la fecha de Firebase viene nula o indefinida
                     map[tlf] = { nombre: c.cliente_nombre, tlf: tlf, visitas: 0, ultima: c.cita_fecha || '', id: c.id };
                 }
                 
                 map[tlf].visitas++;
                 
-                // Si la fecha actual de iteración es válida, comprobamos si es más reciente
                 if(c.cita_fecha) {
                     if (map[tlf].ultima === '') {
                         map[tlf].ultima = c.cita_fecha;
                         map[tlf].id = c.id;
                     } else {
-                        // Comparación segura
                         if(new Date(c.cita_fecha) > new Date(map[tlf].ultima)) { 
                             map[tlf].ultima = c.cita_fecha; 
                             map[tlf].id = c.id; 
@@ -764,7 +790,6 @@
         }
     }
 
-    // --- RENDERIZADO OPTIMIZADO FIDELIDAD ---
     function renderizarFidelidad(datos) {
         const tbody = document.getElementById('tabla-frecuencia-cuerpo');
         
@@ -773,7 +798,6 @@
             return;
         }
 
-        // OPTIMIZACIÓN: Construimos la tabla en memoria
         let contenidoHTML = '';
         datos.forEach(c => {
             let badge = '';
@@ -788,7 +812,6 @@
                 badge = '<span style="background:var(--bronce-oscuro); color:#fff; padding:3px 8px; border-radius:6px; font-size:0.6rem; font-weight:800; margin-left:8px; text-transform:uppercase;">FRECUENTE</span>'; 
             }
 
-            // Evitar error split() si `c.ultima` está vacío
             let fechaMostrar = c.ultima ? c.ultima.split('-').reverse().join('/') : 'N/A';
 
             contenidoHTML += `<tr>
@@ -810,7 +833,7 @@
             </tr>`;
         });
         
-        tbody.innerHTML = contenidoHTML; // DOM actualizado 1 sola vez
+        tbody.innerHTML = contenidoHTML;
     }
 
     function filtrarClientesFidelidad() {
@@ -828,10 +851,19 @@
     // --- GUARDAR Y ACTUALIZAR DATOS ---
     window.guardarGastoManual = async function(e) {
         e.preventDefault();
-        const obj = { concepto: document.getElementById('gConcepto').value, monto: parseFloat(document.getElementById('gMonto').value), fecha: document.getElementById('gFecha').value };
-        await fetch(`${FIREBASE_URL}gastos.json?auth=${tokenAuth}`, { method: 'POST', body: JSON.stringify(obj) });
-        document.getElementById('formGastos').reset(); document.getElementById('gFecha').value = obtenerFechaHoy();
-        cargarDatosDesdeServidor();
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.textContent = 'Registrando...';
+        btn.disabled = true;
+        try {
+            const obj = { concepto: document.getElementById('gConcepto').value, monto: parseFloat(document.getElementById('gMonto').value), fecha: document.getElementById('gFecha').value };
+            await fetch(`${FIREBASE_URL}gastos.json?auth=${tokenAuth}`, { method: 'POST', body: JSON.stringify(obj) });
+            document.getElementById('formGastos').reset(); 
+            document.getElementById('gFecha').value = obtenerFechaHoy();
+            cargarDatosDesdeServidor();
+        } finally {
+            btn.textContent = 'Registrar Gasto';
+            btn.disabled = false;
+        }
     }
 
     window.guardarClienteManual = async function(e) {
@@ -882,6 +914,7 @@
         const idCita = document.getElementById('editId').value;
         const btn = e.target.querySelector('button[type="submit"]');
         btn.textContent = 'Actualizando...';
+        btn.disabled = true;
         
         const obj = {
             cliente_nombre: document.getElementById('editNombre').value,
@@ -890,14 +923,19 @@
             estado: document.getElementById('editEstado').value
         };
 
-        await fetch(`${FIREBASE_URL}citas/${idCita}.json?auth=${tokenAuth}`, { 
-            method: 'PATCH', 
-            body: JSON.stringify(obj) 
-        });
-
-        cerrarModal('modalEditar');
-        btn.textContent = 'Actualizar Cambios';
-        cargarDatosDesdeServidor();
+        try {
+            await fetch(`${FIREBASE_URL}citas/${idCita}.json?auth=${tokenAuth}`, { 
+                method: 'PATCH', 
+                body: JSON.stringify(obj) 
+            });
+            cerrarModal('modalEditar');
+            cargarDatosDesdeServidor();
+        } catch (error) {
+            alert("Error al actualizar datos.");
+        } finally {
+            btn.textContent = 'Actualizar Cambios';
+            btn.disabled = false;
+        }
     }
 </script>
 </body>
