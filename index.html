@@ -626,7 +626,7 @@
         horaSelect.innerHTML = '<option value="" disabled selected>-- Elige una hora disponible --</option>';
         let hayDisponibles = false;
 
-        // Horario de ejemplo: de 9:00 AM a 6:00 PM (18:00) con intervalos de 1 hora
+        // Horario de ejemplo: de 9:00 AM a 5:00 PM (17:00) con intervalos de 1 hora
         for (let i = 9; i <= 18; i++) {
             const ampm = i >= 12 ? 'PM' : 'AM';
             let hora12 = i % 12;
