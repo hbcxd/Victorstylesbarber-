@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración | Víctor Styles</title>
+    <title>Panel de Administración | Victorstyles Barber</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -134,7 +134,7 @@
 </div>
 
 <header>
-    <div class="logo"><img src="LOGO.png" alt="Víctor Styles" onerror="this.src='https://via.placeholder.com/150x50?text=Victor+Styles'"></div>
+    <div class="logo"><img src="LOGO.png" alt="Victorstyles Barber" onerror="this.src='https://via.placeholder.com/150x50?text=Victor+Styles'"></div>
     <button class="btn-cerrar-sesion" id="btnCerrarSesion" style="display:none;">Salir</button>
 </header>
 
@@ -345,6 +345,26 @@
 
 <div id="tab-ajustes" class="modulo-admin">
     <h2>Ajustes del Sistema</h2>
+    
+    <div class="seccion-bloque">
+        <h3>Horario de Atención (Agenda Web)</h3>
+        <p style="color:var(--gris-secundario); font-size: 0.85rem; margin-bottom: 20px;">Configura las horas de apertura y cierre para las citas que piden los clientes por la web.</p>
+        
+        <form class="form-manual" onsubmit="guardarHorario(event)">
+            <div style="display: flex; gap: 15px;">
+                <div class="form-grupo" style="flex: 1;">
+                    <label>Apertura (Formato 24h, ej: 9)</label>
+                    <input type="number" id="cfgApertura" min="0" max="23" value="9" required>
+                </div>
+                <div class="form-grupo" style="flex: 1;">
+                    <label>Cierre (Formato 24h, ej: 18)</label>
+                    <input type="number" id="cfgCierre" min="0" max="23" value="18" required>
+                </div>
+            </div>
+            <button type="submit" class="btn-guardar" style="margin-top: 15px; border: 1px solid var(--dorado-acento); background: var(--fondo-input); color: var(--dorado-brillante);">Guardar Horario</button>
+        </form>
+    </div>
+
     <div class="seccion-bloque">
         <h3>Personalización Visual</h3>
         <p style="color:var(--gris-secundario); font-size: 0.85rem; margin-bottom: 20px;">Elige una combinación de colores para tu panel. Todas las opciones respetan tu imagen corporativa.</p>
@@ -465,7 +485,7 @@
             let numLimpio = cita.cliente_telefono ? cita.cliente_telefono.replace(/\D/g, '') : '';
             if (numLimpio.startsWith('0')) { numLimpio = '58' + numLimpio.substring(1); }
             if (numLimpio.length > 5) {
-                const msj = encodeURIComponent(`¡Hola ${cita.cliente_nombre}! Te escribimos de Víctor Styles...`);
+                const msj = encodeURIComponent(`¡Hola ${cita.cliente_nombre}! Te escribimos de Victorstyles Barber...`);
                 window.open(`https://wa.me/${numLimpio}?text=${msj}`, '_blank');
             } else {
                 alert("El número de teléfono no parece ser válido.");
@@ -490,7 +510,6 @@
         document.getElementById('modalEditar').style.display = 'flex';
     }
 
-    // --- ELIMINAR CITA (NUEVA INTEGRACIÓN) ---
     window.eliminarCita = async function(id) {
         if(confirm('¿Seguro que quieres eliminar este registro de la base de datos? Esta acción no se puede deshacer.')) {
             const btn = document.getElementById('btnEliminarCita');
@@ -579,12 +598,17 @@
     // --- CARGA DE DATOS SEGUROS ---
     async function cargarDatosDesdeServidor() {
         try {
-            const resCitas = await fetch(`${FIREBASE_URL}citas.json?auth=${tokenAuth}`);
+            const [resCitas, resGastos, resConfig] = await Promise.all([
+                fetch(`${FIREBASE_URL}citas.json?auth=${tokenAuth}`),
+                fetch(`${FIREBASE_URL}gastos.json?auth=${tokenAuth}`),
+                fetch(`${FIREBASE_URL}configuracion/horario.json?auth=${tokenAuth}`)
+            ]);
+            
             if (!resCitas.ok) throw new Error("Fallo de autenticación o red en Citas");
-            const resGastos = await fetch(`${FIREBASE_URL}gastos.json?auth=${tokenAuth}`);
             
             const citasData = await resCitas.json();
             const gastosData = await resGastos.json();
+            const configData = await resConfig.json();
 
             todasLasCitas = citasData ? Object.keys(citasData).map(id => ({ id, ...citasData[id] })).sort((a,b)=> {
                 let fechaA = a.cita_fecha ? new Date(a.cita_fecha) : new Date(0);
@@ -592,6 +616,12 @@
                 return fechaB - fechaA;
             }) : [];
             todosLosGastos = gastosData ? Object.keys(gastosData).map(id => ({ id, ...gastosData[id] })) : [];
+
+            // Cargar Configuración de Horario
+            if(configData) {
+                document.getElementById('cfgApertura').value = configData.apertura || 9;
+                document.getElementById('cfgCierre').value = configData.cierre || 18;
+            }
 
             renderizarTablaAgenda(document.getElementById('filtroFechaAgenda').value);
             procesarMetricasGlobales(); 
@@ -849,6 +879,35 @@
     }
 
     // --- GUARDAR Y ACTUALIZAR DATOS ---
+    
+    // GUARDAR HORARIO (NUEVA FUNCIÓN)
+    window.guardarHorario = async function(e) {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]');
+        const textoOriginal = btn.textContent;
+        btn.textContent = 'Guardando...';
+        btn.disabled = true;
+
+        const configuracion = {
+            apertura: parseInt(document.getElementById('cfgApertura').value),
+            cierre: parseInt(document.getElementById('cfgCierre').value)
+        };
+
+        try {
+            await fetch(`${FIREBASE_URL}configuracion/horario.json?auth=${tokenAuth}`, {
+                method: 'PUT',
+                body: JSON.stringify(configuracion)
+            });
+            alert("¡Horario actualizado correctamente en la web!");
+        } catch (error) {
+            alert("Hubo un error al guardar la configuración.");
+            console.error(error);
+        } finally {
+            btn.textContent = textoOriginal;
+            btn.disabled = false;
+        }
+    };
+
     window.guardarGastoManual = async function(e) {
         e.preventDefault();
         const btn = e.target.querySelector('button[type="submit"]');
