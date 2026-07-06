@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Víctor Styles | Barbería Mundialista</title>
+    <title>Víctor Styles | Barbería Premium</title>
     <link rel="manifest" href="manifest.json">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
         /* Variables de color adaptadas */
@@ -47,7 +45,6 @@
             overflow-x: hidden;
         }
 
-        /* Clase para animaciones dinámicas al scrollear */
         .reveal {
             opacity: 0;
             transform: translateY(40px);
@@ -56,11 +53,6 @@
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
-        }
-
-        .bg-mundial-hex {
-            background-image: url("data:image/svg+xml,%3Csvg width='40' height='69' viewBox='0 0 40 69' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0L40 11.5v23L20 46 0 34.5v-23L20 0zm0 13L6.928 20.5v15L20 43l13.072-7.5v-15L20 13z' fill='%23c5a059' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
-            position: relative;
         }
 
         h2 {
@@ -93,7 +85,6 @@
             padding: 0 5%;          
             background-color: rgba(9, 9, 11, 0.85);  
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             position: fixed;            
             width: 100%;
             top: 0;
@@ -102,32 +93,6 @@
             border-bottom: 1px solid var(--borde-sutil);
             height: 75px;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .header-decoracion-mundial {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, #006847 0%, #CE1126 50%, #0033A0 100%);
-            z-index: 1001;
-        }
-
-        .header-badge {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.7rem;
-            font-weight: 800;
-            color: var(--dorado-brillante);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border: 1px solid var(--borde-sutil);
-            padding: 5px 12px;
-            border-radius: 20px;
-            background: rgba(197, 160, 89, 0.1);
-            box-shadow: var(--shadow-dorada);
         }
 
         .menu-hamburguesa {
@@ -184,7 +149,6 @@
             padding: 20px 0;
             border-bottom: 1px solid rgba(197, 160, 89, 0.08);
             transition: all 0.3s ease;
-            position: relative;
         }
 
         .menu-desplegable a:hover {
@@ -209,24 +173,6 @@
 
         .menu-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.8); z-index: 1040; display: none; backdrop-filter: blur(4px); opacity: 0; transition: opacity 0.3s; }
         .menu-overlay.show { display: block; opacity: 1; }
-
-        /* BANDERINES */
-        .banderines-top {
-            position: absolute;
-            top: 75px; 
-            width: 100%;
-            display: flex;
-            justify-content: space-around;
-            z-index: 500;
-            pointer-events: none;
-        }
-        .banderines-top span { width: 18px; height: 28px; clip-path: polygon(50% 100%, 0 0, 100% 0); opacity: 0.9; box-shadow: 0 4px 6px rgba(0,0,0,0.6); animation: balanceo 3s infinite ease-in-out alternate; transform-origin: top center; }
-        .banderines-top span:nth-child(4n+1) { background: #006847; margin-top: -5px; animation-delay: 0.2s;}
-        .banderines-top span:nth-child(4n+2) { background: var(--dorado-acento); animation-delay: 0.5s;}
-        .banderines-top span:nth-child(4n+3) { background: #CE1126; margin-top: -8px; animation-delay: 0.1s;}
-        .banderines-top span:nth-child(4n+4) { background: #0033A0; margin-top: -2px; animation-delay: 0.4s;}
-        
-        @keyframes balanceo { from { transform: rotate(-5deg); } to { transform: rotate(5deg); } }
 
         /* HERO PANEL */
         .hero-container {
@@ -267,22 +213,6 @@
             filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.8));
         }
 
-        .badge-mundial {
-            display: inline-block;
-            padding: 8px 20px;
-            background: rgba(20, 20, 22, 0.6);
-            border: 1px solid var(--borde-sutil);
-            color: var(--dorado-brillante);
-            font-size: 0.8rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            border-radius: 30px;
-            margin-bottom: 25px;
-            backdrop-filter: blur(10px);
-            box-shadow: var(--shadow-dorada);
-        }
-
         .hero-subtitle {
             font-size: 1.1rem;
             color: #e2e2e5;
@@ -291,8 +221,8 @@
             letter-spacing: 1px;
         }
 
-        /* BANNER PROMOCIONAL BARAJITAS */
-        .banner-mundial {
+        /* NUEVO BANNER PROFESIONAL */
+        .banner-elegante {
             background: rgba(21, 21, 24, 0.6);
             border: 1px solid var(--borde-sutil);
             border-left: 4px solid var(--dorado-acento);
@@ -310,16 +240,15 @@
             transition: transform 0.4s ease, box-shadow 0.4s ease;
         }
 
-        .banner-mundial:hover {
+        .banner-elegante:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 40px rgba(197, 160, 89, 0.25);
             border-color: var(--dorado-acento);
         }
 
-        .banner-mundial-icon { font-size: 2.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); animation: float 3s ease-in-out infinite; }
-        @keyframes float { 0% { transform: translateY(0); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0); } }
+        .banner-elegante-icon { font-size: 2.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); }
 
-        .banner-mundial-text h4 {
+        .banner-elegante-text h4 {
             color: var(--dorado-brillante);
             font-size: 1rem;
             font-weight: 800;
@@ -328,8 +257,8 @@
             margin-bottom: 8px;
         }
 
-        .banner-mundial-text p { color: var(--gris-texto); font-size: 0.9rem; line-height: 1.6; font-weight: 400; }
-        .banner-mundial-text strong { color: #ffffff; font-weight: 700; }
+        .banner-elegante-text p { color: var(--gris-texto); font-size: 0.9rem; line-height: 1.6; font-weight: 400; }
+        .banner-elegante-text strong { color: #ffffff; font-weight: 700; }
 
         .hero-btn {
             display: inline-block;
@@ -349,28 +278,14 @@
             overflow: hidden;
         }
 
-        .hero-btn::after {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.5), transparent);
-            transform: skewX(-20deg);
-            animation: shine 4s infinite;
-        }
-        @keyframes shine { 20% { left: 200%; } 100% { left: 200%; } }
-
         .hero-btn:hover { background-position: right center; box-shadow: 0 15px 40px rgba(197, 160, 89, 0.6); transform: translateY(-3px) scale(1.02); }
 
         /* SECCIONES RESTANTES */
         section { padding: 90px 5%; position: relative; }
-
-        .encuesta-section { text-align: center; border-top: 1px solid rgba(255,255,255,0.05); }
-        .btn-equipo { background: rgba(26,26,31,0.6); backdrop-filter: blur(5px); border: 1px solid var(--borde-sutil); color: #ffffff; padding: 16px 10px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; }
-        .btn-equipo:hover { background: rgba(197, 160, 89, 0.1); border-color: var(--dorado-brillante); color: var(--dorado-brillante); transform: translateY(-2px); }
         
         .galeria-section { max-width: 1200px; margin: 0 auto; }
         .grid-galeria { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .tarjeta-galeria { position: relative; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-premium); cursor: pointer; group; }
+        .tarjeta-galeria { position: relative; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-premium); cursor: pointer; }
         .tarjeta-galeria::after { content: ''; position: absolute; inset: 0; border: 1px solid var(--borde-sutil); border-radius: 20px; pointer-events: none; transition: border-color 0.4s; }
         .tarjeta-galeria:hover::after { border-color: var(--dorado-acento); }
         .tarjeta-galeria img { width: 100%; height: 420px; object-fit: cover; filter: grayscale(40%); transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.6s ease; }
@@ -397,18 +312,17 @@
         .precio-tarjeta.destacado .servicio-costo { background: var(--gradiente-metal); color: #000; border: none; box-shadow: var(--shadow-dorada); }
 
         /* FORMULARIO DE AGENDAMIENTO MEJORADO */
-        .agenda-section { background: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23c5a059" fill-opacity="0.03"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E'); border-top: 1px solid var(--borde-sutil); }
+        .agenda-section { border-top: 1px solid var(--borde-sutil); }
         
         .form-agenda { 
             max-width: 600px; 
             margin: 0 auto; 
             background: rgba(15, 15, 18, 0.7); 
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             padding: 45px 40px; 
             border-radius: 24px; 
             border: 1px solid var(--borde-sutil); 
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), inset 0 0 0 1px rgba(255,255,255,0.05); 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9); 
         }
         
         .grupo-input { margin-bottom: 25px; position: relative; }
@@ -444,7 +358,6 @@
             transform: translateY(-2px);
         }
         
-        /* Flecha custom para los selects */
         .select-container { position: relative; }
         .select-container::after {
             content: '▼';
@@ -452,7 +365,7 @@
             color: var(--dorado-acento);
             position: absolute;
             right: 20px;
-            top: 50px; /* Ajustado al label superior */
+            top: 50px; 
             pointer-events: none;
         }
 
@@ -472,23 +385,9 @@
             cursor: pointer; 
             box-shadow: 0 10px 30px rgba(197, 160, 89, 0.3); 
             transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
-            animation: pulse-glow 3s infinite;
         }
-        
-        @keyframes pulse-glow {
-            0% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(197, 160, 89, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0); }
-        }
-
         .btn-submit:hover { background-position: right center; transform: translateY(-3px); }
-        
-        .contenedor-reagendar { margin-top: 40px; padding-top: 30px; border-top: 1px dashed rgba(197, 160, 89, 0.2); }
-        .titulo-reagendar { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gris-secundario); margin-bottom: 15px; text-align: center; }
-        .fila-reagendar { display: flex; gap: 12px; }
-        .input-codigo { flex: 1; text-transform: uppercase; letter-spacing: 4px; text-align: center; border-radius: 12px; font-weight: bold; }
-        .btn-reagendar { padding: 0 25px; background-color: var(--fondo-input); color: #ffffff; border: 1px solid var(--borde-sutil); border-radius: 12px; font-weight: 700; font-size: 0.85rem; text-transform: uppercase; cursor: pointer; transition: all 0.3s ease; }
-        .btn-reagendar:hover { background-color: rgba(197, 160, 89, 0.15); border-color: var(--dorado-brillante); color: var(--dorado-brillante); }
+        .btn-submit:disabled { background: var(--gris-secundario); cursor: not-allowed; transform: none; }
         
         .ubicacion-section { text-align: center; }
         .contenedor-direccion { max-width: 600px; margin: 0 auto; background: rgba(20,20,25,0.6); backdrop-filter: blur(10px); border: 1px solid var(--borde-sutil); border-radius: 20px; padding: 40px; box-shadow: var(--shadow-premium); transition: transform 0.3s; }
@@ -498,62 +397,6 @@
         .btn-mapa:hover { background: var(--dorado-brillante); color: #000; box-shadow: var(--shadow-dorada); }
         
         footer { text-align: center; padding: 50px 20px; background-color: #050505; color: var(--gris-secundario); font-size: 0.9rem; font-weight: 500; border-top: 1px solid rgba(255,255,255,0.05); }
-        
-        /* MODAL VIP (Estilo Pase de Colección) */
-        .modal-cita-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.9); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; backdrop-filter: blur(15px); transition: opacity 0.4s ease; }
-        .modal-cita-overlay.show { opacity: 1; pointer-events: auto; }
-        
-        .ticket-vip { 
-            background: linear-gradient(135deg, #1a1a1f 0%, #0c0c0e 100%); 
-            border: 1px solid var(--dorado-acento); 
-            border-radius: 20px; 
-            width: 100%; 
-            max-width: 400px; 
-            box-shadow: 0 30px 60px rgba(197, 160, 89, 0.2); 
-            transform: scale(0.9) translateY(20px); 
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            position: relative;
-            overflow: hidden;
-        }
-        
-        /* Reflejo dorado en el ticket */
-        .ticket-vip::before {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(197,160,89,0.1) 0%, transparent 60%);
-            pointer-events: none;
-        }
-
-        .modal-cita-overlay.show .ticket-vip { transform: scale(1) translateY(0); }
-        
-        .ticket-header { background: var(--gradiente-metal); padding: 30px 20px; text-align: center; position: relative; }
-        .ticket-header h3 { font-size: 1.4rem; letter-spacing: 4px; color: #000; text-transform: uppercase; font-weight: 900; margin-bottom: 5px; text-shadow: none; background: none; -webkit-text-fill-color: #000;}
-        .ticket-header p { font-size: 0.85rem; color: rgba(0,0,0,0.7); text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
-        
-        /* Simulador de corte (troquelado) del ticket */
-        .ticket-header::after {
-            content: ''; position: absolute; bottom: -10px; left: 0; width: 100%; height: 20px;
-            background-image: radial-gradient(circle at 10px 10px, transparent 10px, #1a1a1f 11px);
-            background-size: 20px 20px; background-repeat: repeat-x;
-        }
-
-        .ticket-body { padding: 40px 30px 20px; display: flex; flex-direction: column; gap: 20px; position: relative; z-index: 1;}
-        .ticket-dato { display: flex; flex-direction: column; gap: 4px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px;}
-        .ticket-dato:last-child { border: none; }
-        .ticket-label { font-size: 0.7rem; text-transform: uppercase; color: var(--dorado-acento); letter-spacing: 1.5px; font-weight: 700; }
-        .ticket-valor { font-size: 1.1rem; color: #ffffff; font-weight: 600; text-transform: capitalize;}
-        
-        .ticket-codigo-box { margin-top: 15px; text-align: center; }
-        .ticket-codigo-num { font-size: 2rem; font-weight: 900; color: var(--dorado-brillante); letter-spacing: 8px; font-family: 'Courier New', Courier, monospace; }
-        
-        /* Código de barras falso */
-        .barcode { width: 100%; height: 40px; background: repeating-linear-gradient(90deg, #fff, #fff 2px, transparent 2px, transparent 6px, #fff 6px, #fff 10px, transparent 10px, transparent 12px, #fff 12px, #fff 14px); opacity: 0.5; margin-top: 15px; border-radius: 4px;}
-
-        .ticket-footer { padding: 0 30px 30px; display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 1; }
-        .btn-ticket-accion { width: 100%; padding: 16px; border-radius: 12px; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; cursor: pointer; text-align: center; letter-spacing: 1px; transition: all 0.3s; border: none; }
-        .btn-ticket-primario { background: var(--gradiente-metal); color: #000; box-shadow: var(--shadow-dorada); }
-        .btn-ticket-primario:hover { filter: brightness(1.1); transform: translateY(-2px); }
-        .btn-ticket-secundario { background-color: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--borde-sutil); }
-        .btn-ticket-secundario:hover { background-color: rgba(197,160,89,0.1); border-color: var(--dorado-brillante); }
     </style>
 </head>
 <body>
@@ -561,30 +404,16 @@
 <div class="menu-overlay" id="menuOverlay"></div>
 
 <header>
-    <div class="header-decoracion-mundial"></div>
     <button class="menu-hamburguesa" id="btnHamburguesa" aria-label="Menú">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span>
     </button>
-    
     <div class="logo"> 
         <img src="LOGO.png" alt="Logo Víctor Styles">
     </div>
-
-    <div class="header-badge">
-        ⚽ M26
-    </div>
-</header>
-
-<div class="banderines-top">
-    <span></span><span></span><span></span><span></span>
-    <span></span><span></span><span></span><span></span>
-    <span></span><span></span><span></span><span></span>
-</div>
+    <div style="width: 24px;"></div> </header>
 
 <nav class="menu-desplegable" id="menuLateral">
-    <a href="#inicio" class="menu-link">⚽ Inicio</a>
+    <a href="#inicio" class="menu-link">🏠 Inicio</a>
     <a href="#galeria" class="menu-link">✂️ Cortes</a>
     <a href="#precios" class="menu-link">🏆 Servicios</a>
     <a href="#agenda" class="menu-link">📅 Agendar Cita</a>
@@ -600,36 +429,17 @@
     
     <div class="hero-content reveal">
         <h1 class="hero-title">VÍCTOR STYLES</h1>
-        <div class="badge-mundial">Edición Mundialista 26</div>
         <p class="hero-subtitle">Estilo, precisión y elegancia en cada corte.</p>
         
-        <div class="banner-mundial">
-            <div class="banner-mundial-icon">🎫</div>
-            <div class="banner-mundial-text">
-                <h4>¡Fiebre Mundialista!</h4>
-                <p>Por cada servicio te llevas una <strong>barajita sorpresa</strong> oficial. ¡Empieza a llenar tu álbum!</p>
+        <div class="banner-elegante">
+            <div class="banner-elegante-icon">💈</div>
+            <div class="banner-elegante-text">
+                <h4>Experiencia Premium</h4>
+                <p>En <strong>Spartanos Barber Shop</strong> definimos tu estilo. Disfruta de un ambiente exclusivo y resultados impecables. Reserva tu espacio y compruébalo.</p>
             </div>
         </div>
 
         <a href="#agenda" class="hero-btn">AGENDAR CITA</a>
-    </div>
-</section>
-
-<section id="encuesta" class="encuesta-section bg-mundial-hex reveal">
-    <h2 style="font-size: 1.5rem; margin-bottom: 30px;">¿Quién es tu favorito al título?</h2>
-    
-    <div id="contenedor-votos" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 450px; margin: 0 auto;">
-        <button class="btn-equipo" onclick="votar('Brasil')">🇧🇷 Brasil</button>
-        <button class="btn-equipo" onclick="votar('España')">🇪🇸 España</button>
-        <button class="btn-equipo" onclick="votar('Francia')">🇫🇷 Francia</button>
-        <button class="btn-equipo" onclick="votar('Portugal')">🇵🇹 Portugal</button>
-        <button class="btn-equipo" onclick="votar('Argentina')">🇦🇷 Argentina</button>
-        <button class="btn-equipo" onclick="votar('Otro')">🌍 Otro</button>
-    </div>
-
-    <div id="resultados-encuesta" style="margin-top: 30px; display: none; max-width: 450px; margin-left: auto; margin-right: auto;">
-        <p style="color: var(--gris-secundario); font-size: 0.9rem; margin-bottom: 20px; font-weight: bold;">Resultados en tiempo real:</p>
-        <div id="barras-resultados"></div>
     </div>
 </section>
 
@@ -652,7 +462,7 @@
     </div>
 </section>
 
-<section id="precios" class="precios-section bg-mundial-hex reveal">
+<section id="precios" class="precios-section reveal">
     <div class="precios-header">
         <h2>Servicios Premium</h2>
         <p class="subtitulo">Calidad, precisión y estilo a tu alcance</p>
@@ -660,50 +470,27 @@
 
     <div class="precios-grid">
         <div class="precio-tarjeta">
-            <div class="servicio-info">
-                <h3>Corte Sencillo</h3>
-                <p>Corte clásico o moderno con acabado limpio.</p>
-            </div>
+            <div class="servicio-info"><h3>Corte Sencillo</h3><p>Corte clásico o moderno con acabado limpio.</p></div>
             <div class="servicio-costo">10$</div>
         </div>
-
         <div class="precio-tarjeta destacado">
-            <div class="servicio-info">
-                <h3>Corte Premium</h3>
-                <p>Corte estilizado, lavado, peinado y producto premium.</p>
-            </div>
+            <div class="servicio-info"><h3>Corte Premium</h3><p>Corte estilizado, lavado, peinado y producto premium.</p></div>
             <div class="servicio-costo">13$</div>
         </div>
-
         <div class="precio-tarjeta">
-            <div class="servicio-info">
-                <h3>Corte con Barba Sencillo</h3>
-                <p>Arreglo de cabello y perfilado de barba básico.</p>
-            </div>
+            <div class="servicio-info"><h3>Corte con Barba Sencillo</h3><p>Arreglo de cabello y perfilado de barba básico.</p></div>
             <div class="servicio-costo">16$</div>
         </div>
-
         <div class="precio-tarjeta destacado">
-            <div class="servicio-info">
-                <h3>Corte con Barba Premium</h3>
-                <p>Servicio completo, ritual de toalla caliente y navaja.</p>
-            </div>
+            <div class="servicio-info"><h3>Corte con Barba Premium</h3><p>Servicio completo, ritual de toalla caliente y navaja.</p></div>
             <div class="servicio-costo">19$</div>
         </div>
-
         <div class="precio-tarjeta">
-            <div class="servicio-info">
-                <h3>Barba Sola</h3>
-                <p>Perfilado, hidratación y cuidado de tu barba.</p>
-            </div>
+            <div class="servicio-info"><h3>Barba Sola</h3><p>Perfilado, hidratación y cuidado de tu barba.</p></div>
             <div class="servicio-costo">6$</div>
         </div>
-
         <div class="precio-tarjeta">
-            <div class="servicio-info">
-                <h3>Cero con Barba Premium</h3>
-                <p>Rasurado al ras (cero) combinado con arreglo premium.</p>
-            </div>
+            <div class="servicio-info"><h3>Cero con Barba Premium</h3><p>Rasurado al ras (cero) combinado con arreglo premium.</p></div>
             <div class="servicio-costo">13$</div>
         </div>
     </div>
@@ -711,7 +498,7 @@
 
 <section id="agenda" class="agenda-section reveal">
     <h2>Agenda tu Cita</h2>
-    <p class="subtitulo">Asegura tu puesto antes del pitazo inicial.</p>
+    <p class="subtitulo">Asegura tu puesto y no hagas filas.</p>
     
     <form id="formulario-cita" class="form-agenda">
         <div class="grupo-input">
@@ -750,18 +537,10 @@
         </div>
         
         <button type="submit" class="btn-submit">Confirmar Reserva</button>
-
-        <div class="contenedor-reagendar">
-            <div class="titulo-reagendar">¿Ya tienes cita? Gestiona o Reagenda</div>
-            <div class="fila-reagendar">
-                <input type="text" id="codigoGestion" class="input-codigo" placeholder="CÓDIGO ÚNICO" maxlength="6">
-                <button type="button" id="btnGestionar" class="btn-reagendar">Buscar</button>
-            </div>
-        </div>
     </form>
 </section>
 
-<section id="ubicacion" class="ubicacion-section bg-mundial-hex reveal">
+<section id="ubicacion" class="ubicacion-section reveal">
     <h2>Ubicación</h2>
     <p class="subtitulo">Visítanos y vive la experiencia premium</p>
     <div class="contenedor-direccion">
@@ -781,46 +560,9 @@
     <p>© 2026 Víctor Styles. Todos los derechos reservados.</p>
 </footer>
 
-<!-- MODAL VIP TICKET -->
-<div class="modal-cita-overlay" id="modalCita">
-    <div class="ticket-vip">
-        <div class="ticket-header">
-            <h3>Pase VIP</h3>
-            <p>Víctor Styles Barbería</p>
-        </div>
-        <div class="ticket-body">
-            <div class="ticket-dato">
-                <span class="ticket-label">Cliente</span>
-                <span class="ticket-valor" id="lblTicketCliente">-</span>
-            </div>
-            <div class="ticket-dato">
-                <span class="ticket-label">Servicio</span>
-                <span class="ticket-valor" id="lblTicketServicio">-</span>
-            </div>
-            <div class="ticket-dato">
-                <span class="ticket-label">Fecha y Hora</span>
-                <span class="ticket-valor" id="lblTicketFechaHora">-</span>
-            </div>
-            <div class="ticket-dato">
-                <span class="ticket-label" style="text-align: center;">Código Único de Gestión</span>
-                <div class="ticket-codigo-box">
-                    <span class="ticket-codigo-num" id="lblTicketCodigo">000000</span>
-                    <div class="barcode"></div>
-                </div>
-            </div>
-        </div>
-        <div class="ticket-footer">
-            <button class="btn-ticket-accion btn-ticket-primario" id="btnGuardarTicket">Guardar / Compartir Pase</button>
-            <button class="btn-ticket-accion btn-ticket-secundario" id="btnCopiarTicket">Copiar Datos</button>
-            <button class="btn-ticket-accion" style="background: transparent; color: var(--gris-secundario); margin-top: -5px;" id="btnCerrarTicket">Cerrar</button>
-        </div>
-    </div>
-</div>
-
 <script>
-    // SCRIPT DE INTERFAZ (MENÚ Y ANIMACIONES AL SCROLLEAR)
+    // --- Menú y Animaciones ---
     document.addEventListener('DOMContentLoaded', () => {
-        // --- Menú Hamburguesa ---
         const btnHamburguesa = document.getElementById('btnHamburguesa');
         const menuLateral = document.getElementById('menuLateral');
         const menuOverlay = document.getElementById('menuOverlay');
@@ -836,20 +578,111 @@
         menuOverlay.addEventListener('click', toggleMenu);
         menuLinks.forEach(link => link.addEventListener('click', toggleMenu));
 
-        // --- Scroll Reveal Animations ---
         function reveal() {
             var reveals = document.querySelectorAll(".reveal");
             for (var i = 0; i < reveals.length; i++) {
                 var windowHeight = window.innerHeight;
                 var elementTop = reveals[i].getBoundingClientRect().top;
-                var elementVisible = 100; // Cuántos píxeles antes de aparecer
-                if (elementTop < windowHeight - elementVisible) {
-                    reveals[i].classList.add("active");
-                }
+                if (elementTop < windowHeight - 100) reveals[i].classList.add("active");
             }
         }
         window.addEventListener("scroll", reveal);
-        reveal(); // Ejecutar al cargar la página
+        reveal(); 
+    });
+
+    // --- Lógica de Firebase para Horas Disponibles ---
+    const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
+    const fechaInput = document.getElementById('fecha');
+    const horaSelect = document.getElementById('hora');
+    const formCita = document.getElementById('formulario-cita');
+
+    fechaInput.addEventListener('change', async (e) => {
+        const fechaSeleccionada = e.target.value;
+        if(!fechaSeleccionada) return;
+
+        horaSelect.innerHTML = '<option value="" disabled selected>Buscando disponibilidad...</option>';
+        horaSelect.disabled = true;
+
+        try {
+            const res = await fetch(`${FIREBASE_URL}citas.json`);
+            const data = await res.json();
+            
+            let horasOcupadas = [];
+            if (data) {
+                Object.values(data).forEach(cita => {
+                    // Solo bloqueamos las horas de la fecha seleccionada que no estén canceladas
+                    if (cita.cita_fecha === fechaSeleccionada && cita.estado !== 'Cancelado') {
+                        horasOcupadas.push(cita.cita_hora);
+                    }
+                });
+            }
+            generarOpcionesHora(horasOcupadas);
+        } catch (error) {
+            horaSelect.innerHTML = '<option value="" disabled selected>Error de conexión</option>';
+        }
+    });
+
+    function generarOpcionesHora(horasOcupadas) {
+        horaSelect.innerHTML = '<option value="" disabled selected>-- Elige una hora disponible --</option>';
+        let hayDisponibles = false;
+
+        // Horario de ejemplo: de 9:00 AM a 6:00 PM (18:00) con intervalos de 1 hora
+        for (let i = 9; i <= 18; i++) {
+            const ampm = i >= 12 ? 'PM' : 'AM';
+            let hora12 = i % 12;
+            hora12 = hora12 ? hora12 : 12;
+            const horaStr = `${hora12}:00 ${ampm}`;
+
+            // Si la hora NO está en el arreglo de horas ocupadas, la mostramos
+            if (!horasOcupadas.includes(horaStr)) {
+                const option = document.createElement('option');
+                option.value = horaStr;
+                option.textContent = horaStr;
+                horaSelect.appendChild(option);
+                hayDisponibles = true;
+            }
+        }
+
+        if (!hayDisponibles) {
+            horaSelect.innerHTML = '<option value="" disabled selected>Sin disponibilidad para esta fecha</option>';
+        }
+        horaSelect.disabled = false;
+    }
+
+    // --- Enviar Formulario a Firebase ---
+    formCita.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('.btn-submit');
+        btn.textContent = 'Procesando...';
+        btn.disabled = true;
+
+        const nuevaCita = {
+            cliente_nombre: document.getElementById('nombre').value,
+            cliente_telefono: document.getElementById('telefono').value,
+            servicio: document.getElementById('servicio').value,
+            cita_fecha: document.getElementById('fecha').value,
+            cita_hora: document.getElementById('hora').value,
+            estado: 'Pendiente',
+            patrocinado: false
+        };
+
+        try {
+            await fetch(`${FIREBASE_URL}citas.json`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(nuevaCita)
+            });
+            
+            alert('¡Listo! Tu cita ha sido agendada con éxito.');
+            formCita.reset();
+            horaSelect.innerHTML = '<option value="" disabled selected>Primero selecciona un día en el calendario</option>';
+            horaSelect.disabled = true;
+        } catch (error) {
+            alert('Ocurrió un error al agendar. Por favor, intenta de nuevo.');
+        } finally {
+            btn.textContent = 'Confirmar Reserva';
+            btn.disabled = false;
+        }
     });
 </script>
 
