@@ -745,7 +745,8 @@
 
     function parseTimeToMinutes(timeStr) {
         if (!timeStr) return null;
-        timeStr = timeStr.trim().toUpperCase();
+        if (typeof timeStr === 'number') return timeStr * 60; // Si viene formato 9 o 18 directo de la config antigua
+        timeStr = timeStr.toString().trim().toUpperCase();
         const isPM = timeStr.includes('PM'), isAM = timeStr.includes('AM');
         const cleanTime = timeStr.replace(/[AP]M/g, '').trim();
         const parts = cleanTime.split(':');
@@ -773,13 +774,17 @@
         horaSelect.disabled = true;
 
         try {
-            const [resCitas, resConfig] = await Promise.all([
-                fetch(`${FIREBASE_URL}citas.json`),
-                fetch(`${FIREBASE_URL}configuracion/horarioSemanal.json`)
-            ]);
-            
+            // Se hace la consulta de citas de manera independiente para que si falla la config no rompa la app pública
+            const resCitas = await fetch(`${FIREBASE_URL}citas.json`);
             const dataCitas = await resCitas.json();
-            const dataConfig = await resConfig.json();
+            
+            let dataConfig = null;
+            try {
+                const resConfig = await fetch(`${FIREBASE_URL}configuracion/horarioSemanal.json`);
+                if (resConfig.ok) dataConfig = await resConfig.json();
+            } catch (errConfig) {
+                console.log("Ajustes de horario remoto protegidos o inexistentes. Cargando valores estándar por defecto.");
+            }
             
             const [year, month, day] = fechaSeleccionada.split('-');
             const fechaObj = new Date(year, month - 1, day);
@@ -801,11 +806,13 @@
                 });
             }
 
-            const inicioMinutos = configDia && configDia.apertura ? parseTimeToMinutes(configDia.apertura) : 9 * 60; 
-            const finMinutos = configDia && configDia.cierre ? parseTimeToMinutes(configDia.cierre) : 21 * 60; 
+            // Si no hay configuración remota accesible, asume 9:00 AM (9*60=540) a 9:00 PM (21*60=1260) por seguridad
+            const inicioMinutos = configDia && configDia.apertura !== undefined ? parseTimeToMinutes(configDia.apertura) : 9 * 60; 
+            const finMinutos = configDia && configDia.cierre !== undefined ? parseTimeToMinutes(configDia.cierre) : 21 * 60; 
 
             generarOpcionesHora(citasOcupadasMinutos, inicioMinutos, finMinutos, fechaSeleccionada);
         } catch (error) {
+            console.error(error);
             horaSelect.innerHTML = '<option value="" disabled selected>Error de conexión</option>';
         }
     });
@@ -937,12 +944,12 @@
         if (horaStr.toUpperCase().includes('AM') || horaStr.toUpperCase().includes('PM')) return horaStr;
         const partes = horaStr.split(':');
         if (partes.length === 2) {
-            let horas = parseInt(partes[0], 10);
+            let hours = parseInt(partes[0], 10);
             const minutos = partes[1];
-            const ampm = horas >= 12 ? 'PM' : 'AM';
-            horas = horas % 12;
-            horas = horas ? horas : 12; 
-            return `${horas}:${minutos} ${ampm}`;
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+            return `${hours}:${minutos} ${ampm}`;
         }
         return horaStr;
     }
