@@ -582,7 +582,7 @@
                 </div>
 
                 <div style="display:flex; align-items:center; gap:12px; margin-top:10px;">
-                    <input type="checkbox" id="mPatrocinado" style="width:20px; height:20px; accent-color:var(--dorado-acento);">
+                    <input type="checkbox" id="mPatrocinado" style="width:20px; height:20px; accent-color:var(--dorado-acento); toggle-color:var(--dorado-acento);">
                     <label style="color:var(--gris-secundario); font-size:0.85rem;">¿Trabajo Patrocinado?</label>
                 </div>
                 
@@ -745,7 +745,7 @@
 
     function parseTimeToMinutes(timeStr) {
         if (!timeStr) return null;
-        if (typeof timeStr === 'number') return timeStr * 60; // Si viene formato 9 o 18 directo de la config antigua
+        if (typeof timeStr === 'number') return timeStr * 60; 
         timeStr = timeStr.toString().trim().toUpperCase();
         const isPM = timeStr.includes('PM'), isAM = timeStr.includes('AM');
         const cleanTime = timeStr.replace(/[AP]M/g, '').trim();
@@ -774,7 +774,6 @@
         horaSelect.disabled = true;
 
         try {
-            // Se hace la consulta de citas de manera independiente para que si falla la config no rompa la app pública
             const resCitas = await fetch(`${FIREBASE_URL}citas.json`);
             const dataCitas = await resCitas.json();
             
@@ -783,7 +782,7 @@
                 const resConfig = await fetch(`${FIREBASE_URL}configuracion/horarioSemanal.json`);
                 if (resConfig.ok) dataConfig = await resConfig.json();
             } catch (errConfig) {
-                console.log("Ajustes de horario remoto protegidos o inexistentes. Cargando valores estándar por defecto.");
+                console.log("Cargando valores estándar por defecto.");
             }
             
             const [year, month, day] = fechaSeleccionada.split('-');
@@ -806,14 +805,15 @@
                 });
             }
 
-            // Si no hay configuración remota accesible, asume 9:00 AM (9*60=540) a 9:00 PM (21*60=1260) por seguridad
-            const inicioMinutos = configDia && configDia.apertura !== undefined ? parseTimeToMinutes(configDia.apertura) : 9 * 60; 
-            const finMinutos = configDia && configDia.cierre !== undefined ? parseTimeToMinutes(configDia.cierre) : 21 * 60; 
+            const inicioMinutos = configDia && configDia.apertura !== undefined && configDia.apertura !== null ? parseTimeToMinutes(configDia.apertura) : 9 * 60; 
+            const finMinutos = configDia && configDia.cierre !== undefined && configDia.cierre !== null ? parseTimeToMinutes(configDia.cierre) : 21 * 60; 
 
             generarOpcionesHora(citasOcupadasMinutos, inicioMinutos, finMinutos, fechaSeleccionada);
         } catch (error) {
             console.error(error);
-            horaSelect.innerHTML = '<option value="" disabled selected>Error de conexión</option>';
+            // El fallback de seguridad entra en acción si hay datos corruptos para no trancar la app
+            horaSelect.innerHTML = '<option value="" disabled selected>-- Elige una hora disponible --</option>';
+            generarOpcionesHora([], 9 * 60, 21 * 60, fechaSeleccionada);
         }
     });
 
@@ -907,9 +907,9 @@
             '--fondo-oscuro': '#050508', 
             '--fondo-tarjeta': 'rgba(18, 12, 28, 0.8)', 
             '--fondo-input': 'rgba(28, 18, 42, 0.8)', 
-            '--dorado-acento': '#c026d3', /* Tono magenta/fucsia del logo */
-            '--dorado-brillante': '#2dd4bf', /* Tono cyan/aguamarina */
-            '--bronce-oscuro': '#3b82f6', /* Tono azul */
+            '--dorado-acento': '#c026d3', 
+            '--dorado-brillante': '#2dd4bf', 
+            '--bronce-oscuro': '#3b82f6', 
             '--borde-sutil': 'rgba(192, 38, 211, 0.3)', 
             '--gradiente-metal': 'linear-gradient(135deg, #c026d3 0%, #3b82f6 50%, #2dd4bf 100%)', 
             '--shadow-dorada': '0 0 25px rgba(192, 38, 211, 0.25)'
@@ -923,7 +923,6 @@
     }
 
     function inicializarTema() {
-        // Obliga a evitar temas claros al iniciar y prioriza el oscuro
         let temaGuardado = localStorage.getItem('temaVictorStyles') || 'original';
         if (temaGuardado === 'claro' || temaGuardado === 'light') temaGuardado = 'original'; 
         document.getElementById('selectorTema').value = temaGuardado;
