@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Victorstyles Barber | Barbería Premium</title>
+    <title>Victorstyles Barber | Barbería Premium & Admin</title>
     <link rel="manifest" href="manifest.json">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
-        /* Variables de color adaptadas */
+        /* =========================================
+           VARIABLES GLOBALES Y TEMAS UNIFICADOS
+           ========================================= */
         :root {
             --fondo-oscuro: #09090b; 
             --fondo-tarjeta: rgba(21, 21, 24, 0.6);
@@ -19,6 +22,10 @@
             --dorado-brillante: #f4d083;
             --bronce-oscuro: #947032;
             
+            --verde-exito: #10b981;
+            --rojo-alerta: #ef4444; 
+            --naranja-alerta: #f59e0b;
+            
             --borde-sutil: rgba(197, 160, 89, 0.2);
             --borde-enfoque: rgba(244, 208, 131, 0.5);
             --shadow-premium: 0 15px 35px -10px rgba(0, 0, 0, 0.8);
@@ -29,17 +36,20 @@
 
         /* Configuración General */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: '-apple-system', BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, sans-serif; scroll-behavior: smooth; }
-
         body { background-color: var(--fondo-oscuro); color: var(--gris-texto); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 
+        /* Transiciones Globales */
         .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
+        /* Tipografía Base */
         h2 { text-align: center; font-size: 2rem; color: #ffffff; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; background: linear-gradient(180deg, #ffffff 20%, var(--dorado-acento) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .subtitulo { text-align: center; color: var(--gris-secundario); margin-top: 8px; margin-bottom: 45px; font-size: 1rem; letter-spacing: 0.5px; font-weight: 400; }
 
-        /* BARRA DE NAVEGACIÓN */
-        header { display: flex; justify-content: space-between; align-items: center; padding: 0 5%; background-color: rgba(9, 9, 11, 0.85); backdrop-filter: blur(20px); position: fixed; width: 100%; top: 0; left: 0; z-index: 1000; border-bottom: 1px solid var(--borde-sutil); height: 85px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); }
+        /* =========================================
+           VISTA PÚBLICA (WEB CLIENTES)
+           ========================================= */
+        #app-public header { display: flex; justify-content: space-between; align-items: center; padding: 0 5%; background-color: rgba(9, 9, 11, 0.85); backdrop-filter: blur(20px); position: fixed; width: 100%; top: 0; left: 0; z-index: 1000; border-bottom: 1px solid var(--borde-sutil); height: 85px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); }
         .menu-hamburguesa { display: flex; flex-direction: column; justify-content: space-between; width: 24px; height: 15px; background: transparent; border: none; cursor: pointer; z-index: 1100; }
         .menu-hamburguesa span { width: 100%; height: 2px; background-color: #ffffff; border-radius: 2px; transition: transform 0.3s, opacity 0.3s, background-color 0.3s; }
         .menu-hamburguesa.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); background-color: var(--dorado-brillante); }
@@ -47,7 +57,7 @@
         .menu-hamburguesa.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); background-color: var(--dorado-brillante); }
         .menu-desplegable { position: fixed; top: 0; left: -320px; width: 300px; height: 100vh; background-color: rgba(15, 15, 18, 0.95); backdrop-filter: blur(25px); border-right: 1px solid var(--borde-sutil); box-shadow: 20px 0 50px rgba(0, 0, 0, 0.9); z-index: 1050; display: flex; flex-direction: column; padding: 100px 35px 40px 35px; transition: left 0.4s; }
         .menu-desplegable.open { left: 0; }
-        .menu-desplegable a { color: var(--gris-texto); text-decoration: none; font-size: 0.95rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; padding: 20px 0; border-bottom: 1px solid rgba(197, 160, 89, 0.08); transition: all 0.3s; }
+        .menu-desplegable a { color: var(--gris-texto); text-decoration: none; font-size: 0.95rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; padding: 20px 0; border-bottom: 1px solid rgba(197, 160, 89, 0.08); transition: all 0.3s; cursor: pointer; }
         .menu-desplegable a:hover { color: var(--dorado-brillante); padding-left: 10px; border-bottom-color: var(--dorado-acento); }
         .menu-desplegable .link-admin-menu { margin-top: auto; color: var(--dorado-brillante); font-size: 0.8rem; border: 1px solid var(--borde-sutil); border-radius: 12px; text-align: center; padding: 16px; background: linear-gradient(135deg, rgba(197, 160, 89, 0.1) 0%, transparent 100%); }
         .logo { display: flex; align-items: center; }
@@ -56,7 +66,6 @@
         .menu-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.8); z-index: 1040; display: none; backdrop-filter: blur(4px); opacity: 0; transition: opacity 0.3s; }
         .menu-overlay.show { display: block; opacity: 1; }
 
-        /* HERO PANEL */
         .hero-container { position: relative; width: 100%; height: 90vh; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-top: 85px; }
         .hero-media { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
         .hero-img { width: 100%; height: 100%; object-fit: cover; object-position: center; opacity: 0.7; transform: scale(1.05); animation: zoomBg 20s infinite alternate linear; }
@@ -71,11 +80,10 @@
         .banner-elegante-text h4 { color: var(--dorado-brillante); font-size: 1.05rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
         .banner-elegante-text p { color: var(--gris-texto); font-size: 0.95rem; line-height: 1.7; font-weight: 300; }
         .banner-elegante-text strong { color: #ffffff; font-weight: 700; border-bottom: 1px solid var(--dorado-acento); padding-bottom: 2px;}
-        .hero-btn { display: inline-block; padding: 18px 45px; background: var(--gradiente-metal); background-size: 200% auto; color: #000; text-decoration: none; font-weight: 800; font-size: 1rem; letter-spacing: 2px; border-radius: 30px; text-transform: uppercase; box-shadow: 0 10px 30px rgba(197, 160, 89, 0.4); transition: all 0.4s; position: relative; overflow: hidden; }
+        .hero-btn { display: inline-block; padding: 18px 45px; background: var(--gradiente-metal); background-size: 200% auto; color: #000; text-decoration: none; font-weight: 800; font-size: 1rem; letter-spacing: 2px; border-radius: 30px; text-transform: uppercase; box-shadow: 0 10px 30px rgba(197, 160, 89, 0.4); transition: all 0.4s; position: relative; overflow: hidden; cursor: pointer; }
         .hero-btn:hover { background-position: right center; box-shadow: 0 15px 40px rgba(197, 160, 89, 0.6); transform: translateY(-3px) scale(1.02); }
 
-        /* SECCIONES RESTANTES */
-        section { padding: 90px 5%; position: relative; }
+        #app-public section { padding: 90px 5%; position: relative; }
         .galeria-section { max-width: 1200px; margin: 0 auto; }
         .grid-galeria { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .tarjeta-galeria { position: relative; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-premium); cursor: pointer; }
@@ -101,7 +109,6 @@
         .servicio-costo { font-size: 1.3rem; font-weight: 800; color: #ffffff; background-color: var(--fondo-input); padding: 12px 20px; border-radius: 14px; min-width: 85px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
         .precio-tarjeta.destacado .servicio-costo { background: var(--gradiente-metal); color: #000; border: none; box-shadow: var(--shadow-dorada); }
 
-        /* FORMULARIO */
         .agenda-section { border-top: 1px solid var(--borde-sutil); }
         .form-agenda { max-width: 600px; margin: 0 auto; background: rgba(15, 15, 18, 0.7); backdrop-filter: blur(20px); padding: 45px 40px; border-radius: 24px; border: 1px solid var(--borde-sutil); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9); transition: opacity 0.4s ease; }
         .grupo-input { margin-bottom: 25px; position: relative; }
@@ -114,31 +121,15 @@
         .btn-submit:hover { background-position: right center; transform: translateY(-3px); }
         .btn-submit:disabled { background: var(--gris-secundario); cursor: not-allowed; transform: none; }
 
-        /* TICKET DE CONFIRMACIÓN */
-        #ticket-confirmacion {
-            display: none;
-            max-width: 450px;
-            margin: 0 auto;
-            background: linear-gradient(135deg, rgba(20, 20, 24, 0.95), rgba(10, 10, 12, 0.95));
-            border: 1px solid var(--dorado-acento);
-            border-radius: 16px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(197, 160, 89, 0.1);
-            position: relative;
-            animation: fadeInTicket 0.6s ease forwards;
-        }
+        #ticket-confirmacion { display: none; max-width: 450px; margin: 0 auto; background: linear-gradient(135deg, rgba(20, 20, 24, 0.95), rgba(10, 10, 12, 0.95)); border: 1px solid var(--dorado-acento); border-radius: 16px; padding: 30px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(197, 160, 89, 0.1); position: relative; animation: fadeInTicket 0.6s ease forwards; }
         @keyframes fadeInTicket { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        
         .ticket-header { border-bottom: 1px dashed var(--borde-sutil); padding-bottom: 20px; margin-bottom: 20px; }
         .ticket-header h3 { color: var(--dorado-brillante); font-size: 1.5rem; text-transform: uppercase; letter-spacing: 3px; font-weight: 900; }
         .ticket-header p { color: var(--gris-texto); font-size: 0.85rem; letter-spacing: 1px; margin-top: 5px; }
-        
         .ticket-body { text-align: left; margin-bottom: 25px; }
         .ticket-row { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; }
         .ticket-label { color: var(--dorado-acento); font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
         .ticket-value { color: #ffffff; font-weight: 600; font-size: 1rem; text-align: right; }
-        
         .ticket-footer { padding-top: 10px; }
         .btn-whatsapp { display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 16px; background: #25D366; color: #fff; text-decoration: none; font-weight: 800; text-transform: uppercase; border-radius: 12px; letter-spacing: 1px; transition: transform 0.3s; }
         .btn-whatsapp:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3); }
@@ -152,147 +143,532 @@
         .btn-mapa { display: inline-flex; align-items: center; gap: 10px; color: var(--dorado-brillante); text-decoration: none; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; border: 1px solid var(--dorado-brillante); padding: 12px 24px; border-radius: 30px; transition: all 0.3s ease; }
         .btn-mapa:hover { background: var(--dorado-brillante); color: #000; box-shadow: var(--shadow-dorada); }
         footer { text-align: center; padding: 50px 20px; background-color: #050505; color: var(--gris-secundario); font-size: 0.9rem; font-weight: 500; border-top: 1px solid rgba(255,255,255,0.05); }
+
+        /* =========================================
+           VISTA PANEL ADMINISTRADOR
+           ========================================= */
+        #app-admin { display: none; padding-top: 85px; }
+        #app-admin header { display: flex; justify-content: center; align-items: center; padding: 0 5%; background-color: var(--fondo-oscuro); opacity: 0.95; backdrop-filter: blur(25px); position: fixed; width: 100%; top: 0; left: 0; z-index: 1000; border-bottom: 1px solid var(--borde-sutil); height: 75px; }
+        
+        #app-admin h2 { font-size: 1.6rem; margin-bottom: 8px; }
+        #app-admin h3 { font-size: 1rem; font-weight: 700; border-bottom: 1px solid var(--borde-sutil); padding-bottom: 16px; margin-bottom: 16px; color: rgba(255, 255, 255, 0.9); text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center;}
+        
+        .btn-cerrar-sesion { position: absolute; right: 5%; background: var(--fondo-input); border: 1px solid var(--borde-sutil); color: var(--dorado-acento); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; transition: all 0.2s; }
+        .btn-cerrar-sesion:hover { border-color: var(--dorado-acento); color: var(--dorado-brillante); }
+        .btn-volver-web { right: 15%; border-color: var(--verde-exito); color: var(--verde-exito); }
+        .btn-volver-web:hover { background: rgba(16, 185, 129, 0.1); color: #fff; }
+
+        .tabs-container { display: flex; gap: 12px; overflow-x: auto; padding: 0 5% 15px 5%; margin-bottom: 25px; border-bottom: 1px solid var(--borde-sutil); scrollbar-width: none; }
+        .tabs-container::-webkit-scrollbar { display: none; }
+        .tab-btn { background: transparent; color: var(--gris-secundario); border: none; padding: 12px 18px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; position: relative; white-space: nowrap; transition: color 0.3s; }
+        .tab-btn.active { color: var(--dorado-brillante); }
+        .tab-btn.active::after { content: ''; position: absolute; bottom: -16px; left: 0; width: 100%; height: 3px; background: var(--gradiente-metal); border-radius: 3px 3px 0 0; }
+        
+        .modulo-admin { display: none; animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 0 5%; max-width: 1200px; margin: 0 auto; }
+        .modulo-admin.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .login-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(12, 12, 14, 0.95); backdrop-filter: blur(10px); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 24px; }
+        .login-box { background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); padding: 45px 35px; border-radius: 20px; width: 100%; max-width: 400px; text-align: center; border-top: 4px solid var(--dorado-acento); box-shadow: var(--shadow-premium); }
+        .login-box input { width: 100%; padding: 16px; background-color: var(--fondo-input); border: 1px solid var(--borde-sutil); color: #fff; border-radius: 12px; outline: none; margin-bottom: 20px; font-size: 0.95rem; text-align: center; transition: all 0.3s;}
+        .login-box input:focus { border-color: var(--dorado-acento); box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.15); }
+        .btn-login { width: 100%; padding: 16px; background: var(--gradiente-metal); background-size: 200% auto; color: #0c0c0e; border: none; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; border-radius: 12px; cursor: pointer; transition: all 0.3s; }
+        .btn-login:hover { background-position: right center; }
+        .error-login { color: var(--rojo-alerta); font-size: 0.85rem; margin-top: 16px; display: none; font-weight: 600; }
+        .btn-cerrar-login { margin-top: 15px; background: transparent; color: var(--gris-secundario); font-size: 0.8rem; border: none; text-decoration: underline; cursor: pointer; }
+
+        .seccion-bloque { background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-radius: 20px; padding: 26px; margin-bottom: 28px; box-shadow: var(--shadow-premium); }
+        .grid-contable { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 28px; }
+        .tarjeta-contable { background-color: var(--fondo-input); border: 1px solid var(--borde-sutil); border-radius: 16px; padding: 22px 16px; text-align: center; position: relative; transition: transform 0.2s;}
+        .tarjeta-contable:hover { transform: translateY(-3px); }
+        .tarjeta-contable h4 { font-size: 0.7rem; text-transform: uppercase; color: var(--gris-secundario); margin-bottom: 10px; font-weight: 700; letter-spacing: 1px;}
+        .tarjeta-contable .dato-principal { font-size: 1.8rem; font-weight: 800; color: #ffffff; }
+
+        .contenedor-graficos { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 28px; }
+        .tarjeta-grafico { background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-radius: 20px; padding: 24px; box-shadow: var(--shadow-premium); display: flex; flex-direction: column; align-items: center; justify-content: center;}
+        .tarjeta-grafico h4 { font-size: 0.85rem; text-transform: uppercase; color: var(--gris-secundario); margin-bottom: 20px; font-weight: 700; letter-spacing: 1px; width: 100%; text-align: left; border-bottom: 1px solid var(--borde-sutil); padding-bottom: 12px;}
+        .canvas-container { position: relative; width: 100%; max-height: 280px; display: flex; justify-content: center;}
+
+        .form-manual { display: flex; flex-direction: column; gap: 18px; }
+        .form-grupo { display: flex; flex-direction: column; gap: 10px; }
+        .form-grupo label { font-size: 0.75rem; color: var(--dorado-acento); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+        .form-grupo input, .form-grupo select { background-color: var(--fondo-input); border: 1px solid var(--borde-sutil); color: #fff; padding: 16px; border-radius: 12px; outline: none; width: 100%; font-size: 0.95rem; transition: border-color 0.2s; }
+        .form-grupo input:focus, .form-grupo select:focus { border-color: var(--dorado-acento); }
+        .btn-guardar { background: var(--gradiente-metal); background-size: 200% auto; color: #0c0c0e; border: none; padding: 16px; border-radius: 12px; cursor: pointer; font-weight: 800; text-transform: uppercase; width: 100%; font-size: 0.85rem; letter-spacing: 1.5px; transition: all 0.3s; }
+        .btn-guardar:hover { background-position: right center; }
+        .btn-guardar:disabled { background: var(--gris-secundario); cursor: not-allowed; }
+        
+        .btn-accion { background: transparent; border: 1px solid var(--borde-sutil); color: var(--dorado-brillante); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: bold; transition: all 0.2s; text-transform: uppercase;}
+        .btn-accion:hover { background: rgba(197, 160, 89, 0.1); border-color: var(--dorado-acento); color: #fff; }
+        
+        .contenedor-tabla { width: 100%; overflow-x: auto; margin-top: 15px; border: 1px solid var(--borde-sutil); border-radius: 16px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; background: var(--fondo-input); }
+        th, td { padding: 16px; border-bottom: 1px solid var(--borde-sutil); font-size: 0.9rem; }
+        th { background-color: var(--fondo-tarjeta); color: var(--gris-secundario); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1.5px; }
+
+        .dia-grid { display: grid; grid-template-columns: 1fr 2fr 2fr; gap: 10px; align-items: center; margin-bottom: 12px; padding: 12px; background: var(--fondo-input); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);}
+        .dia-grid h4 { color: #fff; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;}
+        .dia-grid input[type="number"] { padding: 8px; border-radius: 8px; text-align: center; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(12, 12, 14, 0.85); backdrop-filter: blur(8px); z-index: 3000; display: none; justify-content: center; align-items: center; padding: 20px; }
+        .modal-box { background: var(--fondo-tarjeta); border: 1px solid var(--dorado-acento); border-radius: 20px; width: 100%; max-width: 420px; padding: 30px; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
+        .modal-cerrar { position: absolute; top: 20px; right: 25px; background: transparent; border: none; color: var(--gris-secundario); font-size: 1.8rem; cursor: pointer; transition: color 0.2s; }
+        .modal-cerrar:hover { color: #fff; }
+        .modal-titulo { font-size: 1.3rem; color: #fff; border-bottom: 1px solid var(--borde-sutil); padding-bottom: 12px; margin-bottom: 20px; font-weight: 700;}
+        .modal-dato { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.95rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 8px;}
+        .modal-dato span:first-child { color: var(--gris-secundario); font-size: 0.8rem; text-transform: uppercase; font-weight: 600;}
+        .modal-dato span:last-child { color: #fff; font-weight: bold;}
+        
+        .filtros-rango { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; background: var(--fondo-input); padding: 18px; border-radius: 16px; border: 1px solid var(--borde-sutil); margin-bottom: 24px; }
+        .filtros-rango input { background: var(--fondo-tarjeta); color: #fff; border: 1px solid var(--borde-sutil); padding: 12px; border-radius: 10px; flex: 1; font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            table, thead, tbody, th, td, tr { display: block; width: 100%; border:none; }
+            thead { display: none; }
+            tr { border-bottom: 1px solid var(--dorado-acento); margin-bottom: 15px; padding: 15px; background: var(--fondo-input); border-radius: 12px;}
+            td { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);}
+            td::before { content: attr(data-label); font-weight: 700; text-transform: uppercase; font-size: 0.75rem; color: var(--dorado-acento); }
+            .dia-grid { grid-template-columns: 1fr; }
+            .btn-volver-web { right: 25%; }
+        }
     </style>
 </head>
 <body>
 
-<div class="menu-overlay" id="menuOverlay"></div>
+<div id="app-public">
+    <div class="menu-overlay" id="menuOverlay"></div>
 
-<header>
-    <button class="menu-hamburguesa" id="btnHamburguesa" aria-label="Menú">
-        <span></span><span></span><span></span>
-    </button>
-    <div class="logo"> 
-        <img src="LOGO.png" alt="Logo Victorstyles Barber" onerror="this.style.display='none'; document.write('<span style=\'color:var(--dorado-brillante); font-weight:bold; font-size:1.5rem;\'>VICTORSTYLES</span>')">
-    </div>
-</header>
+    <header>
+        <button class="menu-hamburguesa" id="btnHamburguesa" aria-label="Menú">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="logo"> 
+            <img src="LOGO.png" alt="Logo Victorstyles Barber" onerror="this.style.display='none'; document.write('<span style=\'color:var(--dorado-brillante); font-weight:bold; font-size:1.5rem;\'>VICTORSTYLES</span>')">
+        </div>
+    </header>
 
-<nav class="menu-desplegable" id="menuLateral">
-    <a href="#inicio" class="menu-link">🏠 Inicio</a>
-    <a href="#galeria" class="menu-link">✂️ Cortes</a>
-    <a href="#precios" class="menu-link">🏆 Servicios</a>
-    <a href="#agenda" class="menu-link">📅 Agendar Cita</a>
-    <a href="#ubicacion" class="menu-link">📍 Ubicación</a>
-    <a href="admin.html" class="link-admin-menu">⚙️ Panel Administrador</a>
-</nav>
+    <nav class="menu-desplegable" id="menuLateral">
+        <a href="#inicio" class="menu-link">🏠 Inicio</a>
+        <a href="#galeria" class="menu-link">✂️ Cortes</a>
+        <a href="#precios" class="menu-link">🏆 Servicios</a>
+        <a href="#agenda" class="menu-link">📅 Agendar Cita</a>
+        <a href="#ubicacion" class="menu-link">📍 Ubicación</a>
+        <a onclick="switchView('admin')" class="link-admin-menu">⚙️ Panel Administrador</a>
+    </nav>
 
-<section id="inicio" class="hero-container">
-    <div class="hero-media">
-        <img src="Hero.jpg" alt="Fondo Victorstyles Barber" class="hero-img" onerror="this.src='https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=2074&auto=format&fit=crop'">
-        <div class="hero-overlay"></div>
-    </div>
-    
-    <div class="hero-content reveal">
-        <h1 class="hero-title">VICTORSTYLES BARBER</h1>
-        <p class="hero-subtitle">Estilo, precisión y elegancia en cada corte.</p>
+    <section id="inicio" class="hero-container">
+        <div class="hero-media">
+            <img src="Hero.jpg" alt="Fondo Victorstyles Barber" class="hero-img" onerror="this.src='https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=2074&auto=format&fit=crop'">
+            <div class="hero-overlay"></div>
+        </div>
         
-        <div class="banner-elegante">
-            <div class="banner-elegante-icon">💈</div>
-            <div class="banner-elegante-text">
-                <h4>Experiencia Premium</h4>
-                <p>En <strong>Victorstyles Barber</strong> definimos tu estilo. Disfruta de un ambiente exclusivo y resultados impecables. Reserva tu espacio y compruébalo.</p>
+        <div class="hero-content reveal">
+            <h1 class="hero-title">VICTORSTYLES BARBER</h1>
+            <p class="hero-subtitle">Estilo, precisión y elegancia en cada corte.</p>
+            
+            <div class="banner-elegante">
+                <div class="banner-elegante-icon">💈</div>
+                <div class="banner-elegante-text">
+                    <h4>Experiencia Premium</h4>
+                    <p>En <strong>Victorstyles Barber</strong> definimos tu estilo. Disfruta de un ambiente exclusivo y resultados impecables. Reserva tu espacio y compruébalo.</p>
+                </div>
+            </div>
+            <a href="#agenda" class="hero-btn">AGENDAR CITA</a>
+        </div>
+    </section>
+
+    <section id="galeria" class="galeria-section reveal">
+        <h2>Mi Trabajo</h2>
+        <p class="subtitulo">Una muestra de los cortes y estilos recientes.</p>
+        <div class="grid-galeria">
+            <div class="tarjeta-galeria"><img src="corte1.png" onerror="this.src='https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=500'"><div class="info-galeria"><p>Hair Fade</p></div></div>
+            <div class="tarjeta-galeria"><img src="corte2.jpg" onerror="this.src='https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=500'"><div class="info-galeria"><p>Fade con Línea</p></div></div>
+            <div class="tarjeta-galeria"><img src="corte3.jpg" onerror="this.src='https://images.unsplash.com/photo-1588773846618-973ac5477c4e?w=500'"><div class="info-galeria"><p>Mid Fade</p></div></div>
+        </div>
+    </section>
+
+    <section id="precios" class="precios-section reveal">
+        <div class="precios-header"><h2>Servicios Premium</h2><p class="subtitulo">Calidad, precisión y estilo a tu alcance</p></div>
+        <div class="precios-grid">
+            <div class="precio-tarjeta"><div class="servicio-info"><h3>Corte Sencillo</h3><p>Corte clásico o moderno.</p></div><div class="servicio-costo">10$</div></div>
+            <div class="precio-tarjeta destacado"><div class="servicio-info"><h3>Corte Premium</h3><p>Corte estilizado, lavado y peinado.</p></div><div class="servicio-costo">13$</div></div>
+            <div class="precio-tarjeta"><div class="servicio-info"><h3>Corte con Barba Sencillo</h3><p>Arreglo y perfilado básico.</p></div><div class="servicio-costo">16$</div></div>
+            <div class="precio-tarjeta destacado"><div class="servicio-info"><h3>Corte con Barba Premium</h3><p>Ritual de toalla caliente y navaja.</p></div><div class="servicio-costo">19$</div></div>
+            <div class="precio-tarjeta"><div class="servicio-info"><h3>Barba Sola</h3><p>Perfilado y cuidado.</p></div><div class="servicio-costo">6$</div></div>
+        </div>
+    </section>
+
+    <section id="agenda" class="agenda-section reveal">
+        <h2>Agenda tu Cita</h2>
+        <p class="subtitulo" id="subtitulo-agenda">Asegura tu puesto y no hagas filas.</p>
+        
+        <form id="formulario-cita" class="form-agenda">
+            <div class="grupo-input">
+                <label for="nombre">Nombre Completo</label>
+                <input type="text" id="nombre" required placeholder="Ej. Juan Pérez">
+            </div>
+            <div class="grupo-input">
+                <label for="telefono">Teléfono de Contacto</label>
+                <input type="tel" id="telefono" required placeholder="Ej. 04121234567">
+            </div>
+            <div class="grupo-input select-container">
+                <label for="servicio">Servicio Deseado</label>
+                <select id="servicio" required class="select-servicio">
+                    <option value="" disabled selected>-- Elige tu estilo --</option>
+                    <option value="Corte Sencillo (10$)">Corte Sencillo - 10$</option>
+                    <option value="Corte Premium (13$)">Corte Premium - 13$</option>
+                    <option value="Corte con Barba Sencillo (16$)">Corte con Barba Sencillo - 16$</option>
+                    <option value="Corte con Barba Premium (19$)">Corte con Barba Premium - 19$</option>
+                    <option value="Barba Sola (6$)">Barba Sola - 6$</option>
+                    <option value="Cero con Barba Premium (13$)">Cero con Barba Premium - 13$</option>
+                </select>
+            </div>
+            <div class="grupo-input">
+                <label for="fecha">Fecha de tu Cita</label>
+                <input type="date" id="fecha" required min="">
+            </div>
+            <div class="grupo-input select-container">
+                <label for="hora">Hora Disponible</label>
+                <select id="hora" required disabled>
+                    <option value="" disabled selected>Primero selecciona un día en el calendario</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-submit">Confirmar Reserva</button>
+        </form>
+
+        <div id="ticket-confirmacion">
+            <div class="ticket-header">
+                <h3>CITA CONFIRMADA</h3>
+                <p>Victorstyles Barber</p>
+            </div>
+            <div class="ticket-body">
+                <div class="ticket-row"><span class="ticket-label">Cliente</span><span class="ticket-value" id="tk-nombre"></span></div>
+                <div class="ticket-row"><span class="ticket-label">Servicio</span><span class="ticket-value" id="tk-servicio"></span></div>
+                <div class="ticket-row"><span class="ticket-label">Día</span><span class="ticket-value" id="tk-fecha"></span></div>
+                <div class="ticket-row" style="border:none; margin-bottom:0;"><span class="ticket-label">Hora</span><span class="ticket-value" style="color:var(--dorado-brillante); font-size:1.2rem;" id="tk-hora"></span></div>
+            </div>
+            <div class="ticket-footer">
+                <p style="color:var(--gris-secundario); font-size:0.75rem; margin-bottom:15px; font-style:italic;">Haz captura de pantalla a este ticket y sé puntual.</p>
+                <a href="#" id="btn-wa-ticket" target="_blank" class="btn-whatsapp">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 0C5.383 0 0 5.383 0 12.031c0 2.126.551 4.195 1.594 6.015L.175 23.825l5.922-1.554a11.972 11.972 0 005.934 1.572h.005c6.648 0 12.031-5.383 12.031-12.031S18.679 0 12.031 0zm0 21.84c-1.802 0-3.568-.485-5.116-1.405l-.366-.217-3.805.998 1.018-3.712-.238-.378a9.98 9.98 0 01-1.524-5.281c0-5.526 4.498-10.024 10.033-10.024s10.033 4.498 10.033 10.024-4.5 10.023-10.035 10.023zm5.503-7.518c-.302-.151-1.785-.882-2.062-.983-.277-.101-.479-.151-.68.151-.202.302-.781.983-.958 1.184-.176.202-.353.227-.655.076-.302-.151-1.275-.47-2.428-1.501-.896-.803-1.501-1.794-1.677-2.096-.176-.302-.019-.465.132-.616.136-.136.302-.353.453-.529.151-.176.202-.302.302-.504.101-.202.05-.378-.025-.529-.076-.151-.68-1.638-.932-2.243-.245-.589-.495-.509-.68-.518-.176-.008-.378-.008-.579-.008-.202 0-.529.076-.806.378-.277.302-1.058 1.033-1.058 2.52 0 1.487 1.083 2.924 1.234 3.125.151.202 2.133 3.255 5.166 4.561.721.311 1.283.497 1.723.636.725.23 1.385.197 1.905.12.585-.087 1.785-.73 2.037-1.436.252-.706.252-1.31.176-1.436-.076-.126-.277-.202-.579-.353z"/></svg>
+                    Enviar Ticket a WhatsApp
+                </a>
+                <button class="btn-nueva-cita" onclick="resetFormulario()">Agendar otra cita</button>
             </div>
         </div>
-        <a href="#agenda" class="hero-btn">AGENDAR CITA</a>
-    </div>
-</section>
+    </section>
 
-<section id="galeria" class="galeria-section reveal">
-    <h2>Mi Trabajo</h2>
-    <p class="subtitulo">Una muestra de los cortes y estilos recientes.</p>
-    <div class="grid-galeria">
-        <div class="tarjeta-galeria"><img src="corte1.png" onerror="this.src='https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=500'"><div class="info-galeria"><p>Hair Fade</p></div></div>
-        <div class="tarjeta-galeria"><img src="corte2.jpg" onerror="this.src='https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=500'"><div class="info-galeria"><p>Fade con Línea</p></div></div>
-        <div class="tarjeta-galeria"><img src="corte3.jpg" onerror="this.src='https://images.unsplash.com/photo-1588773846618-973ac5477c4e?w=500'"><div class="info-galeria"><p>Mid Fade</p></div></div>
-    </div>
-</section>
+    <section id="ubicacion" class="ubicacion-section reveal">
+        <h2>Ubicación</h2>
+        <p class="subtitulo">Visítanos y vive la experiencia premium</p>
+        <div class="contenedor-direccion">
+            <p class="direccion-texto">
+                <strong>Victorstyles Barber</strong><br><br>Urb. La Gaviota, San Diego,<br>Estado Carabobo, Venezuela.
+            </p>
+            <a href="https://maps.google.com" target="_blank" class="btn-mapa">Ver en Mapa</a>
+        </div>
+    </section>
+    <footer><p>© 2026 Victorstyles Barber. Todos los derechos reservados.</p></footer>
+</div>
 
-<section id="precios" class="precios-section reveal">
-    <div class="precios-header"><h2>Servicios Premium</h2><p class="subtitulo">Calidad, precisión y estilo a tu alcance</p></div>
-    <div class="precios-grid">
-        <div class="precio-tarjeta"><div class="servicio-info"><h3>Corte Sencillo</h3><p>Corte clásico o moderno.</p></div><div class="servicio-costo">10$</div></div>
-        <div class="precio-tarjeta destacado"><div class="servicio-info"><h3>Corte Premium</h3><p>Corte estilizado, lavado y peinado.</p></div><div class="servicio-costo">13$</div></div>
-        <div class="precio-tarjeta"><div class="servicio-info"><h3>Corte con Barba Sencillo</h3><p>Arreglo y perfilado básico.</p></div><div class="servicio-costo">16$</div></div>
-        <div class="precio-tarjeta destacado"><div class="servicio-info"><h3>Corte con Barba Premium</h3><p>Ritual de toalla caliente y navaja.</p></div><div class="servicio-costo">19$</div></div>
-        <div class="precio-tarjeta"><div class="servicio-info"><h3>Barba Sola</h3><p>Perfilado y cuidado.</p></div><div class="servicio-costo">6$</div></div>
-    </div>
-</section>
-
-<section id="agenda" class="agenda-section reveal">
-    <h2>Agenda tu Cita</h2>
-    <p class="subtitulo" id="subtitulo-agenda">Asegura tu puesto y no hagas filas.</p>
-    
-    <form id="formulario-cita" class="form-agenda">
-        <div class="grupo-input">
-            <label for="nombre">Nombre Completo</label>
-            <input type="text" id="nombre" required placeholder="Ej. Juan Pérez">
-        </div>
-        <div class="grupo-input">
-            <label for="telefono">Teléfono de Contacto</label>
-            <input type="tel" id="telefono" required placeholder="Ej. 04121234567">
-        </div>
-        <div class="grupo-input select-container">
-            <label for="servicio">Servicio Deseado</label>
-            <select id="servicio" required class="select-servicio">
-                <option value="" disabled selected>-- Elige tu estilo --</option>
-                <option value="Corte Sencillo (10$)">Corte Sencillo - 10$</option>
-                <option value="Corte Premium (13$)">Corte Premium - 13$</option>
-                <option value="Corte con Barba Sencillo (16$)">Corte con Barba Sencillo - 16$</option>
-                <option value="Corte con Barba Premium (19$)">Corte con Barba Premium - 19$</option>
-                <option value="Barba Sola (6$)">Barba Sola - 6$</option>
-                <option value="Cero con Barba Premium (13$)">Cero con Barba Premium - 13$</option>
-            </select>
-        </div>
-        <div class="grupo-input">
-            <label for="fecha">Fecha de tu Cita</label>
-            <input type="date" id="fecha" required min="">
-        </div>
-        <div class="grupo-input select-container">
-            <label for="hora">Hora Disponible</label>
-            <select id="hora" required disabled>
-                <option value="" disabled selected>Primero selecciona un día en el calendario</option>
-            </select>
-        </div>
-        <button type="submit" class="btn-submit">Confirmar Reserva</button>
-    </form>
-
-    <div id="ticket-confirmacion">
-        <div class="ticket-header">
-            <h3>CITA CONFIRMADA</h3>
-            <p>Victorstyles Barber</p>
-        </div>
-        <div class="ticket-body">
-            <div class="ticket-row"><span class="ticket-label">Cliente</span><span class="ticket-value" id="tk-nombre"></span></div>
-            <div class="ticket-row"><span class="ticket-label">Servicio</span><span class="ticket-value" id="tk-servicio"></span></div>
-            <div class="ticket-row"><span class="ticket-label">Día</span><span class="ticket-value" id="tk-fecha"></span></div>
-            <div class="ticket-row" style="border:none; margin-bottom:0;"><span class="ticket-label">Hora</span><span class="ticket-value" style="color:var(--dorado-brillante); font-size:1.2rem;" id="tk-hora"></span></div>
-        </div>
-        <div class="ticket-footer">
-            <p style="color:var(--gris-secundario); font-size:0.75rem; margin-bottom:15px; font-style:italic;">Haz captura de pantalla a este ticket y sé puntual.</p>
-            <a href="#" id="btn-wa-ticket" target="_blank" class="btn-whatsapp">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 0C5.383 0 0 5.383 0 12.031c0 2.126.551 4.195 1.594 6.015L.175 23.825l5.922-1.554a11.972 11.972 0 005.934 1.572h.005c6.648 0 12.031-5.383 12.031-12.031S18.679 0 12.031 0zm0 21.84c-1.802 0-3.568-.485-5.116-1.405l-.366-.217-3.805.998 1.018-3.712-.238-.378a9.98 9.98 0 01-1.524-5.281c0-5.526 4.498-10.024 10.033-10.024s10.033 4.498 10.033 10.024-4.5 10.023-10.035 10.023zm5.503-7.518c-.302-.151-1.785-.882-2.062-.983-.277-.101-.479-.151-.68.151-.202.302-.781.983-.958 1.184-.176.202-.353.227-.655.076-.302-.151-1.275-.47-2.428-1.501-.896-.803-1.501-1.794-1.677-2.096-.176-.302-.019-.465.132-.616.136-.136.302-.353.453-.529.151-.176.202-.302.302-.504.101-.202.05-.378-.025-.529-.076-.151-.68-1.638-.932-2.243-.245-.589-.495-.509-.68-.518-.176-.008-.378-.008-.579-.008-.202 0-.529.076-.806.378-.277.302-1.058 1.033-1.058 2.52 0 1.487 1.083 2.924 1.234 3.125.151.202 2.133 3.255 5.166 4.561.721.311 1.283.497 1.723.636.725.23 1.385.197 1.905.12.585-.087 1.785-.73 2.037-1.436.252-.706.252-1.31.176-1.436-.076-.126-.277-.202-.579-.353z"/></svg>
-                Enviar Ticket a WhatsApp
-            </a>
-            <button class="btn-nueva-cita" onclick="resetFormulario()">Agendar otra cita</button>
+<div id="app-admin">
+    <div class="login-container" id="pantallaLogin" style="display:none;">
+        <div class="login-box">
+            <h3 style="border:none; justify-content:center; margin-bottom:0; color: var(--dorado-brillante);">Acceso Restringido</h3>
+            <p style="color:var(--gris-secundario); font-size:0.85rem; margin-bottom:28px;">Autenticación con Firebase</p>
+            <input type="email" id="campoEmail" placeholder="correo@ejemplo.com" autocomplete="email">
+            <input type="password" id="campoClave" placeholder="••••••••" autocomplete="current-password">
+            <button class="btn-login" id="btnIngresar">Ingresar</button>
+            <div class="error-login" id="mensajeError">Datos incorrectos. Inténtalo de nuevo.</div>
+            <button class="btn-cerrar-login" onclick="switchView('public')">Cancelar y volver a la web</button>
         </div>
     </div>
-</section>
 
-<section id="ubicacion" class="ubicacion-section reveal">
-    <h2>Ubicación</h2>
-    <p class="subtitulo">Visítanos y vive la experiencia premium</p>
-    <div class="contenedor-direccion">
-        <p class="direccion-texto">
-            <strong>Victorstyles Barber</strong><br><br>Urb. La Gaviota, San Diego,<br>Estado Carabobo, Venezuela.
-        </p>
-        <a href="https://maps.google.com" target="_blank" class="btn-mapa">Ver en Mapa</a>
+    <header>
+        <div class="logo"><img src="LOGO.png" alt="Victorstyles Barber" onerror="this.src='https://via.placeholder.com/150x50?text=Victor+Styles'"></div>
+        <button class="btn-cerrar-sesion btn-volver-web" onclick="switchView('public')">Ver Web</button>
+        <button class="btn-cerrar-sesion" id="btnCerrarSesion" style="display:none;">Salir</button>
+    </header>
+
+    <nav class="tabs-container" id="navegacionTabs" style="display:none;">
+        <button class="tab-btn active" onclick="cambiarTab('tab-dashboard', this)">Resumen</button>
+        <button class="tab-btn" onclick="cambiarTab('tab-agenda-admin', this)">Agenda</button>
+        <button class="tab-btn" onclick="cambiarTab('tab-finanzas', this)">Finanzas</button>
+        <button class="tab-btn" onclick="cambiarTab('tab-clientes', this)">Clientes</button>
+        <button class="tab-btn" onclick="cambiarTab('tab-ajustes', this)">Ajustes</button> 
+    </nav>
+
+    <div class="modal-overlay" id="modalDetalle">
+        <div class="modal-box">
+            <button class="modal-cerrar" onclick="cerrarModal('modalDetalle')">×</button>
+            <div class="modal-titulo" id="modalNombreCliente">Nombre Cliente</div>
+            <div class="modal-dato"><span>Teléfono</span><span id="modalTlf"></span></div>
+            <div class="modal-dato"><span>Servicio</span><span id="modalServicio"></span></div>
+            <div class="modal-dato"><span>Fecha</span><span id="modalFecha"></span></div>
+            <div class="modal-dato"><span>Estado</span><span id="modalEstado"></span></div>
+            <div class="modal-dato"><span>Patrocinado</span><span id="modalPatrocinio"></span></div>
+            <div style="margin-top: 25px; text-align: center; display: flex; flex-direction: column; gap: 10px;">
+                <button class="btn-guardar" id="btnAbrirEdicion" style="width: 100%;">Editar Datos del Cliente</button>
+                <button class="btn-accion" id="btnWhatsApp" style="border-color: var(--verde-exito); color: var(--verde-exito); width: 100%;">Contactar por WhatsApp</button>
+            </div>
+        </div>
     </div>
-</section>
-<footer><p>© 2026 Victorstyles Barber. Todos los derechos reservados.</p></footer>
+
+    <div class="modal-overlay" id="modalEditar">
+        <div class="modal-box">
+            <button class="modal-cerrar" onclick="cerrarModal('modalEditar')">×</button>
+            <div class="modal-titulo">Editar Registro</div>
+            <form id="formEditar" onsubmit="guardarEdicion(event)">
+                <input type="hidden" id="editId">
+                <div class="form-grupo"><label>Nombre</label><input type="text" id="editNombre" required></div>
+                <div class="form-grupo"><label>Teléfono</label><input type="tel" id="editTelefono" required></div>
+                <div class="form-grupo">
+                    <label>Servicio</label>
+                    <select id="editServicio" required>
+                        <option value="Corte Sencillo (10$)">Corte Sencillo (10$)</option>
+                        <option value="Corte Premium (13$)">Corte Premium (13$)</option>
+                        <option value="Corte con Barba Sencillo (16$)">Corte y barba sencillo (16$)</option>
+                        <option value="Corte con Barba Premium (19$)">Corte y barba premium (19$)</option>
+                        <option value="Barba Sola (6$)">Barba Sola (6$)</option>
+                    </select>
+                </div>
+                <div class="form-grupo">
+                    <label>Estado de la Cita</label>
+                    <select id="editEstado" required>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Atendido">Atendido</option>
+                        <option value="Cancelado">Cancelado</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn-guardar" style="background: transparent; color: var(--rojo-alerta); border: 1px solid var(--rojo-alerta); flex: 1;" id="btnEliminarCita">Eliminar</button>
+                    <button type="submit" class="btn-guardar" style="flex: 2;">Actualizar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="tab-dashboard" class="modulo-admin active">
+        <h2>Panel de Rendimiento</h2>
+        <div class="filtros-rango">
+            <span style="font-size: 0.85rem; color: var(--dorado-acento); font-weight: bold; text-transform: uppercase;">Desde:</span>
+            <input type="date" id="fechaInicioGlobal">
+            <span style="font-size: 0.85rem; color: var(--dorado-acento); font-weight: bold; text-transform: uppercase;">Hasta:</span>
+            <input type="date" id="fechaFinGlobal">
+            <button class="btn-accion" style="border-color:var(--dorado-acento); color:var(--dorado-brillante);" onclick="procesarMetricasGlobales()">Calcular</button>
+            <button class="btn-accion" onclick="limpiarMetricasGlobales()" style="border-color: var(--rojo-alerta); color: var(--rojo-alerta);">Ver Todo</button>
+        </div>
+
+        <div class="grid-contable">
+            <div class="tarjeta-contable"><h4>Total Cortes</h4><div class="dato-principal" id="cortesTotales">0</div></div>
+            <div class="tarjeta-contable"><h4>Promedio Diario</h4><div class="dato-principal" id="promedioCortes" style="color:var(--naranja-alerta);">0</div></div>
+            <div class="tarjeta-contable"><h4>Tu Neto Bruto</h4><div class="dato-principal" style="color:var(--verde-exito);" id="totalVictor">$0.00</div></div>
+            <div class="tarjeta-contable" style="border: 1px solid var(--dorado-acento); box-shadow: 0 0 20px rgba(197, 160, 89, 0.15); background: linear-gradient(180deg, var(--fondo-input), rgba(0,0,0,0.4));">
+                <h4 style="color: var(--dorado-brillante);">Tu Neto Real</h4>
+                <div class="dato-principal" style="color:var(--dorado-brillante);" id="netoRealTotal">$0.00</div>
+            </div>
+        </div>
+
+        <div class="contenedor-graficos">
+            <div class="tarjeta-grafico">
+                <h4>Distribución de Servicios</h4>
+                <div class="canvas-container">
+                    <canvas id="graficoServicios"></canvas>
+                </div>
+            </div>
+            <div class="tarjeta-grafico">
+                <h4>Balance Financiero ($)</h4>
+                <div class="canvas-container">
+                    <canvas id="graficoFinanzas"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-agenda-admin" class="modulo-admin">
+        <h2>Agenda e Historial</h2>
+        <div class="seccion-bloque">
+            <h3>Filtro por Día Específico</h3>
+            <div style="display:flex; gap:12px;">
+                <input type="date" id="filtroFechaAgenda" style="background:var(--fondo-input); color:#fff; padding:14px; border:1px solid var(--borde-sutil); border-radius:10px; width:100%;">
+                <button id="btnVerTodoAgenda" style="background:var(--fondo-input); color:var(--gris-texto); border:1px solid var(--borde-sutil); border-radius:10px; padding:0 20px; cursor:pointer; transition:all 0.2s;">Limpiar</button>
+            </div>
+        </div>
+
+        <div class="seccion-bloque">
+            <h3>Historial Operativo</h3>
+            <div class="contenedor-tabla">
+                <table>
+                    <thead><tr><th>Cliente</th><th>Servicio</th><th>Hora</th><th>Acción</th></tr></thead>
+                    <tbody id="tabla-citas-cuerpo">
+                        <tr><td colspan="4" style="text-align:center; padding:20px;">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="seccion-bloque">
+            <h3>Cliente en Puerta (Sin Agenda)</h3>
+            <form class="form-manual" id="formManual" onsubmit="guardarClienteManual(event)">
+                <div class="form-grupo">
+                    <label>Nombre y Apellido</label>
+                    <input type="text" id="mNombre" placeholder="Ej: Juan Pérez" required>
+                </div>
+                
+                <div style="display: flex; gap: 15px;">
+                    <div class="form-grupo" style="flex: 1;">
+                        <label>Teléfono</label>
+                        <input type="tel" id="mTelefono" placeholder="0414..." required>
+                    </div>
+                    <div class="form-grupo" style="flex: 1;">
+                        <label>Estado</label>
+                        <select id="mEstado" required>
+                            <option value="Atendido">Atendido</option>
+                            <option value="Pendiente">Pendiente</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-grupo">
+                    <label>Servicio</label>
+                    <select id="mServicio" required>
+                        <option value="Corte Sencillo (10$)">Corte Sencillo (10$)</option>
+                        <option value="Corte Premium (13$)">Corte Premium (13$)</option>
+                        <option value="Corte con Barba Sencillo (16$)">Corte y barba sencillo (16$)</option>
+                        <option value="Corte con Barba Premium (19$)">Corte y barba premium (19$)</option>
+                        <option value="Barba Sola (6$)">Barba Sola (6$)</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 15px;">
+                    <div class="form-grupo" style="flex: 1;">
+                        <label>Fecha</label>
+                        <input type="date" id="mFecha" required>
+                    </div>
+                    <div class="form-grupo" style="flex: 1;">
+                        <label>Hora</label>
+                        <input type="time" id="mHora" required>
+                    </div>
+                </div>
+
+                <div style="display:flex; align-items:center; gap:12px; margin-top:10px;">
+                    <input type="checkbox" id="mPatrocinado" style="width:20px; height:20px; accent-color:var(--dorado-acento);">
+                    <label style="color:var(--gris-secundario); font-size:0.85rem;">¿Trabajo Patrocinado?</label>
+                </div>
+                
+                <button type="submit" class="btn-guardar" style="margin-top: 10px;">Registrar y Bloquear Horario</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="tab-finanzas" class="modulo-admin">
+        <h2>Gestión Financiera</h2>
+        <div class="seccion-bloque">
+            <h3>Registrar Gasto</h3>
+            <form class="form-manual" id="formGastos" onsubmit="guardarGastoManual(event)">
+                <div class="form-grupo"><label>Concepto</label><input type="text" id="gConcepto" required></div>
+                <div class="form-grupo"><label>Monto ($)</label><input type="number" id="gMonto" step="0.01" required></div>
+                <div class="form-grupo"><label>Fecha</label><input type="date" id="gFecha" required></div>
+                <button type="submit" class="btn-guardar" style="background:var(--fondo-input); color:var(--dorado-brillante); border: 1px solid var(--dorado-acento);">Registrar Gasto</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="tab-clientes" class="modulo-admin">
+        <h2>Fidelidad de Clientes</h2>
+        <div class="seccion-bloque">
+            <h3>Base de Datos de Clientes</h3>
+            <div class="form-grupo" style="margin-bottom: 20px;">
+                <input type="text" id="buscadorClientes" placeholder="Buscar por nombre o número de teléfono..." onkeyup="filtrarClientesFidelidad()" style="padding-left: 20px; border-radius: 20px; font-weight: 500;">
+            </div>
+            <div class="contenedor-tabla">
+                <table>
+                    <thead><tr><th>Cliente</th><th>Visitas</th><th>Última Vez</th><th>Acción</th></tr></thead>
+                    <tbody id="tabla-frecuencia-cuerpo">
+                        <tr><td colspan="4" style="text-align:center; padding:20px;">Calculando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-ajustes" class="modulo-admin">
+        <h2>Ajustes del Sistema</h2>
+        
+        <div class="seccion-bloque">
+            <h3>Horario Semanal Día a Día (Agenda Web)</h3>
+            <p style="color:var(--gris-secundario); font-size: 0.85rem; margin-bottom: 20px;">Desmarca la casilla si un día no trabajas. Formato de 24h (ej: 9 para 9am, 18 para 6pm).</p>
+            <form id="formHorarioSemanal" onsubmit="guardarHorarioSemanal(event)">
+                <div id="contenedorDias"></div>
+                <button type="submit" class="btn-guardar" style="margin-top: 15px;">Actualizar Todos los Días</button>
+            </form>
+        </div>
+
+        <div class="seccion-bloque">
+            <h3>Personalización Visual</h3>
+            <p style="color:var(--gris-secundario); font-size: 0.85rem; margin-bottom: 20px;">Elige una combinación de colores para tu panel. Todas las opciones respetan tu imagen corporativa.</p>
+            <div class="form-grupo">
+                <label>Esquema de Colores</label>
+                <select id="selectorTema" onchange="aplicarTema(this.value)">
+                    <option value="original">Clásico: Gris y Dorado (Por defecto)</option>
+                    <option value="noche">Noche Premium: Negro Profundo</option>
+                    <option value="carbon">Carbón: Gris Oscuro Mate</option>
+                </select>
+            </div>
+            <div style="margin-top:25px; padding: 15px; border-radius: 12px; background: var(--fondo-input); border: 1px solid var(--borde-sutil); text-align: center;">
+                <h4 style="color: var(--dorado-brillante); font-size: 0.9rem;">Vista Previa de Colores</h4>
+                <div style="display:flex; justify-content:center; gap:10px; margin-top:10px;">
+                    <div style="width:30px; height:30px; border-radius:50%; background:var(--fondo-oscuro); border:1px solid #fff;"></div>
+                    <div style="width:30px; height:30px; border-radius:50%; background:var(--fondo-tarjeta); border:1px solid #fff;"></div>
+                    <div style="width:30px; height:30px; border-radius:50%; background:var(--dorado-acento); border:1px solid #fff;"></div>
+                    <div style="width:30px; height:30px; border-radius:50%; background:var(--dorado-brillante); border:1px solid #fff;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="seccion-bloque" style="border-color: var(--rojo-alerta);">
+            <h3 style="color:var(--rojo-alerta); border-bottom-color: rgba(239, 68, 68, 0.2);">Seguridad de Datos</h3>
+            <p style="color:var(--gris-secundario); font-size: 0.85rem; margin-bottom: 15px;">Descarga una copia completa de tus clientes y finanzas en formato JSON.</p>
+            <button onclick="descargarRespaldoBD()" class="btn-accion" style="border-color:var(--rojo-alerta); color:var(--rojo-alerta); width:100%; padding: 12px;">Descargar Respaldo Total</button>
+        </div>
+    </div>
+</div>
 
 <script>
-    // --- Lógica del Menú ---
+    /* =========================================
+       VARIABLES COMPARTIDAS Y CONFIGURACIÓN
+       ========================================= */
+    const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
+    const API_KEY_FIREBASE = 'AIzaSyBKrJD4VAzOkvbCay-C8Dxsg3gsUkAt4EA'; 
+    let todasLasCitas = [];
+    let todosLosGastos = [];
+    let clientesFidelidadData = []; 
+    let tokenAuth = sessionStorage.getItem('tokenAdminVictor');
+    const diasSemanaNombres = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+
+    /* =========================================
+       NAVEGACIÓN ENTRE VISTAS (APP SPA)
+       ========================================= */
+    function switchView(view) {
+        if (view === 'admin') {
+            document.getElementById('app-public').style.display = 'none';
+            document.getElementById('app-admin').style.display = 'block';
+            if (!tokenAuth) {
+                document.getElementById('pantallaLogin').style.display = 'flex';
+            } else {
+                iniciarPanel();
+            }
+        } else {
+            document.getElementById('app-admin').style.display = 'none';
+            document.getElementById('app-public').style.display = 'block';
+        }
+    }
+
+    /* =========================================
+       LÓGICA VISTA PÚBLICA (CLIENTES)
+       ========================================= */
     document.addEventListener('DOMContentLoaded', () => {
+        // Menú hamburguesa público
         const btn = document.getElementById('btnHamburguesa'), 
               menu = document.getElementById('menuLateral'), 
               overlay = document.getElementById('menuOverlay');
@@ -307,59 +683,49 @@
         overlay.addEventListener('click', toggle);
         document.querySelectorAll('.menu-link').forEach(l => l.addEventListener('click', toggle));
         
+        // Animaciones Scroll
         window.addEventListener("scroll", () => { 
             document.querySelectorAll(".reveal").forEach(el => { 
                 if(el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add("active"); 
             }); 
         });
         
-        // Configurar la fecha mínima permitida en el calendario (Hoy en Venezuela)
+        // Setup Fecha Cita
         const hoy = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Caracas"}));
         document.getElementById('fecha').min = `${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,'0')}-${String(hoy.getDate()).padStart(2,'0')}`;
+
+        // Setup Temas Admin
+        inicializarTema();
+        Chart.defaults.color = '#a1a1aa';
+        Chart.defaults.font.family = "'-apple-system', sans-serif";
     });
 
-    const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
     const fechaInput = document.getElementById('fecha');
     const horaSelect = document.getElementById('hora');
     const formCita = document.getElementById('formulario-cita');
 
-    // --- FUNCIÓN INTELEGENTE: PARSEA CUALQUIER FORMATO A MINUTOS DESDE MEDIANOCHE ---
     function parseTimeToMinutes(timeStr) {
         if (!timeStr) return null;
         timeStr = timeStr.trim().toUpperCase();
-        
-        const isPM = timeStr.includes('PM');
-        const isAM = timeStr.includes('AM');
-        
-        // Limpiamos letras de formato
+        const isPM = timeStr.includes('PM'), isAM = timeStr.includes('AM');
         const cleanTime = timeStr.replace(/[AP]M/g, '').trim();
         const parts = cleanTime.split(':');
-        
         let hours = parseInt(parts[0], 10);
         const minutes = parts[1] ? parseInt(parts[1], 10) : 0;
-
-        // Si explícitamente tiene formato AM/PM
         if (isPM && hours < 12) hours += 12;
         if (isAM && hours === 12) hours = 0;
-        
-        // Retorna el total de minutos (Ej: "14:30" o "2:30 PM" darán ambos 870)
         return hours * 60 + minutes;
     }
 
-    // --- TRANSFORMA MINUTOS EN FORMATO ESTÁNDAR 12 HORAS ---
     function formatMinutesTo12H(totalMinutes) {
         const hours = Math.floor(totalMinutes / 60);
         const minutes = totalMinutes % 60;
         const ampm = hours >= 12 ? 'PM' : 'AM';
-        
         let hours12 = hours % 12;
         hours12 = hours12 ? hours12 : 12;
-        const minStr = String(minutes).padStart(2, '0');
-        
-        return `${hours12}:${minStr} ${ampm}`;
+        return `${hours12}:${String(minutes).padStart(2, '0')} ${ampm}`;
     }
 
-    // --- CONSULTA Y FILTRADO EN TIEMPO REAL ---
     fechaInput.addEventListener('change', async (e) => {
         const fechaSeleccionada = e.target.value;
         if(!fechaSeleccionada) return;
@@ -376,34 +742,28 @@
             const dataCitas = await resCitas.json();
             const dataConfig = await resConfig.json();
             
-            // Parseo estricto del día de la semana (0 = Domingo, 1 = Lunes...)
             const [year, month, day] = fechaSeleccionada.split('-');
             const fechaObj = new Date(year, month - 1, day);
             const diaSemana = fechaObj.getDay();
 
             let configDia = dataConfig ? dataConfig[diaSemana] : null;
-            
             if (configDia && configDia.activo === false) {
                 horaSelect.innerHTML = '<option value="" disabled selected>Día no laborable (Cerrado)</option>';
                 return;
             }
 
-            // Convertimos las citas ocupadas de la base de datos a minutos
             let citasOcupadasMinutos = [];
             if (dataCitas) {
                 Object.values(dataCitas).forEach(cita => {
                     if (cita.cita_fecha === fechaSeleccionada && cita.estado !== 'Cancelado') {
                         const minCita = parseTimeToMinutes(cita.cita_hora);
-                        if (minCita !== null) {
-                            citasOcupadasMinutos.push(minCita);
-                        }
+                        if (minCita !== null) citasOcupadasMinutos.push(minCita);
                     }
                 });
             }
 
-            // Leemos la apertura y cierre configurada desde el panel (con soporte multitipo)
-            const inicioMinutos = configDia && configDia.apertura ? parseTimeToMinutes(configDia.apertura) : 9 * 60; // 9:00 AM default
-            const finMinutos = configDia && configDia.cierre ? parseTimeToMinutes(configDia.cierre) : 21 * 60; // 9:00 PM default
+            const inicioMinutos = configDia && configDia.apertura ? parseTimeToMinutes(configDia.apertura) : 9 * 60; 
+            const finMinutos = configDia && configDia.cierre ? parseTimeToMinutes(configDia.cierre) : 21 * 60; 
 
             generarOpcionesHora(citasOcupadasMinutos, inicioMinutos, finMinutos, fechaSeleccionada);
         } catch (error) {
@@ -414,25 +774,15 @@
     function generarOpcionesHora(citasOcupadasMinutos, inicio, fin, fechaSeleccionada) {
         horaSelect.innerHTML = '<option value="" disabled selected>-- Elige una hora disponible --</option>';
         let hayDisponibles = false;
-
         const hoy = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Caracas"}));
         const hoyStr = `${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,'0')}-${String(hoy.getDate()).padStart(2,'0')}`;
         const esHoy = (fechaSeleccionada === hoyStr);
         const horaActualMinutos = hoy.getHours() * 60 + hoy.getMinutes();
 
-        // Generamos opciones cada 30 minutos desde la apertura hasta el cierre (menos 60min del servicio final)
         for (let min = inicio; min <= fin - 60; min += 30) {
-            
-            // Si la cita es hoy, quitamos las horas que ya pasaron en tiempo real
-            if (esHoy && min <= horaActualMinutos) {
-                continue;
-            }
+            if (esHoy && min <= horaActualMinutos) continue;
 
-            // LÓGICA DE BLOQUEO DE 60 MINUTOS:
-            // Un bloque colisiona si se cruza en el intervalo de 60 minutos con cualquier otra cita activa
-            const tieneConflicto = citasOcupadasMinutos.some(apptMin => {
-                return min < apptMin + 60 && apptMin < min + 60;
-            });
+            const tieneConflicto = citasOcupadasMinutos.some(apptMin => min < apptMin + 60 && apptMin < min + 60);
 
             if (!tieneConflicto) {
                 const option = document.createElement('option');
@@ -443,12 +793,8 @@
                 hayDisponibles = true;
             }
         }
-
-        if (!hayDisponibles) {
-            horaSelect.innerHTML = '<option value="" disabled selected>Agenda llena o sin horas disponibles</option>';
-        } else {
-            horaSelect.disabled = false;
-        }
+        if (!hayDisponibles) horaSelect.innerHTML = '<option value="" disabled selected>Agenda llena o sin horas disponibles</option>';
+        else horaSelect.disabled = false;
     }
 
     formCita.addEventListener('submit', async (e) => {
@@ -468,10 +814,7 @@
         };
 
         try {
-            await fetch(`${FIREBASE_URL}citas.json`, { 
-                method: 'POST', 
-                body: JSON.stringify(nuevaCita) 
-            });
+            await fetch(`${FIREBASE_URL}citas.json`, { method: 'POST', body: JSON.stringify(nuevaCita) });
             mostrarTicket(nuevaCita);
         } catch (error) {
             alert('Ocurrió un error al agendar. Verifica tu internet.');
@@ -483,10 +826,8 @@
     function mostrarTicket(datos) {
         formCita.style.display = 'none';
         document.getElementById('subtitulo-agenda').style.display = 'none';
-        
         const f = datos.cita_fecha.split('-');
         const fechaFormat = `${f[2]}/${f[1]}/${f[0]}`;
-
         document.getElementById('tk-nombre').textContent = datos.cliente_nombre;
         document.getElementById('tk-servicio').textContent = datos.servicio.split(' (')[0]; 
         document.getElementById('tk-fecha').textContent = fechaFormat;
@@ -495,7 +836,6 @@
         const numeroBarberia = "584244416044"; 
         const mensaje = encodeURIComponent(`💈 ¡Hola Victorstyles! Acabo de agendar.\n\n*Cliente:* ${datos.cliente_nombre}\n*Servicio:* ${datos.servicio}\n*Día:* ${fechaFormat}\n*Hora:* ${datos.cita_hora}\n\n¡Nos vemos allá!`);
         document.getElementById('btn-wa-ticket').href = `https://wa.me/${numeroBarberia}?text=${mensaje}`;
-
         document.getElementById('ticket-confirmacion').style.display = 'block';
     }
 
@@ -508,6 +848,429 @@
         formCita.style.display = 'block';
         formCita.querySelector('.btn-submit').textContent = 'Confirmar Reserva';
         formCita.querySelector('.btn-submit').disabled = false;
+    }
+
+    /* =========================================
+       LÓGICA VISTA ADMIN (PANEL)
+       ========================================= */
+    const esquemasColor = {
+        original: { '--fondo-oscuro': '#0c0c0e', '--fondo-tarjeta': '#151518', '--fondo-input': '#1a1a1f', '--dorado-acento': '#c5a059', '--dorado-brillante': '#e8c77a', '--bronce-oscuro': '#947032', '--borde-sutil': 'rgba(197, 160, 89, 0.15)' },
+        noche: { '--fondo-oscuro': '#000000', '--fondo-tarjeta': '#080808', '--fondo-input': '#121212', '--dorado-acento': '#d4af37', '--dorado-brillante': '#f9d71c', '--bronce-oscuro': '#996515', '--borde-sutil': 'rgba(212, 175, 55, 0.2)' },
+        carbon: { '--fondo-oscuro': '#18181b', '--fondo-tarjeta': '#27272a', '--fondo-input': '#3f3f46', '--dorado-acento': '#dcb46a', '--dorado-brillante': '#fde08b', '--bronce-oscuro': '#b48a43', '--borde-sutil': 'rgba(220, 180, 106, 0.2)' }
+    };
+
+    function aplicarTema(nombreTema) {
+        const tema = esquemasColor[nombreTema] || esquemasColor.original;
+        for (let variable in tema) document.documentElement.style.setProperty(variable, tema[variable]);
+        localStorage.setItem('temaVictorStyles', nombreTema);
+    }
+
+    function inicializarTema() {
+        const temaGuardado = localStorage.getItem('temaVictorStyles') || 'original';
+        document.getElementById('selectorTema').value = temaGuardado;
+        aplicarTema(temaGuardado);
+    }
+
+    function cambiarTab(idTab, boton) {
+        document.querySelectorAll('.modulo-admin').forEach(mod => mod.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(idTab).classList.add('active');
+        boton.classList.add('active');
+    }
+
+    function cerrarModal(idModal) { document.getElementById(idModal).style.display = 'none'; }
+
+    function estandarizarHora(horaStr) {
+        if (!horaStr) return '';
+        if (horaStr.toUpperCase().includes('AM') || horaStr.toUpperCase().includes('PM')) return horaStr;
+        const partes = horaStr.split(':');
+        if (partes.length === 2) {
+            let horas = parseInt(partes[0], 10);
+            const minutos = partes[1];
+            const ampm = horas >= 12 ? 'PM' : 'AM';
+            horas = horas % 12;
+            horas = horas ? horas : 12; 
+            return `${horas}:${minutos} ${ampm}`;
+        }
+        return horaStr;
+    }
+
+    function abrirModalDetalle(idCita) {
+        const cita = todasLasCitas.find(c => c.id === idCita);
+        if(!cita) return;
+        const horaLimpia = estandarizarHora(cita.cita_hora);
+        const fechaMostrar = cita.cita_fecha ? cita.cita_fecha : 'Sin fecha';
+
+        document.getElementById('modalNombreCliente').textContent = cita.cliente_nombre || 'Sin Nombre';
+        document.getElementById('modalTlf').textContent = cita.cliente_telefono || 'N/A';
+        document.getElementById('modalServicio').textContent = cita.servicio || 'N/A';
+        document.getElementById('modalFecha').textContent = `${fechaMostrar} / ${horaLimpia}`;
+        document.getElementById('modalEstado').textContent = cita.estado || 'Atendido';
+        document.getElementById('modalPatrocinio').textContent = cita.patrocinado ? 'Sí (Neto 100%)' : 'No (40/60)';
+        
+        document.getElementById('btnAbrirEdicion').onclick = () => abrirModalEditar(idCita);
+        
+        document.getElementById('btnWhatsApp').onclick = () => {
+            let numLimpio = cita.cliente_telefono ? cita.cliente_telefono.replace(/\D/g, '') : '';
+            if (numLimpio.startsWith('0')) { numLimpio = '58' + numLimpio.substring(1); }
+            if (numLimpio.length > 5) {
+                const msj = encodeURIComponent(`¡Hola ${cita.cliente_nombre}! Te escribimos de Victorstyles Barber...`);
+                window.open(`https://wa.me/${numLimpio}?text=${msj}`, '_blank');
+            } else { alert("El número de teléfono no parece ser válido."); }
+        };
+
+        document.getElementById('modalDetalle').style.display = 'flex';
+    }
+
+    function abrirModalEditar(idCita) {
+        const cita = todasLasCitas.find(c => c.id === idCita);
+        if(!cita) return;
+        cerrarModal('modalDetalle');
+        document.getElementById('editId').value = cita.id;
+        document.getElementById('editNombre').value = cita.cliente_nombre || '';
+        document.getElementById('editTelefono').value = cita.cliente_telefono || '';
+        document.getElementById('editServicio').value = cita.servicio || '';
+        document.getElementById('editEstado').value = cita.estado || 'Atendido';
+        document.getElementById('btnEliminarCita').onclick = () => eliminarCita(idCita);
+        document.getElementById('modalEditar').style.display = 'flex';
+    }
+
+    window.eliminarCita = async function(id) {
+        if(confirm('¿Seguro que quieres eliminar este registro?')) {
+            const btn = document.getElementById('btnEliminarCita');
+            btn.textContent = 'Borrando...';
+            btn.disabled = true;
+            try {
+                await fetch(`${FIREBASE_URL}citas/${id}.json?auth=${tokenAuth}`, { method: 'DELETE' });
+                cerrarModal('modalEditar');
+                cargarDatosDesdeServidor();
+            } catch (error) { alert("Error al eliminar."); } 
+            finally { btn.textContent = 'Eliminar'; btn.disabled = false; }
+        }
+    }
+
+    const btnIngresar = document.getElementById('btnIngresar');
+    btnIngresar.addEventListener('click', async () => {
+        const email = document.getElementById('campoEmail').value;
+        const password = document.getElementById('campoClave').value;
+        btnIngresar.textContent = 'Verificando...';
+        btnIngresar.disabled = true;
+        
+        try {
+            const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY_FIREBASE}`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password, returnSecureToken: true })
+            });
+            const data = await res.json();
+            
+            if(data.idToken) {
+                sessionStorage.setItem('tokenAdminVictor', data.idToken);
+                tokenAuth = data.idToken;
+                iniciarPanel();
+            } else { document.getElementById('mensajeError').style.display = 'block'; }
+        } catch(err) { document.getElementById('mensajeError').style.display = 'block'; } 
+        finally { btnIngresar.textContent = 'Ingresar'; btnIngresar.disabled = false; }
+    });
+
+    document.getElementById('btnCerrarSesion').addEventListener('click', () => {
+        sessionStorage.removeItem('tokenAdminVictor');
+        location.reload();
+    });
+
+    function iniciarPanel() {
+        document.getElementById('pantallaLogin').style.display = 'none';
+        document.getElementById('btnCerrarSesion').style.display = 'block';
+        document.getElementById('navegacionTabs').style.display = 'flex';
+        document.getElementById('gFecha').value = obtenerFechaHoy();
+        
+        document.getElementById('mFecha').value = obtenerFechaHoy();
+        const ahora = new Date();
+        document.getElementById('mHora').value = `${String(ahora.getHours()).padStart(2,'0')}:${String(ahora.getMinutes()).padStart(2,'0')}`;
+        
+        cargarDatosDesdeServidor();
+        
+        document.getElementById('filtroFechaAgenda').addEventListener('change', e => renderizarTablaAgenda(e.target.value));
+        document.getElementById('btnVerTodoAgenda').addEventListener('click', () => {
+            document.getElementById('filtroFechaAgenda').value = '';
+            renderizarTablaAgenda('');
+        });
+    }
+
+    function obtenerFechaHoy() {
+        const d = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Caracas"}));
+        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    }
+
+    async function cargarDatosDesdeServidor() {
+        try {
+            const [resCitas, resGastos, resConfig] = await Promise.all([
+                fetch(`${FIREBASE_URL}citas.json?auth=${tokenAuth}`),
+                fetch(`${FIREBASE_URL}gastos.json?auth=${tokenAuth}`),
+                fetch(`${FIREBASE_URL}configuracion/horarioSemanal.json?auth=${tokenAuth}`)
+            ]);
+            
+            if (!resCitas.ok) throw new Error("Fallo de autenticación o red en Citas");
+            
+            const citasData = await resCitas.json();
+            const gastosData = await resGastos.json();
+            const configData = await resConfig.json();
+
+            todasLasCitas = citasData ? Object.keys(citasData).map(id => ({ id, ...citasData[id] })).sort((a,b)=> {
+                let fechaA = a.cita_fecha ? new Date(a.cita_fecha) : new Date(0);
+                let fechaB = b.cita_fecha ? new Date(b.cita_fecha) : new Date(0);
+                return fechaB - fechaA;
+            }) : [];
+            todosLosGastos = gastosData ? Object.keys(gastosData).map(id => ({ id, ...gastosData[id] })) : [];
+
+            renderizarTablaAgenda(document.getElementById('filtroFechaAgenda').value);
+            procesarMetricasGlobales(); 
+            calcularFrecuencias();
+            renderizarAjustesDias(configData);
+
+        } catch (error) {
+            console.error("Error cargando datos protegidos", error);
+            document.getElementById('tabla-citas-cuerpo').innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--rojo-alerta);">Error de conexión. Recarga la página.</td></tr>';
+        }
+    }
+
+    function renderizarAjustesDias(datosGuardados) {
+        const contenedor = document.getElementById('contenedorDias');
+        contenedor.innerHTML = '';
+        for (let i = 0; i < 7; i++) {
+            let activo = true, ap = 9, ci = 18;
+            if (i === 0) activo = false;
+            if (datosGuardados && datosGuardados[i]) {
+                activo = datosGuardados[i].activo; ap = datosGuardados[i].apertura; ci = datosGuardados[i].cierre;
+            }
+            contenedor.innerHTML += `
+                <div class="dia-grid">
+                    <h4><input type="checkbox" id="chk_${i}" ${activo ? 'checked' : ''} style="accent-color: var(--dorado-acento); width:18px; height:18px;"> ${diasSemanaNombres[i]}</h4>
+                    <div class="form-grupo" style="margin:0;"><label>Abre</label><input type="number" id="ap_${i}" value="${ap}" min="0" max="23"></div>
+                    <div class="form-grupo" style="margin:0;"><label>Cierra</label><input type="number" id="ci_${i}" value="${ci}" min="0" max="23"></div>
+                </div>
+            `;
+        }
+    }
+
+    window.guardarHorarioSemanal = async function(e) {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.textContent = 'Guardando...'; btn.disabled = true;
+        const horarioObj = {};
+        for (let i = 0; i < 7; i++) {
+            horarioObj[i] = { activo: document.getElementById(`chk_${i}`).checked, apertura: parseInt(document.getElementById(`ap_${i}`).value), cierre: parseInt(document.getElementById(`ci_${i}`).value) };
+        }
+        try {
+            await fetch(`${FIREBASE_URL}configuracion/horarioSemanal.json?auth=${tokenAuth}`, { method: 'PUT', body: JSON.stringify(horarioObj) });
+            alert("¡Horarios actualizados!");
+        } catch (error) { alert("Error al guardar."); } 
+        finally { btn.textContent = 'Actualizar Todos los Días'; btn.disabled = false; }
+    }
+
+    window.descargarRespaldoBD = async function() {
+        try {
+            const res = await fetch(`${FIREBASE_URL}.json?auth=${tokenAuth}`);
+            const data = await res.json();
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url;
+            const fecha = new Date().toISOString().split('T')[0];
+            a.download = `Respaldo_Victorstyles_${fecha}.json`;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+        } catch (error) { alert("Hubo un problema descargando el respaldo."); }
+    }
+
+    function extraerPrecio(str) {
+        if(!str) return 0;
+        const match = str.match(/\((\d+)\$\)/);
+        return match ? parseInt(match[1], 10) : 0;
+    }
+
+    function limpiarMetricasGlobales() {
+        document.getElementById('fechaInicioGlobal').value = '';
+        document.getElementById('fechaFinGlobal').value = '';
+        procesarMetricasGlobales();
+    }
+
+    let graficoServiciosObj = null; let graficoFinanzasObj = null;
+
+    function procesarMetricasGlobales() {
+        const strInicio = document.getElementById('fechaInicioGlobal').value;
+        const strFin = document.getElementById('fechaFinGlobal').value;
+        const fechaInicio = strInicio ? new Date(strInicio + 'T00:00:00') : new Date('2000-01-01T00:00:00');
+        const fechaFin = strFin ? new Date(strFin + 'T23:59:59') : new Date('2100-01-01T23:59:59');
+
+        let cTotal = 0, iBarberia = 0, iVictor = 0, gTotal = 0;
+        let fechasRegistradas = new Set();
+        let conteoTipos = { 'Sencillo': 0, 'Premium': 0, 'Corte+Barba Sencillo': 0, 'Corte+Barba Premium': 0, 'Barba': 0 };
+
+        todasLasCitas.forEach(cita => {
+            if((cita.estado||'Atendido') !== 'Atendido') return;
+            if(!cita.cita_fecha) return; 
+            const fCita = new Date(cita.cita_fecha + 'T12:00:00'); 
+            if(fCita >= fechaInicio && fCita <= fechaFin) {
+                cTotal++; fechasRegistradas.add(cita.cita_fecha); 
+                const precio = extraerPrecio(cita.servicio);
+                if(cita.patrocinado) iVictor += precio; 
+                else { iBarberia += precio * 0.40; iVictor += precio * 0.60; }
+
+                if(cita.servicio.includes('Corte Sencillo')) conteoTipos['Sencillo']++;
+                else if(cita.servicio.includes('Corte Premium')) conteoTipos['Premium']++;
+                else if(cita.servicio.includes('y barba sencillo')) conteoTipos['Corte+Barba Sencillo']++;
+                else if(cita.servicio.includes('y barba premium')) conteoTipos['Corte+Barba Premium']++;
+                else if(cita.servicio.includes('Barba Sola')) conteoTipos['Barba']++;
+            }
+        });
+
+        todosLosGastos.forEach(g => {
+            if(!g.fecha) return;
+            const fGasto = new Date(g.fecha + 'T12:00:00');
+            if(fGasto >= fechaInicio && fGasto <= fechaFin) gTotal += parseFloat(g.monto || 0);
+        });
+
+        let diasTrabajados = fechasRegistradas.size;
+        let promedio = diasTrabajados > 0 ? (cTotal / diasTrabajados) : 0;
+
+        document.getElementById('cortesTotales').textContent = cTotal;
+        document.getElementById('promedioCortes').textContent = promedio.toFixed(1);
+        document.getElementById('totalVictor').textContent = `$${iVictor.toFixed(2)}`;
+        document.getElementById('netoRealTotal').textContent = `$${(iVictor - gTotal).toFixed(2)}`;
+
+        actualizarGraficos(conteoTipos, iVictor, gTotal);
+    }
+
+    function actualizarGraficos(datosServicios, ingresosVictor, gastos) {
+        const ctxServicios = document.getElementById('graficoServicios').getContext('2d');
+        const labelsServicios = Object.keys(datosServicios).filter(k => datosServicios[k] > 0);
+        const dataServicios = Object.values(datosServicios).filter(v => v > 0);
+
+        if(graficoServiciosObj) graficoServiciosObj.destroy();
+        graficoServiciosObj = new Chart(ctxServicios, {
+            type: 'doughnut',
+            data: { labels: labelsServicios.length ? labelsServicios : ['Sin datos'], datasets: [{ data: dataServicios.length ? dataServicios : [1], backgroundColor: dataServicios.length ? ['#e8c77a', '#c5a059', '#947032', '#6b5123', '#4a3818'] : ['#333'], borderWidth: 0, hoverOffset: 4 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#e2e2e5', font: { size: 11 } } } }, cutout: '75%' }
+        });
+
+        const ctxFinanzas = document.getElementById('graficoFinanzas').getContext('2d');
+        if(graficoFinanzasObj) graficoFinanzasObj.destroy();
+        graficoFinanzasObj = new Chart(ctxFinanzas, {
+            type: 'bar',
+            data: { labels: ['Neto Bruto', 'Gastos', 'Neto Real'], datasets: [{ label: 'Monto ($)', data: [ingresosVictor, gastos, ingresosVictor - gastos], backgroundColor: ['#10b981', '#ef4444', '#e8c77a'], borderRadius: 8, borderWidth: 0 }] },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { callback: function(value) { return '$' + value; } } }, x: { grid: { display: false } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { return '$' + context.parsed.y.toFixed(2); } } } } }
+        });
+    }
+
+    function renderizarTablaAgenda(fechaFiltro) {
+        const tbody = document.getElementById('tabla-citas-cuerpo');
+        const filtradas = fechaFiltro ? todasLasCitas.filter(c => c.cita_fecha === fechaFiltro) : todasLasCitas;
+
+        if(filtradas.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px;">No hay registros.</td></tr>'; return; }
+
+        let contenidoHTML = '';
+        filtradas.forEach(cita => {
+            let colorEstado = cita.estado === 'Cancelado' ? 'var(--rojo-alerta)' : (cita.estado === 'Pendiente' ? 'var(--naranja-alerta)' : 'var(--verde-exito)');
+            const horaLimpia = estandarizarHora(cita.cita_hora);
+            const fechaLimpia = cita.cita_fecha ? cita.cita_fecha.split('-').reverse().join('/') : 'N/A';
+            contenidoHTML += `<tr><td data-label="Cliente"><strong>${cita.cliente_nombre || 'Sin nombre'}</strong><br><span style="color:${colorEstado}; font-size:0.75rem; font-weight: 600;">● ${cita.estado||'Atendido'}</span></td><td data-label="Servicio">${cita.servicio}</td><td data-label="Hora">${fechaLimpia} <br> <span style="color:var(--dorado-acento); font-weight:bold;">${horaLimpia}</span></td><td data-label="Acción"><button class="btn-accion" onclick="abrirModalDetalle('${cita.id}')">Opciones</button></td></tr>`;
+        });
+        tbody.innerHTML = contenidoHTML;
+    }
+
+    function calcularFrecuencias() {
+        const map = {};
+        todasLasCitas.forEach(c => {
+            if((c.estado||'Atendido')!=='Atendido') return;
+            const tlf = c.cliente_telefono || 'S/N';
+            if(!map[tlf]) map[tlf] = { nombre: c.cliente_nombre, tlf: tlf, visitas: 0, ultima: c.cita_fecha || '', id: c.id };
+            map[tlf].visitas++;
+            if(c.cita_fecha) {
+                if (map[tlf].ultima === '') { map[tlf].ultima = c.cita_fecha; map[tlf].id = c.id; } 
+                else { if(new Date(c.cita_fecha) > new Date(map[tlf].ultima)) { map[tlf].ultima = c.cita_fecha; map[tlf].id = c.id; } }
+            }
+        });
+        clientesFidelidadData = Object.values(map).sort((a,b) => b.visitas - a.visitas);
+        renderizarFidelidad(clientesFidelidadData);
+    }
+
+    function renderizarFidelidad(datos) {
+        const tbody = document.getElementById('tabla-frecuencia-cuerpo');
+        if (datos.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--gris-secundario);">No se encontraron resultados.</td></tr>'; return; }
+
+        let contenidoHTML = '';
+        datos.forEach(c => {
+            let badge = ''; let colorNombre = '#fff';
+            if (c.visitas >= 10) { badge = '<span style="background:var(--dorado-brillante); color:#000; padding:3px 8px; border-radius:6px; font-size:0.6rem; font-weight:800; margin-left:8px; text-transform:uppercase;">VIP ORO</span>'; colorNombre = 'var(--dorado-brillante)'; } 
+            else if (c.visitas >= 5) { badge = '<span style="background:#e2e2e5; color:#000; padding:3px 8px; border-radius:6px; font-size:0.6rem; font-weight:800; margin-left:8px; text-transform:uppercase;">VIP PLATA</span>'; } 
+            else if (c.visitas >= 3) { badge = '<span style="background:var(--bronce-oscuro); color:#fff; padding:3px 8px; border-radius:6px; font-size:0.6rem; font-weight:800; margin-left:8px; text-transform:uppercase;">FRECUENTE</span>'; }
+
+            let fechaMostrar = c.ultima ? c.ultima.split('-').reverse().join('/') : 'N/A';
+            contenidoHTML += `<tr><td data-label="Cliente"><strong style="color:${colorNombre}; font-size: 1.05rem;">${c.nombre || 'Desconocido'}</strong> ${badge}<br><span style="color:var(--gris-secundario); font-size:0.8rem;">${c.tlf !== 'S/N' ? c.tlf : 'Sin teléfono registrado'}</span></td><td data-label="Visitas"><div style="background:var(--fondo-tarjeta); border:1px solid var(--borde-sutil); display:inline-block; padding:6px 14px; border-radius:8px; color:var(--dorado-brillante); font-weight:900; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">${c.visitas}</div></td><td data-label="Última Vez" style="color:var(--gris-texto); font-weight: 500;">${fechaMostrar}</td><td data-label="Acción"><button class="btn-accion" style="border-color:var(--dorado-acento); width:100%;" onclick="abrirModalDetalle('${c.id}')">Ver Perfil</button></td></tr>`;
+        });
+        tbody.innerHTML = contenidoHTML;
+    }
+
+    function filtrarClientesFidelidad() {
+        const textoBusqueda = document.getElementById('buscadorClientes').value.toLowerCase();
+        const clientesFiltrados = clientesFidelidadData.filter(cliente => {
+            const matchNombre = cliente.nombre && cliente.nombre.toLowerCase().includes(textoBusqueda);
+            const matchTlf = cliente.tlf && String(cliente.tlf).toLowerCase().includes(textoBusqueda);
+            return matchNombre || matchTlf;
+        });
+        renderizarFidelidad(clientesFiltrados);
+    }
+
+    window.guardarGastoManual = async function(e) {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.textContent = 'Registrando...'; btn.disabled = true;
+        try {
+            const obj = { concepto: document.getElementById('gConcepto').value, monto: parseFloat(document.getElementById('gMonto').value), fecha: document.getElementById('gFecha').value };
+            await fetch(`${FIREBASE_URL}gastos.json?auth=${tokenAuth}`, { method: 'POST', body: JSON.stringify(obj) });
+            document.getElementById('formGastos').reset(); 
+            document.getElementById('gFecha').value = obtenerFechaHoy();
+            cargarDatosDesdeServidor();
+        } finally { btn.textContent = 'Registrar Gasto'; btn.disabled = false; }
+    }
+
+    window.guardarClienteManual = async function(e) {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]');
+        const textoOriginal = btn.textContent; btn.textContent = 'Registrando...'; btn.disabled = true;
+
+        const horaOriginal = document.getElementById('mHora').value;
+        const obj = {
+            cliente_nombre: document.getElementById('mNombre').value, cliente_telefono: document.getElementById('mTelefono').value,
+            servicio: document.getElementById('mServicio').value, cita_fecha: document.getElementById('mFecha').value,
+            cita_hora: estandarizarHora(horaOriginal), estado: document.getElementById('mEstado').value, patrocinado: document.getElementById('mPatrocinado').checked
+        };
+
+        try {
+            await fetch(`${FIREBASE_URL}citas.json?auth=${tokenAuth}`, { method: 'POST', body: JSON.stringify(obj) });
+            document.getElementById('formManual').reset();
+            document.getElementById('mFecha').value = obtenerFechaHoy();
+            const ahora = new Date();
+            document.getElementById('mHora').value = `${String(ahora.getHours()).padStart(2,'0')}:${String(ahora.getMinutes()).padStart(2,'0')}`;
+            cargarDatosDesdeServidor();
+        } catch (error) { alert("Hubo un error al registrar el cliente."); } 
+        finally { btn.textContent = textoOriginal; btn.disabled = false; }
+    }
+
+    window.guardarEdicion = async function(e) {
+        e.preventDefault();
+        const idCita = document.getElementById('editId').value;
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.textContent = 'Actualizando...'; btn.disabled = true;
+        
+        const obj = {
+            cliente_nombre: document.getElementById('editNombre').value, cliente_telefono: document.getElementById('editTelefono').value,
+            servicio: document.getElementById('editServicio').value, estado: document.getElementById('editEstado').value
+        };
+
+        try {
+            await fetch(`${FIREBASE_URL}citas/${idCita}.json?auth=${tokenAuth}`, { method: 'PATCH', body: JSON.stringify(obj) });
+            cerrarModal('modalEditar'); cargarDatosDesdeServidor();
+        } catch (error) { alert("Error al actualizar datos."); } 
+        finally { btn.textContent = 'Actualizar Cambios'; btn.disabled = false; }
     }
 </script>
 </body>
