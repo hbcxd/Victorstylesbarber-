@@ -4,112 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración | Victorstyles Barber</title>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --fondo-oscuro: #0c0c0e; 
-            --fondo-tarjeta: #151518;
-            --fondo-input: #1a1a1f;
-            --gris-texto: #e2e2e5;
-            --gris-secundario: #a1a1aa;
-            
-            --dorado-acento: #c5a059; 
-            --dorado-brillante: #e8c77a;
-            --bronce-oscuro: #947032;
-            
-            --verde-exito: #10b981;
-            --rojo-alerta: #ef4444; 
-            --naranja-alerta: #f59e0b;
-            
-            --borde-sutil: rgba(197, 160, 89, 0.15);
-            --borde-enfoque: rgba(232, 199, 122, 0.4);
-            --shadow-premium: 0 12px 35px -10px rgba(0, 0, 0, 0.6);
-            
+            --fondo-oscuro: #0c0c0e; --fondo-tarjeta: #151518; --fondo-input: #1a1a1f;
+            --gris-texto: #e2e2e5; --gris-secundario: #a1a1aa;
+            --dorado-acento: #c5a059; --dorado-brillante: #e8c77a; --bronce-oscuro: #947032;
+            --verde-exito: #10b981; --rojo-alerta: #ef4444; --naranja-alerta: #f59e0b;
+            --borde-sutil: rgba(197, 160, 89, 0.15); --shadow-premium: 0 12px 35px -10px rgba(0, 0, 0, 0.6);
             --gradiente-metal: linear-gradient(135deg, var(--bronce-oscuro) 0%, var(--dorado-brillante) 45%, var(--dorado-acento) 75%, var(--bronce-oscuro) 100%);
-            transition: all 0.3s ease;
         }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: '-apple-system', sans-serif; }
+        body { background-color: var(--fondo-oscuro); color: var(--gris-texto); padding-top: 85px; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif; }
-
-        body { background-color: var(--fondo-oscuro); color: var(--gris-texto); padding-top: 85px; -webkit-font-smoothing: antialiased; }
-
-        h2 { font-size: 1.6rem; text-align: center; font-weight: 800; margin-bottom: 8px; background: linear-gradient(180deg, #ffffff 0%, var(--dorado-acento) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 2px;}
-        h3 { font-size: 1rem; font-weight: 700; border-bottom: 1px solid var(--borde-sutil); padding-bottom: 16px; margin-bottom: 16px; color: rgba(255, 255, 255, 0.9); text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center;}
+        h2 { font-size: 1.6rem; text-align: center; font-weight: 800; margin-bottom: 8px; background: linear-gradient(180deg, #ffffff 0%, var(--dorado-acento) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
+        h3 { font-size: 1rem; font-weight: 700; border-bottom: 1px solid var(--borde-sutil); padding-bottom: 16px; margin-bottom: 16px; color: #fff; text-transform: uppercase;}
         
-        /* HEADER Y MENÚ */
-        header { display: flex; justify-content: center; align-items: center; padding: 0 5%; background-color: var(--fondo-oscuro); opacity: 0.95; backdrop-filter: blur(25px); position: fixed; width: 100%; top: 0; left: 0; z-index: 1000; border-bottom: 1px solid var(--borde-sutil); height: 75px; }
-        .logo img { height: 40px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)); }
-        .btn-cerrar-sesion { position: absolute; right: 5%; background: var(--fondo-input); border: 1px solid var(--borde-sutil); color: var(--dorado-acento); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; transition: all 0.2s; }
-        .btn-cerrar-sesion:hover { border-color: var(--dorado-acento); color: var(--dorado-brillante); }
+        header { display: flex; justify-content: center; align-items: center; padding: 0 5%; background-color: rgba(12,12,14,0.95); backdrop-filter: blur(25px); position: fixed; width: 100%; top: 0; left: 0; z-index: 1000; border-bottom: 1px solid var(--borde-sutil); height: 75px; }
+        .btn-cerrar-sesion { position: absolute; right: 5%; background: var(--fondo-input); border: 1px solid var(--borde-sutil); color: var(--dorado-acento); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: bold; text-transform: uppercase;}
         
-        /* SISTEMA DE PESTAÑAS (TABS) */
-        .tabs-container { display: flex; gap: 12px; overflow-x: auto; padding: 0 5% 15px 5%; margin-bottom: 25px; border-bottom: 1px solid var(--borde-sutil); scrollbar-width: none; }
-        .tabs-container::-webkit-scrollbar { display: none; }
-        .tab-btn { background: transparent; color: var(--gris-secundario); border: none; padding: 12px 18px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; position: relative; white-space: nowrap; transition: color 0.3s; }
+        .tabs-container { display: flex; gap: 12px; overflow-x: auto; padding: 0 5% 15px 5%; margin-bottom: 25px; border-bottom: 1px solid var(--borde-sutil); }
+        .tab-btn { background: transparent; color: var(--gris-secundario); border: none; padding: 12px 18px; font-weight: 700; text-transform: uppercase; cursor: pointer; position: relative; white-space: nowrap; }
         .tab-btn.active { color: var(--dorado-brillante); }
-        .tab-btn.active::after { content: ''; position: absolute; bottom: -16px; left: 0; width: 100%; height: 3px; background: var(--gradiente-metal); border-radius: 3px 3px 0 0; }
+        .tab-btn.active::after { content: ''; position: absolute; bottom: -16px; left: 0; width: 100%; height: 3px; background: var(--gradiente-metal); }
         
-        .modulo-admin { display: none; animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 0 5%; max-width: 1200px; margin: 0 auto; }
+        .modulo-admin { display: none; padding: 0 5%; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.4s; }
         .modulo-admin.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* LOGIN SEGURO */
-        .login-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(12, 12, 14, 0.95); backdrop-filter: blur(10px); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 24px; }
-        .login-box { background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); padding: 45px 35px; border-radius: 20px; width: 100%; max-width: 400px; text-align: center; border-top: 4px solid var(--dorado-acento); box-shadow: var(--shadow-premium); }
-        .login-box input { width: 100%; padding: 16px; background-color: var(--fondo-input); border: 1px solid var(--borde-sutil); color: #fff; border-radius: 12px; outline: none; margin-bottom: 20px; font-size: 0.95rem; text-align: center; transition: all 0.3s;}
-        .login-box input:focus { border-color: var(--dorado-acento); box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.15); }
-        .btn-login { width: 100%; padding: 16px; background: var(--gradiente-metal); background-size: 200% auto; color: #0c0c0e; border: none; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; border-radius: 12px; cursor: pointer; transition: all 0.3s; }
-        .btn-login:hover { background-position: right center; }
-        .error-login { color: var(--rojo-alerta); font-size: 0.85rem; margin-top: 16px; display: none; font-weight: 600; }
+        .login-container { position: fixed; inset: 0; background: rgba(12,12,14,0.95); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 24px; }
+        .login-box { background: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); padding: 45px 35px; border-radius: 20px; width: 100%; max-width: 400px; text-align: center; border-top: 4px solid var(--dorado-acento); }
+        .login-box input { width: 100%; padding: 16px; background: var(--fondo-input); border: 1px solid var(--borde-sutil); color: #fff; border-radius: 12px; margin-bottom: 20px; text-align: center; }
+        .btn-login { width: 100%; padding: 16px; background: var(--gradiente-metal); color: #000; border: none; font-weight: 800; text-transform: uppercase; border-radius: 12px; cursor: pointer; }
 
-        /* ESTRUCTURAS GENERALES */
         .seccion-bloque { background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-radius: 20px; padding: 26px; margin-bottom: 28px; box-shadow: var(--shadow-premium); }
-        .grid-contable { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 28px; }
-        .tarjeta-contable { background-color: var(--fondo-input); border: 1px solid var(--borde-sutil); border-radius: 16px; padding: 22px 16px; text-align: center; position: relative; transition: transform 0.2s;}
-        .tarjeta-contable:hover { transform: translateY(-3px); }
-        .tarjeta-contable h4 { font-size: 0.7rem; text-transform: uppercase; color: var(--gris-secundario); margin-bottom: 10px; font-weight: 700; letter-spacing: 1px;}
-        .tarjeta-contable .dato-principal { font-size: 1.8rem; font-weight: 800; color: #ffffff; }
-
-        /* GRÁFICOS */
-        .contenedor-graficos { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 28px; }
-        .tarjeta-grafico { background-color: var(--fondo-tarjeta); border: 1px solid var(--borde-sutil); border-radius: 20px; padding: 24px; box-shadow: var(--shadow-premium); display: flex; flex-direction: column; align-items: center; justify-content: center;}
-        .tarjeta-grafico h4 { font-size: 0.85rem; text-transform: uppercase; color: var(--gris-secundario); margin-bottom: 20px; font-weight: 700; letter-spacing: 1px; width: 100%; text-align: left; border-bottom: 1px solid var(--borde-sutil); padding-bottom: 12px;}
-        .canvas-container { position: relative; width: 100%; max-height: 280px; display: flex; justify-content: center;}
-
-        /* FORMULARIOS Y TABLAS */
-        .form-manual { display: flex; flex-direction: column; gap: 18px; }
-        .form-grupo { display: flex; flex-direction: column; gap: 10px; }
-        .form-grupo label { font-size: 0.75rem; color: var(--dorado-acento); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
-        .form-grupo input, .form-grupo select { background-color: var(--fondo-input); border: 1px solid var(--borde-sutil); color: #fff; padding: 16px; border-radius: 12px; outline: none; width: 100%; font-size: 0.95rem; transition: border-color 0.2s; }
-        .form-grupo input:focus, .form-grupo select:focus { border-color: var(--dorado-acento); }
-        .btn-guardar { background: var(--gradiente-metal); background-size: 200% auto; color: #0c0c0e; border: none; padding: 16px; border-radius: 12px; cursor: pointer; font-weight: 800; text-transform: uppercase; width: 100%; font-size: 0.85rem; letter-spacing: 1.5px; transition: all 0.3s; }
-        .btn-guardar:hover { background-position: right center; }
-        .btn-guardar:disabled { background: var(--gris-secundario); cursor: not-allowed; }
-        
-        .btn-accion { background: transparent; border: 1px solid var(--borde-sutil); color: var(--dorado-brillante); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: bold; transition: all 0.2s; text-transform: uppercase;}
-        .btn-accion:hover { background: rgba(197, 160, 89, 0.1); border-color: var(--dorado-acento); color: #fff; }
+        .form-grupo { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;}
+        .form-grupo label { font-size: 0.75rem; color: var(--dorado-acento); text-transform: uppercase; font-weight: 700; }
+        .form-grupo input, .form-grupo select { background: var(--fondo-input); border: 1px solid var(--borde-sutil); color: #fff; padding: 16px; border-radius: 12px; outline: none; width: 100%; }
+        .btn-guardar { background: var(--gradiente-metal); color: #000; border: none; padding: 16px; border-radius: 12px; cursor: pointer; font-weight: 800; text-transform: uppercase; width: 100%; transition: 0.3s; }
+        .btn-accion { background: transparent; border: 1px solid var(--borde-sutil); color: var(--dorado-brillante); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: bold; text-transform: uppercase;}
         
         .contenedor-tabla { width: 100%; overflow-x: auto; margin-top: 15px; border: 1px solid var(--borde-sutil); border-radius: 16px; }
         table { width: 100%; border-collapse: collapse; text-align: left; background: var(--fondo-input); }
         th, td { padding: 16px; border-bottom: 1px solid var(--borde-sutil); font-size: 0.9rem; }
-        th { background-color: var(--fondo-tarjeta); color: var(--gris-secundario); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1.5px; }
+        th { background: var(--fondo-tarjeta); color: var(--gris-secundario); text-transform: uppercase; font-size: 0.75rem; }
 
-        /* MODALES */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(12, 12, 14, 0.85); backdrop-filter: blur(8px); z-index: 3000; display: none; justify-content: center; align-items: center; padding: 20px; }
-        .modal-box { background: var(--fondo-tarjeta); border: 1px solid var(--dorado-acento); border-radius: 20px; width: 100%; max-width: 420px; padding: 30px; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
-        .modal-cerrar { position: absolute; top: 20px; right: 25px; background: transparent; border: none; color: var(--gris-secundario); font-size: 1.8rem; cursor: pointer; transition: color 0.2s; }
-        .modal-cerrar:hover { color: #fff; }
-        .modal-titulo { font-size: 1.3rem; color: #fff; border-bottom: 1px solid var(--borde-sutil); padding-bottom: 12px; margin-bottom: 20px; font-weight: 700;}
-        .modal-dato { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.95rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 8px;}
-        .modal-dato span:first-child { color: var(--gris-secundario); font-size: 0.8rem; text-transform: uppercase; font-weight: 600;}
-        .modal-dato span:last-child { color: #fff; font-weight: bold;}
-        
-        .filtros-rango { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; background: var(--fondo-input); padding: 18px; border-radius: 16px; border: 1px solid var(--borde-sutil); margin-bottom: 24px; }
-        .filtros-rango input { background: var(--fondo-tarjeta); color: #fff; border: 1px solid var(--borde-sutil); padding: 12px; border-radius: 10px; flex: 1; font-size: 0.9rem; }
+        /* Estilos Tabla Horarios */
+        .dia-grid { display: grid; grid-template-columns: 1fr 2fr 2fr; gap: 10px; align-items: center; margin-bottom: 12px; padding: 12px; background: var(--fondo-input); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);}
+        .dia-grid h4 { color: #fff; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;}
+        .dia-grid input[type="number"] { padding: 8px; border-radius: 8px; text-align: center; }
 
         @media (max-width: 768px) {
             table, thead, tbody, th, td, tr { display: block; width: 100%; border:none; }
@@ -117,6 +60,7 @@
             tr { border-bottom: 1px solid var(--dorado-acento); margin-bottom: 15px; padding: 15px; background: var(--fondo-input); border-radius: 12px;}
             td { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);}
             td::before { content: attr(data-label); font-weight: 700; text-transform: uppercase; font-size: 0.75rem; color: var(--dorado-acento); }
+            .dia-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -124,17 +68,16 @@
 
 <div class="login-container" id="pantallaLogin">
     <div class="login-box">
-        <h3 style="border:none; justify-content:center; margin-bottom:0; color: var(--dorado-brillante);">Acceso Restringido</h3>
-        <p style="color:var(--gris-secundario); font-size:0.85rem; margin-bottom:28px;">Autenticación con Firebase</p>
-        <input type="email" id="campoEmail" placeholder="correo@ejemplo.com" autocomplete="email">
-        <input type="password" id="campoClave" placeholder="••••••••" autocomplete="current-password">
+        <h3 style="border:none; color: var(--dorado-brillante);">Acceso Restringido</h3>
+        <input type="email" id="campoEmail" placeholder="correo@ejemplo.com">
+        <input type="password" id="campoClave" placeholder="••••••••">
         <button class="btn-login" id="btnIngresar">Ingresar</button>
-        <div class="error-login" id="mensajeError">Datos incorrectos. Inténtalo de nuevo.</div>
+        <div id="mensajeError" style="color:var(--rojo-alerta); margin-top:10px; display:none;">Datos incorrectos.</div>
     </div>
 </div>
 
 <header>
-    <div class="logo"><img src="LOGO.png" alt="Victorstyles Barber" onerror="this.src='https://via.placeholder.com/150x50?text=Victor+Styles'"></div>
+    <div class="logo"><span style="color:var(--dorado-brillante); font-weight:900; font-size:1.2rem; letter-spacing:2px;">VICTORSTYLES PANEL</span></div>
     <button class="btn-cerrar-sesion" id="btnCerrarSesion" style="display:none;">Salir</button>
 </header>
 
@@ -146,297 +89,95 @@
     <button class="tab-btn" onclick="cambiarTab('tab-ajustes', this)">Ajustes</button> 
 </nav>
 
-<div class="modal-overlay" id="modalDetalle">
-    <div class="modal-box">
-        <button class="modal-cerrar" onclick="cerrarModal('modalDetalle')">×</button>
-        <div class="modal-titulo" id="modalNombreCliente">Nombre Cliente</div>
-        <div class="modal-dato"><span>Teléfono</span><span id="modalTlf"></span></div>
-        <div class="modal-dato"><span>Servicio</span><span id="modalServicio"></span></div>
-        <div class="modal-dato"><span>Fecha</span><span id="modalFecha"></span></div>
-        <div class="modal-dato"><span>Estado</span><span id="modalEstado"></span></div>
-        <div class="modal-dato"><span>Patrocinado</span><span id="modalPatrocinio"></span></div>
-        <div style="margin-top: 25px; text-align: center; display: flex; flex-direction: column; gap: 10px;">
-            <button class="btn-guardar" id="btnAbrirEdicion" style="width: 100%;">Editar Datos del Cliente</button>
-            <button class="btn-accion" id="btnWhatsApp" style="border-color: var(--verde-exito); color: var(--verde-exito); width: 100%;">Contactar por WhatsApp</button>
+<div id="modalDetalle" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:3000; justify-content:center; align-items:center;">
+    <div style="background:var(--fondo-tarjeta); padding:30px; border-radius:20px; width:90%; max-width:400px; border:1px solid var(--dorado-acento);">
+        <button onclick="document.getElementById('modalDetalle').style.display='none'" style="float:right; background:none; border:none; color:#fff; font-size:1.5rem;">×</button>
+        <h3 id="modalNombreCliente" style="border-bottom:1px solid #333; padding-bottom:10px;">Cliente</h3>
+        <p><strong>Teléfono:</strong> <span id="modalTlf"></span></p>
+        <p><strong>Servicio:</strong> <span id="modalServicio"></span></p>
+        <p><strong>Fecha:</strong> <span id="modalFecha"></span></p>
+        <p><strong>Estado:</strong> <span id="modalEstado"></span></p>
+        <div style="margin-top:20px; display:flex; flex-direction:column; gap:10px;">
+            <button class="btn-guardar" id="btnAbrirEdicion">Editar Estado</button>
+            <button class="btn-accion" id="btnWhatsApp" style="border-color:#10b981; color:#10b981;">Contactar WhatsApp</button>
         </div>
-    </div>
-</div>
-
-<div class="modal-overlay" id="modalEditar">
-    <div class="modal-box">
-        <button class="modal-cerrar" onclick="cerrarModal('modalEditar')">×</button>
-        <div class="modal-titulo">Editar Registro</div>
-        <form id="formEditar" onsubmit="guardarEdicion(event)">
-            <input type="hidden" id="editId">
-            <div class="form-grupo"><label>Nombre</label><input type="text" id="editNombre" required></div>
-            <div class="form-grupo"><label>Teléfono</label><input type="tel" id="editTelefono" required></div>
-            <div class="form-grupo">
-                <label>Servicio</label>
-                <select id="editServicio" required>
-                    <option value="Corte Sencillo (10$)">Corte Sencillo (10$)</option>
-                    <option value="Corte Premium (13$)">Corte Premium (13$)</option>
-                    <option value="Corte y barba sencillo (16$)">Corte y barba sencillo (16$)</option>
-                    <option value="Corte y barba premium (19$)">Corte y barba premium (19$)</option>
-                    <option value="Barba Sola (6$)">Barba Sola (6$)</option>
-                </select>
-            </div>
-            <div class="form-grupo">
-                <label>Estado de la Cita</label>
-                <select id="editEstado" required>
-                    <option value="Pendiente">Pendiente</option>
-                    <option value="Atendido">Atendido</option>
-                    <option value="Cancelado">Cancelado</option>
-                </select>
-            </div>
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button type="button" class="btn-guardar" style="background: transparent; color: var(--rojo-alerta); border: 1px solid var(--rojo-alerta); flex: 1;" id="btnEliminarCita">Eliminar</button>
-                <button type="submit" class="btn-guardar" style="flex: 2;">Actualizar Cambios</button>
-            </div>
-        </form>
     </div>
 </div>
 
 <div id="tab-dashboard" class="modulo-admin active">
-    <h2>Panel de Rendimiento</h2>
-    
-    <div class="filtros-rango">
-        <span style="font-size: 0.85rem; color: var(--dorado-acento); font-weight: bold; text-transform: uppercase;">Desde:</span>
-        <input type="date" id="fechaInicioGlobal">
-        <span style="font-size: 0.85rem; color: var(--dorado-acento); font-weight: bold; text-transform: uppercase;">Hasta:</span>
-        <input type="date" id="fechaFinGlobal">
-        <button class="btn-accion" style="border-color:var(--dorado-acento); color:var(--dorado-brillante);" onclick="procesarMetricasGlobales()">Calcular</button>
-        <button class="btn-accion" onclick="limpiarMetricasGlobales()" style="border-color: var(--rojo-alerta); color: var(--rojo-alerta);">Ver Todo</button>
-    </div>
-
-    <div class="grid-contable">
-        <div class="tarjeta-contable"><h4>Total Cortes</h4><div class="dato-principal" id="cortesTotales">0</div></div>
-        <div class="tarjeta-contable"><h4>Promedio Diario</h4><div class="dato-principal" id="promedioCortes" style="color:var(--naranja-alerta);">0</div></div>
-        <div class="tarjeta-contable"><h4>Tu Neto Bruto</h4><div class="dato-principal" style="color:var(--verde-exito);" id="totalVictor">$0.00</div></div>
-        <div class="tarjeta-contable" style="border: 1px solid var(--dorado-acento); box-shadow: 0 0 20px rgba(197, 160, 89, 0.15); background: linear-gradient(180deg, var(--fondo-input), rgba(0,0,0,0.4));">
-            <h4 style="color: var(--dorado-brillante);">Tu Neto Real</h4>
-            <div class="dato-principal" style="color:var(--dorado-brillante);" id="netoRealTotal">$0.00</div>
-        </div>
-    </div>
-
-    <div class="contenedor-graficos">
-        <div class="tarjeta-grafico">
-            <h4>Distribución de Servicios</h4>
-            <div class="canvas-container">
-                <canvas id="graficoServicios"></canvas>
-            </div>
-        </div>
-        <div class="tarjeta-grafico">
-            <h4>Balance Financiero ($)</h4>
-            <div class="canvas-container">
-                <canvas id="graficoFinanzas"></canvas>
-            </div>
-        </div>
+    <h2>Panel Principal</h2>
+    <div style="background:var(--fondo-tarjeta); padding:20px; border-radius:15px; border:1px solid var(--borde-sutil); text-align:center;">
+        <h3 style="justify-content:center;">Resumen Rápido</h3>
+        <p>Cortes totales: <strong id="cortesTotales" style="color:var(--dorado-brillante); font-size:1.2rem;">0</strong></p>
+        <p>Ingresos Brutos: <strong id="totalVictor" style="color:#10b981; font-size:1.2rem;">$0.00</strong></p>
     </div>
 </div>
 
 <div id="tab-agenda" class="modulo-admin">
-    <h2>Agenda e Historial</h2>
+    <h2>Agenda de Hoy</h2>
     <div class="seccion-bloque">
-        <h3>Filtro por Día Específico</h3>
-        <div style="display:flex; gap:12px;">
-            <input type="date" id="filtroFechaAgenda" style="background:var(--fondo-input); color:#fff; padding:14px; border:1px solid var(--borde-sutil); border-radius:10px; width:100%;">
-            <button id="btnVerTodoAgenda" style="background:var(--fondo-input); color:var(--gris-texto); border:1px solid var(--borde-sutil); border-radius:10px; padding:0 20px; cursor:pointer; transition:all 0.2s;">Limpiar</button>
-        </div>
-    </div>
-
-    <div class="seccion-bloque">
-        <h3>Historial Operativo</h3>
+        <input type="date" id="filtroFechaAgenda" style="background:var(--fondo-input); color:#fff; padding:14px; border:1px solid var(--borde-sutil); border-radius:10px; width:100%; margin-bottom:15px;">
         <div class="contenedor-tabla">
             <table>
                 <thead><tr><th>Cliente</th><th>Servicio</th><th>Hora</th><th>Acción</th></tr></thead>
-                <tbody id="tabla-citas-cuerpo">
-                    <tr><td colspan="4" style="text-align:center; padding:20px;">Cargando...</td></tr>
-                </tbody>
+                <tbody id="tabla-citas-cuerpo"><tr><td colspan="4" style="text-align:center;">Cargando...</td></tr></tbody>
             </table>
         </div>
-    </div>
-
-    <div class="seccion-bloque">
-        <h3>Cliente en Puerta (Sin Agenda)</h3>
-        <form class="form-manual" id="formManual" onsubmit="guardarClienteManual(event)">
-            <div class="form-grupo">
-                <label>Nombre y Apellido</label>
-                <input type="text" id="mNombre" placeholder="Ej: Juan Pérez" required>
-            </div>
-            
-            <div style="display: flex; gap: 15px;">
-                <div class="form-grupo" style="flex: 1;">
-                    <label>Teléfono</label>
-                    <input type="tel" id="mTelefono" placeholder="0414..." required>
-                </div>
-                <div class="form-grupo" style="flex: 1;">
-                    <label>Estado</label>
-                    <select id="mEstado" required>
-                        <option value="Atendido">Atendido</option>
-                        <option value="Pendiente">Pendiente</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-grupo">
-                <label>Servicio</label>
-                <select id="mServicio" required>
-                    <option value="Corte Sencillo (10$)">Corte Sencillo (10$)</option>
-                    <option value="Corte Premium (13$)">Corte Premium (13$)</option>
-                    <option value="Corte y barba sencillo (16$)">Corte y barba sencillo (16$)</option>
-                    <option value="Corte y barba premium (19$)">Corte y barba premium (19$)</option>
-                    <option value="Barba Sola (6$)">Barba Sola (6$)</option>
-                </select>
-            </div>
-
-            <div style="display: flex; gap: 15px;">
-                <div class="form-grupo" style="flex: 1;">
-                    <label>Fecha</label>
-                    <input type="date" id="mFecha" required>
-                </div>
-                <div class="form-grupo" style="flex: 1;">
-                    <label>Hora</label>
-                    <input type="time" id="mHora" required>
-                </div>
-            </div>
-
-            <div style="display:flex; align-items:center; gap:12px; margin-top:10px;">
-                <input type="checkbox" id="mPatrocinado" style="width:20px; height:20px; accent-color:var(--dorado-acento);">
-                <label style="color:var(--gris-secundario); font-size:0.85rem;">¿Trabajo Patrocinado?</label>
-            </div>
-            
-            <button type="submit" class="btn-guardar" style="margin-top: 10px;">Registrar y Bloquear Horario</button>
-        </form>
     </div>
 </div>
 
 <div id="tab-finanzas" class="modulo-admin">
-    <h2>Gestión Financiera</h2>
+    <h2>Finanzas</h2>
     <div class="seccion-bloque">
         <h3>Registrar Gasto</h3>
         <form class="form-manual" id="formGastos" onsubmit="guardarGastoManual(event)">
             <div class="form-grupo"><label>Concepto</label><input type="text" id="gConcepto" required></div>
             <div class="form-grupo"><label>Monto ($)</label><input type="number" id="gMonto" step="0.01" required></div>
             <div class="form-grupo"><label>Fecha</label><input type="date" id="gFecha" required></div>
-            <button type="submit" class="btn-guardar" style="background:var(--fondo-input); color:var(--dorado-brillante); border: 1px solid var(--dorado-acento);">Registrar Gasto</button>
+            <button type="submit" class="btn-guardar">Registrar</button>
         </form>
     </div>
 </div>
 
 <div id="tab-clientes" class="modulo-admin">
-    <h2>Fidelidad de Clientes</h2>
-    <div class="seccion-bloque">
-        <h3>Base de Datos de Clientes</h3>
-        
-        <div class="form-grupo" style="margin-bottom: 20px;">
-            <input type="text" id="buscadorClientes" placeholder="Buscar por nombre o número de teléfono..." onkeyup="filtrarClientesFidelidad()" style="padding-left: 20px; border-radius: 20px; font-weight: 500;">
-        </div>
-
-        <div class="contenedor-tabla">
-            <table>
-                <thead><tr><th>Cliente</th><th>Visitas</th><th>Última Vez</th><th>Acción</th></tr></thead>
-                <tbody id="tabla-frecuencia-cuerpo">
-                    <tr><td colspan="4" style="text-align:center; padding:20px;">Calculando...</td></tr>
-                </tbody>
-            </table>
-        </div>
+    <h2>Clientes Frecuentes</h2>
+    <div class="contenedor-tabla">
+        <table>
+            <thead><tr><th>Cliente</th><th>Visitas</th><th>Última Vez</th></tr></thead>
+            <tbody id="tabla-frecuencia-cuerpo"></tbody>
+        </table>
     </div>
 </div>
 
 <div id="tab-ajustes" class="modulo-admin">
-    <h2>Ajustes del Sistema</h2>
+    <h2>Configuración Avanzada</h2>
     
     <div class="seccion-bloque">
-        <h3>Horario de Atención (Agenda Web)</h3>
-        <p style="color:var(--gris-secundario); font-size: 0.85rem; margin-bottom: 20px;">Configura las horas de apertura y cierre para las citas que piden los clientes por la web.</p>
+        <h3>Horario Semanal Día a Día</h3>
+        <p style="color:var(--gris-secundario); font-size: 0.85rem; margin-bottom: 20px;">Desmarca la casilla si un día no trabajas. Formato de 24h (ej: 9 para 9am, 18 para 6pm).</p>
         
-        <form class="form-manual" onsubmit="guardarHorario(event)">
-            <div style="display: flex; gap: 15px;">
-                <div class="form-grupo" style="flex: 1;">
-                    <label>Apertura (Formato 24h, ej: 9)</label>
-                    <input type="number" id="cfgApertura" min="0" max="23" value="9" required>
+        <form id="formHorarioSemanal" onsubmit="guardarHorarioSemanal(event)">
+            <div id="contenedorDias">
                 </div>
-                <div class="form-grupo" style="flex: 1;">
-                    <label>Cierre (Formato 24h, ej: 18)</label>
-                    <input type="number" id="cfgCierre" min="0" max="23" value="18" required>
-                </div>
-            </div>
-            <button type="submit" class="btn-guardar" style="margin-top: 15px; border: 1px solid var(--dorado-acento); background: var(--fondo-input); color: var(--dorado-brillante);">Guardar Horario</button>
+            <button type="submit" class="btn-guardar" style="margin-top: 15px;">Actualizar Todos los Días</button>
         </form>
     </div>
 
-    <div class="seccion-bloque">
-        <h3>Personalización Visual</h3>
-        <p style="color:var(--gris-secundario); font-size: 0.85rem; margin-bottom: 20px;">Elige una combinación de colores para tu panel. Todas las opciones respetan tu imagen corporativa.</p>
-        
-        <div class="form-grupo">
-            <label>Esquema de Colores</label>
-            <select id="selectorTema" onchange="aplicarTema(this.value)">
-                <option value="original">Clásico: Gris y Dorado (Por defecto)</option>
-                <option value="noche">Noche Premium: Negro Profundo</option>
-                <option value="carbon">Carbón: Gris Oscuro Mate</option>
-            </select>
-        </div>
-        
-        <div style="margin-top:25px; padding: 15px; border-radius: 12px; background: var(--fondo-input); border: 1px solid var(--borde-sutil); text-align: center;">
-            <h4 style="color: var(--dorado-brillante); font-size: 0.9rem;">Vista Previa de Colores</h4>
-            <div style="display:flex; justify-content:center; gap:10px; margin-top:10px;">
-                <div style="width:30px; height:30px; border-radius:50%; background:var(--fondo-oscuro); border:1px solid #fff;"></div>
-                <div style="width:30px; height:30px; border-radius:50%; background:var(--fondo-tarjeta); border:1px solid #fff;"></div>
-                <div style="width:30px; height:30px; border-radius:50%; background:var(--dorado-acento); border:1px solid #fff;"></div>
-                <div style="width:30px; height:30px; border-radius:50%; background:var(--dorado-brillante); border:1px solid #fff;"></div>
-            </div>
-        </div>
+    <div class="seccion-bloque" style="border-color: var(--rojo-alerta);">
+        <h3 style="color:var(--rojo-alerta); border-bottom-color: rgba(239, 68, 68, 0.2);">Seguridad de Datos</h3>
+        <p style="color:var(--gris-secundario); font-size: 0.85rem; margin-bottom: 15px;">Descarga una copia completa de tus clientes y finanzas en formato JSON.</p>
+        <button onclick="descargarRespaldoBD()" class="btn-accion" style="border-color:var(--rojo-alerta); color:var(--rojo-alerta); width:100%; padding: 12px;">Descargar Respaldo Total</button>
     </div>
 </div>
 
 <script>
-    // --- VARIABLES GLOBALES ---
     const API_KEY_FIREBASE = 'AIzaSyBKrJD4VAzOkvbCay-C8Dxsg3gsUkAt4EA'; 
     const FIREBASE_URL = 'https://barberia-victor-default-rtdb.firebaseio.com/';
     let todasLasCitas = [];
-    let todosLosGastos = [];
-    let clientesFidelidadData = []; 
     let tokenAuth = sessionStorage.getItem('tokenAdminVictor');
-    
-    // Variables para los gráficos
-    let graficoServiciosObj = null;
-    let graficoFinanzasObj = null;
 
-    // --- SISTEMA DE TEMAS DE COLOR ---
-    const esquemasColor = {
-        original: {
-            '--fondo-oscuro': '#0c0c0e', '--fondo-tarjeta': '#151518', '--fondo-input': '#1a1a1f',
-            '--dorado-acento': '#c5a059', '--dorado-brillante': '#e8c77a', '--bronce-oscuro': '#947032',
-            '--borde-sutil': 'rgba(197, 160, 89, 0.15)'
-        },
-        noche: {
-            '--fondo-oscuro': '#000000', '--fondo-tarjeta': '#080808', '--fondo-input': '#121212',
-            '--dorado-acento': '#d4af37', '--dorado-brillante': '#f9d71c', '--bronce-oscuro': '#996515',
-            '--borde-sutil': 'rgba(212, 175, 55, 0.2)'
-        },
-        carbon: {
-            '--fondo-oscuro': '#18181b', '--fondo-tarjeta': '#27272a', '--fondo-input': '#3f3f46',
-            '--dorado-acento': '#dcb46a', '--dorado-brillante': '#fde08b', '--bronce-oscuro': '#b48a43',
-            '--borde-sutil': 'rgba(220, 180, 106, 0.2)'
-        }
-    };
+    const diasSemanaNombres = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 
-    function aplicarTema(nombreTema) {
-        const tema = esquemasColor[nombreTema] || esquemasColor.original;
-        for (let variable in tema) {
-            document.documentElement.style.setProperty(variable, tema[variable]);
-        }
-        localStorage.setItem('temaVictorStyles', nombreTema);
-    }
-
-    function inicializarTema() {
-        const temaGuardado = localStorage.getItem('temaVictorStyles') || 'original';
-        document.getElementById('selectorTema').value = temaGuardado;
-        aplicarTema(temaGuardado);
-    }
-
-    // --- LÓGICA DE PESTAÑAS (TABS) ---
     function cambiarTab(idTab, boton) {
         document.querySelectorAll('.modulo-admin').forEach(mod => mod.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -444,557 +185,151 @@
         boton.classList.add('active');
     }
 
-    // --- LÓGICA DE MODALES ---
-    function cerrarModal(idModal) { document.getElementById(idModal).style.display = 'none'; }
-
-    function estandarizarHora(horaStr) {
-        if (!horaStr) return '';
-        if (horaStr.toUpperCase().includes('AM') || horaStr.toUpperCase().includes('PM')) {
-            return horaStr;
-        }
-        const partes = horaStr.split(':');
-        if (partes.length === 2) {
-            let horas = parseInt(partes[0], 10);
-            const minutos = partes[1];
-            const ampm = horas >= 12 ? 'PM' : 'AM';
-            horas = horas % 12;
-            horas = horas ? horas : 12; 
-            return `${horas}:${minutos} ${ampm}`;
-        }
-        return horaStr;
-    }
-
-    function abrirModalDetalle(idCita) {
-        const cita = todasLasCitas.find(c => c.id === idCita);
-        if(!cita) return;
-        
-        const horaLimpia = estandarizarHora(cita.cita_hora);
-        const fechaMostrar = cita.cita_fecha ? cita.cita_fecha : 'Sin fecha';
-
-        document.getElementById('modalNombreCliente').textContent = cita.cliente_nombre || 'Sin Nombre';
-        document.getElementById('modalTlf').textContent = cita.cliente_telefono || 'N/A';
-        document.getElementById('modalServicio').textContent = cita.servicio || 'N/A';
-        document.getElementById('modalFecha').textContent = `${fechaMostrar} / ${horaLimpia}`;
-        document.getElementById('modalEstado').textContent = cita.estado || 'Atendido';
-        document.getElementById('modalPatrocinio').textContent = cita.patrocinado ? 'Sí (Neto 100%)' : 'No (40/60)';
-        
-        document.getElementById('btnAbrirEdicion').onclick = () => abrirModalEditar(idCita);
-        
-        // --- INTEGRACIÓN WHATSAPP VENEZUELA ---
-        document.getElementById('btnWhatsApp').onclick = () => {
-            let numLimpio = cita.cliente_telefono ? cita.cliente_telefono.replace(/\D/g, '') : '';
-            if (numLimpio.startsWith('0')) { numLimpio = '58' + numLimpio.substring(1); }
-            if (numLimpio.length > 5) {
-                const msj = encodeURIComponent(`¡Hola ${cita.cliente_nombre}! Te escribimos de Victorstyles Barber...`);
-                window.open(`https://wa.me/${numLimpio}?text=${msj}`, '_blank');
-            } else {
-                alert("El número de teléfono no parece ser válido.");
-            }
-        };
-
-        document.getElementById('modalDetalle').style.display = 'flex';
-    }
-
-    function abrirModalEditar(idCita) {
-        const cita = todasLasCitas.find(c => c.id === idCita);
-        if(!cita) return;
-        cerrarModal('modalDetalle');
-        document.getElementById('editId').value = cita.id;
-        document.getElementById('editNombre').value = cita.cliente_nombre || '';
-        document.getElementById('editTelefono').value = cita.cliente_telefono || '';
-        document.getElementById('editServicio').value = cita.servicio || '';
-        document.getElementById('editEstado').value = cita.estado || 'Atendido';
-        
-        document.getElementById('btnEliminarCita').onclick = () => eliminarCita(idCita);
-        
-        document.getElementById('modalEditar').style.display = 'flex';
-    }
-
-    window.eliminarCita = async function(id) {
-        if(confirm('¿Seguro que quieres eliminar este registro de la base de datos? Esta acción no se puede deshacer.')) {
-            const btn = document.getElementById('btnEliminarCita');
-            btn.textContent = 'Borrando...';
-            btn.disabled = true;
-            try {
-                await fetch(`${FIREBASE_URL}citas/${id}.json?auth=${tokenAuth}`, { method: 'DELETE' });
-                cerrarModal('modalEditar');
-                cargarDatosDesdeServidor();
-            } catch (error) {
-                alert("Error al eliminar. Revisa la conexión.");
-            } finally {
-                btn.textContent = 'Eliminar';
-                btn.disabled = false;
-            }
-        }
-    }
-
-    // --- AUTENTICACIÓN FIREBASE ---
     const btnIngresar = document.getElementById('btnIngresar');
     btnIngresar.addEventListener('click', async () => {
         const email = document.getElementById('campoEmail').value;
         const password = document.getElementById('campoClave').value;
         btnIngresar.textContent = 'Verificando...';
-        btnIngresar.disabled = true;
         
         try {
             const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY_FIREBASE}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password, returnSecureToken: true })
             });
             const data = await res.json();
-            
             if(data.idToken) {
                 sessionStorage.setItem('tokenAdminVictor', data.idToken);
                 tokenAuth = data.idToken;
                 iniciarPanel();
-            } else {
-                document.getElementById('mensajeError').style.display = 'block';
-            }
-        } catch(err) {
-            document.getElementById('mensajeError').style.display = 'block';
-        } finally {
-            btnIngresar.textContent = 'Ingresar';
-            btnIngresar.disabled = false;
-        }
+            } else { document.getElementById('mensajeError').style.display = 'block'; btnIngresar.textContent = 'Ingresar'; }
+        } catch(err) { btnIngresar.textContent = 'Ingresar'; }
     });
 
-    document.getElementById('btnCerrarSesion').addEventListener('click', () => {
-        sessionStorage.removeItem('tokenAdminVictor');
-        location.reload();
-    });
+    document.getElementById('btnCerrarSesion').addEventListener('click', () => { sessionStorage.removeItem('tokenAdminVictor'); location.reload(); });
 
-    window.onload = () => { 
-        inicializarTema(); 
-        Chart.defaults.color = '#a1a1aa';
-        Chart.defaults.font.family = "'-apple-system', sans-serif";
-        if(tokenAuth) iniciarPanel(); 
-    };
+    window.onload = () => { if(tokenAuth) iniciarPanel(); };
 
     function iniciarPanel() {
         document.getElementById('pantallaLogin').style.display = 'none';
         document.getElementById('btnCerrarSesion').style.display = 'block';
         document.getElementById('navegacionTabs').style.display = 'flex';
-        document.getElementById('gFecha').value = obtenerFechaHoy();
-        
-        document.getElementById('mFecha').value = obtenerFechaHoy();
-        const ahora = new Date();
-        document.getElementById('mHora').value = `${String(ahora.getHours()).padStart(2,'0')}:${String(ahora.getMinutes()).padStart(2,'0')}`;
         
         cargarDatosDesdeServidor();
-        
-        document.getElementById('filtroFechaAgenda').addEventListener('change', e => renderizarTablaAgenda(e.target.value));
-        document.getElementById('btnVerTodoAgenda').addEventListener('click', () => {
-            document.getElementById('filtroFechaAgenda').value = '';
-            renderizarTablaAgenda('');
-        });
     }
 
-    function obtenerFechaHoy() {
-        const d = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Caracas"}));
-        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-    }
-
-    // --- CARGA DE DATOS SEGUROS ---
     async function cargarDatosDesdeServidor() {
         try {
-            const [resCitas, resGastos, resConfig] = await Promise.all([
+            const [resCitas, resConfig] = await Promise.all([
                 fetch(`${FIREBASE_URL}citas.json?auth=${tokenAuth}`),
-                fetch(`${FIREBASE_URL}gastos.json?auth=${tokenAuth}`),
-                fetch(`${FIREBASE_URL}configuracion/horario.json?auth=${tokenAuth}`)
+                fetch(`${FIREBASE_URL}configuracion/horarioSemanal.json?auth=${tokenAuth}`)
             ]);
             
-            if (!resCitas.ok) throw new Error("Fallo de autenticación o red en Citas");
-            
             const citasData = await resCitas.json();
-            const gastosData = await resGastos.json();
             const configData = await resConfig.json();
 
-            todasLasCitas = citasData ? Object.keys(citasData).map(id => ({ id, ...citasData[id] })).sort((a,b)=> {
-                let fechaA = a.cita_fecha ? new Date(a.cita_fecha) : new Date(0);
-                let fechaB = b.cita_fecha ? new Date(b.cita_fecha) : new Date(0);
-                return fechaB - fechaA;
-            }) : [];
-            todosLosGastos = gastosData ? Object.keys(gastosData).map(id => ({ id, ...gastosData[id] })) : [];
+            todasLasCitas = citasData ? Object.keys(citasData).map(id => ({ id, ...citasData[id] })) : [];
 
-            // Cargar Configuración de Horario
-            if(configData) {
-                document.getElementById('cfgApertura').value = configData.apertura || 9;
-                document.getElementById('cfgCierre').value = configData.cierre || 18;
-            }
+            renderizarTablaAgenda('');
+            renderizarAjustesDias(configData);
 
-            renderizarTablaAgenda(document.getElementById('filtroFechaAgenda').value);
-            procesarMetricasGlobales(); 
-            calcularFrecuencias();
-        } catch (error) {
-            console.error("Error cargando datos protegidos", error);
-            document.getElementById('tabla-citas-cuerpo').innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--rojo-alerta);">Error de conexión. Recarga la página.</td></tr>';
-            document.getElementById('tabla-frecuencia-cuerpo').innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--rojo-alerta);">Error al calcular. Revisa tu conexión.</td></tr>';
-        }
+        } catch (error) { console.error(error); }
     }
 
-    function extraerPrecio(str) {
-        if(!str) return 0;
-        const match = str.match(/\((\d+)\$\)/);
-        return match ? parseInt(match[1], 10) : 0;
-    }
-
-    function limpiarMetricasGlobales() {
-        document.getElementById('fechaInicioGlobal').value = '';
-        document.getElementById('fechaFinGlobal').value = '';
-        procesarMetricasGlobales();
-    }
-
-    function procesarMetricasGlobales() {
-        const strInicio = document.getElementById('fechaInicioGlobal').value;
-        const strFin = document.getElementById('fechaFinGlobal').value;
-
-        const fechaInicio = strInicio ? new Date(strInicio + 'T00:00:00') : new Date('2000-01-01T00:00:00');
-        const fechaFin = strFin ? new Date(strFin + 'T23:59:59') : new Date('2100-01-01T23:59:59');
-
-        let cTotal = 0, iBarberia = 0, iVictor = 0, gTotal = 0;
-        let fechasRegistradas = new Set();
+    // --- NUEVA LÓGICA DE RENDEREZADO DÍA A DÍA ---
+    function renderizarAjustesDias(datosGuardados) {
+        const contenedor = document.getElementById('contenedorDias');
+        contenedor.innerHTML = '';
         
-        let conteoTipos = {
-            'Sencillo': 0, 'Premium': 0, 'Corte+Barba Sencillo': 0, 'Corte+Barba Premium': 0, 'Barba': 0
-        };
+        for (let i = 0; i < 7; i++) {
+            // Valores por defecto
+            let activo = true; let ap = 9; let ci = 18;
+            if (i === 0) activo = false; // Domingo libre por defecto
 
-        todasLasCitas.forEach(cita => {
-            if((cita.estado||'Atendido') !== 'Atendido') return;
-            if(!cita.cita_fecha) return; 
-
-            const fCita = new Date(cita.cita_fecha + 'T12:00:00'); 
-            
-            if(fCita >= fechaInicio && fCita <= fechaFin) {
-                cTotal++;
-                fechasRegistradas.add(cita.cita_fecha); 
-                const precio = extraerPrecio(cita.servicio);
-                
-                if(cita.patrocinado) iVictor += precio; 
-                else { iBarberia += precio * 0.40; iVictor += precio * 0.60; }
-
-                if(cita.servicio.includes('Corte Sencillo')) conteoTipos['Sencillo']++;
-                else if(cita.servicio.includes('Corte Premium')) conteoTipos['Premium']++;
-                else if(cita.servicio.includes('y barba sencillo')) conteoTipos['Corte+Barba Sencillo']++;
-                else if(cita.servicio.includes('y barba premium')) conteoTipos['Corte+Barba Premium']++;
-                else if(cita.servicio.includes('Barba Sola')) conteoTipos['Barba']++;
+            if (datosGuardados && datosGuardados[i]) {
+                activo = datosGuardados[i].activo;
+                ap = datosGuardados[i].apertura;
+                ci = datosGuardados[i].cierre;
             }
-        });
 
-        todosLosGastos.forEach(g => {
-            if(!g.fecha) return;
-            const fGasto = new Date(g.fecha + 'T12:00:00');
-            if(fGasto >= fechaInicio && fGasto <= fechaFin) {
-                gTotal += parseFloat(g.monto || 0);
-            }
-        });
-
-        let diasTrabajados = fechasRegistradas.size;
-        let promedio = diasTrabajados > 0 ? (cTotal / diasTrabajados) : 0;
-
-        document.getElementById('cortesTotales').textContent = cTotal;
-        document.getElementById('promedioCortes').textContent = promedio.toFixed(1);
-        document.getElementById('totalVictor').textContent = `$${iVictor.toFixed(2)}`;
-        document.getElementById('netoRealTotal').textContent = `$${(iVictor - gTotal).toFixed(2)}`;
-
-        actualizarGraficos(conteoTipos, iVictor, gTotal);
-    }
-
-    function actualizarGraficos(datosServicios, ingresosVictor, gastos) {
-        const ctxServicios = document.getElementById('graficoServicios').getContext('2d');
-        const labelsServicios = Object.keys(datosServicios).filter(k => datosServicios[k] > 0);
-        const dataServicios = Object.values(datosServicios).filter(v => v > 0);
-
-        if(graficoServiciosObj) graficoServiciosObj.destroy();
-        
-        graficoServiciosObj = new Chart(ctxServicios, {
-            type: 'doughnut',
-            data: {
-                labels: labelsServicios.length ? labelsServicios : ['Sin datos'],
-                datasets: [{
-                    data: dataServicios.length ? dataServicios : [1],
-                    backgroundColor: dataServicios.length ? 
-                        [getComputedStyle(document.documentElement).getPropertyValue('--dorado-brillante').trim(), 
-                         getComputedStyle(document.documentElement).getPropertyValue('--dorado-acento').trim(), 
-                         getComputedStyle(document.documentElement).getPropertyValue('--bronce-oscuro').trim(), 
-                         '#6b5123', '#4a3818'] : ['#333'],
-                    borderWidth: 0,
-                    hoverOffset: 4
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { position: 'bottom', labels: { color: '#e2e2e5', font: { size: 11 } } } },
-                cutout: '75%'
-            }
-        });
-
-        const ctxFinanzas = document.getElementById('graficoFinanzas').getContext('2d');
-        if(graficoFinanzasObj) graficoFinanzasObj.destroy();
-
-        graficoFinanzasObj = new Chart(ctxFinanzas, {
-            type: 'bar',
-            data: {
-                labels: ['Neto Bruto', 'Gastos', 'Neto Real'],
-                datasets: [{
-                    label: 'Monto ($)',
-                    data: [ingresosVictor, gastos, ingresosVictor - gastos],
-                    backgroundColor: [
-                        getComputedStyle(document.documentElement).getPropertyValue('--verde-exito').trim(), 
-                        getComputedStyle(document.documentElement).getPropertyValue('--rojo-alerta').trim(), 
-                        getComputedStyle(document.documentElement).getPropertyValue('--dorado-brillante').trim()
-                    ],
-                    borderRadius: 8, borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                scales: {
-                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { callback: function(value) { return '$' + value; } } },
-                    x: { grid: { display: false } }
-                },
-                plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { return '$' + context.parsed.y.toFixed(2); } } } }
-            }
-        });
-    }
-
-    function renderizarTablaAgenda(fechaFiltro) {
-        const tbody = document.getElementById('tabla-citas-cuerpo');
-        const filtradas = fechaFiltro ? todasLasCitas.filter(c => c.cita_fecha === fechaFiltro) : todasLasCitas;
-
-        if(filtradas.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px;">No hay registros.</td></tr>';
-            return;
-        }
-
-        let contenidoHTML = '';
-        filtradas.forEach(cita => {
-            let colorEstado = cita.estado === 'Cancelado' ? 'var(--rojo-alerta)' : (cita.estado === 'Pendiente' ? 'var(--naranja-alerta)' : 'var(--verde-exito)');
-            const horaLimpia = estandarizarHora(cita.cita_hora);
-            const fechaLimpia = cita.cita_fecha ? cita.cita_fecha.split('-').reverse().join('/') : 'N/A';
-
-            contenidoHTML += `
-                <tr>
-                    <td data-label="Cliente"><strong>${cita.cliente_nombre || 'Sin nombre'}</strong><br><span style="color:${colorEstado}; font-size:0.75rem; font-weight: 600;">● ${cita.estado||'Atendido'}</span></td>
-                    <td data-label="Servicio">${cita.servicio}</td>
-                    <td data-label="Hora">${fechaLimpia} <br> <span style="color:var(--dorado-acento); font-weight:bold;">${horaLimpia}</span></td>
-                    <td data-label="Acción"><button class="btn-accion" onclick="abrirModalDetalle('${cita.id}')">Opciones</button></td>
-                </tr>
+            contenedor.innerHTML += `
+                <div class="dia-grid">
+                    <h4>
+                        <input type="checkbox" id="chk_${i}" ${activo ? 'checked' : ''} style="accent-color: var(--dorado-acento); width:18px; height:18px;"> 
+                        ${diasSemanaNombres[i]}
+                    </h4>
+                    <div class="form-grupo" style="margin:0;"><label>Abre</label><input type="number" id="ap_${i}" value="${ap}" min="0" max="23"></div>
+                    <div class="form-grupo" style="margin:0;"><label>Cierra</label><input type="number" id="ci_${i}" value="${ci}" min="0" max="23"></div>
+                </div>
             `;
-        });
-        
-        tbody.innerHTML = contenidoHTML;
-    }
-
-    function calcularFrecuencias() {
-        try {
-            const map = {};
-            todasLasCitas.forEach(c => {
-                if((c.estado||'Atendido')!=='Atendido') return;
-                const tlf = c.cliente_telefono || 'S/N';
-                
-                if(!map[tlf]) {
-                    map[tlf] = { nombre: c.cliente_nombre, tlf: tlf, visitas: 0, ultima: c.cita_fecha || '', id: c.id };
-                }
-                
-                map[tlf].visitas++;
-                
-                if(c.cita_fecha) {
-                    if (map[tlf].ultima === '') {
-                        map[tlf].ultima = c.cita_fecha;
-                        map[tlf].id = c.id;
-                    } else {
-                        if(new Date(c.cita_fecha) > new Date(map[tlf].ultima)) { 
-                            map[tlf].ultima = c.cita_fecha; 
-                            map[tlf].id = c.id; 
-                        }
-                    }
-                }
-            });
-
-            clientesFidelidadData = Object.values(map).sort((a,b) => b.visitas - a.visitas);
-            renderizarFidelidad(clientesFidelidadData);
-        } catch (error) {
-            console.error("Error al calcular fidelidad:", error);
-            document.getElementById('tabla-frecuencia-cuerpo').innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--rojo-alerta);">Error al organizar clientes. Verifica datos en BD.</td></tr>';
         }
     }
 
-    function renderizarFidelidad(datos) {
-        const tbody = document.getElementById('tabla-frecuencia-cuerpo');
-        
-        if (datos.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--gris-secundario);">No se encontraron resultados en la base de datos.</td></tr>';
-            return;
-        }
-
-        let contenidoHTML = '';
-        datos.forEach(c => {
-            let badge = '';
-            let colorNombre = '#fff';
-            
-            if (c.visitas >= 10) { 
-                badge = '<span style="background:var(--dorado-brillante); color:#000; padding:3px 8px; border-radius:6px; font-size:0.6rem; font-weight:800; margin-left:8px; text-transform:uppercase;">VIP ORO</span>'; 
-                colorNombre = 'var(--dorado-brillante)'; 
-            } else if (c.visitas >= 5) { 
-                badge = '<span style="background:#e2e2e5; color:#000; padding:3px 8px; border-radius:6px; font-size:0.6rem; font-weight:800; margin-left:8px; text-transform:uppercase;">VIP PLATA</span>'; 
-            } else if (c.visitas >= 3) { 
-                badge = '<span style="background:var(--bronce-oscuro); color:#fff; padding:3px 8px; border-radius:6px; font-size:0.6rem; font-weight:800; margin-left:8px; text-transform:uppercase;">FRECUENTE</span>'; 
-            }
-
-            let fechaMostrar = c.ultima ? c.ultima.split('-').reverse().join('/') : 'N/A';
-
-            contenidoHTML += `<tr>
-                <td data-label="Cliente">
-                    <strong style="color:${colorNombre}; font-size: 1.05rem;">${c.nombre || 'Desconocido'}</strong> ${badge}<br>
-                    <span style="color:var(--gris-secundario); font-size:0.8rem;">${c.tlf !== 'S/N' ? c.tlf : 'Sin teléfono registrado'}</span>
-                </td>
-                <td data-label="Visitas">
-                    <div style="background:var(--fondo-tarjeta); border:1px solid var(--borde-sutil); display:inline-block; padding:6px 14px; border-radius:8px; color:var(--dorado-brillante); font-weight:900; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
-                        ${c.visitas}
-                    </div>
-                </td>
-                <td data-label="Última Vez" style="color:var(--gris-texto); font-weight: 500;">
-                    ${fechaMostrar}
-                </td>
-                <td data-label="Acción">
-                    <button class="btn-accion" style="border-color:var(--dorado-acento); width:100%;" onclick="abrirModalDetalle('${c.id}')">Ver Perfil</button>
-                </td>
-            </tr>`;
-        });
-        
-        tbody.innerHTML = contenidoHTML;
-    }
-
-    function filtrarClientesFidelidad() {
-        const textoBusqueda = document.getElementById('buscadorClientes').value.toLowerCase();
-        
-        const clientesFiltrados = clientesFidelidadData.filter(cliente => {
-            const matchNombre = cliente.nombre && cliente.nombre.toLowerCase().includes(textoBusqueda);
-            const matchTlf = cliente.tlf && String(cliente.tlf).toLowerCase().includes(textoBusqueda);
-            return matchNombre || matchTlf;
-        });
-
-        renderizarFidelidad(clientesFiltrados);
-    }
-
-    // --- GUARDAR Y ACTUALIZAR DATOS ---
-    
-    // GUARDAR HORARIO (NUEVA FUNCIÓN)
-    window.guardarHorario = async function(e) {
+    window.guardarHorarioSemanal = async function(e) {
         e.preventDefault();
         const btn = e.target.querySelector('button[type="submit"]');
-        const textoOriginal = btn.textContent;
         btn.textContent = 'Guardando...';
         btn.disabled = true;
 
-        const configuracion = {
-            apertura: parseInt(document.getElementById('cfgApertura').value),
-            cierre: parseInt(document.getElementById('cfgCierre').value)
-        };
+        const horarioObj = {};
+        for (let i = 0; i < 7; i++) {
+            horarioObj[i] = {
+                activo: document.getElementById(`chk_${i}`).checked,
+                apertura: parseInt(document.getElementById(`ap_${i}`).value),
+                cierre: parseInt(document.getElementById(`ci_${i}`).value)
+            };
+        }
 
         try {
-            await fetch(`${FIREBASE_URL}configuracion/horario.json?auth=${tokenAuth}`, {
+            await fetch(`${FIREBASE_URL}configuracion/horarioSemanal.json?auth=${tokenAuth}`, {
                 method: 'PUT',
-                body: JSON.stringify(configuracion)
+                body: JSON.stringify(horarioObj)
             });
-            alert("¡Horario actualizado correctamente en la web!");
+            alert("¡Horarios de la semana actualizados! Tu web ya los está leyendo.");
         } catch (error) {
-            alert("Hubo un error al guardar la configuración.");
-            console.error(error);
+            alert("Error al guardar.");
         } finally {
-            btn.textContent = textoOriginal;
-            btn.disabled = false;
-        }
-    };
-
-    window.guardarGastoManual = async function(e) {
-        e.preventDefault();
-        const btn = e.target.querySelector('button[type="submit"]');
-        btn.textContent = 'Registrando...';
-        btn.disabled = true;
-        try {
-            const obj = { concepto: document.getElementById('gConcepto').value, monto: parseFloat(document.getElementById('gMonto').value), fecha: document.getElementById('gFecha').value };
-            await fetch(`${FIREBASE_URL}gastos.json?auth=${tokenAuth}`, { method: 'POST', body: JSON.stringify(obj) });
-            document.getElementById('formGastos').reset(); 
-            document.getElementById('gFecha').value = obtenerFechaHoy();
-            cargarDatosDesdeServidor();
-        } finally {
-            btn.textContent = 'Registrar Gasto';
+            btn.textContent = 'Actualizar Todos los Días';
             btn.disabled = false;
         }
     }
 
-    window.guardarClienteManual = async function(e) {
-        e.preventDefault();
-        
-        const btn = e.target.querySelector('button[type="submit"]');
-        const textoOriginal = btn.textContent;
-        btn.textContent = 'Registrando...';
-        btn.disabled = true;
-
-        const horaOriginal = document.getElementById('mHora').value;
-        const horaHomogenea = estandarizarHora(horaOriginal);
-
-        const obj = {
-            cliente_nombre: document.getElementById('mNombre').value,
-            cliente_telefono: document.getElementById('mTelefono').value,
-            servicio: document.getElementById('mServicio').value,
-            cita_fecha: document.getElementById('mFecha').value,
-            cita_hora: horaHomogenea, 
-            estado: document.getElementById('mEstado').value,
-            patrocinado: document.getElementById('mPatrocinado').checked
-        };
-
+    // --- FUNCIÓN DE RESPALDO (BACKUP) ---
+    window.descargarRespaldoBD = async function() {
         try {
-            await fetch(`${FIREBASE_URL}citas.json?auth=${tokenAuth}`, { 
-                method: 'POST', 
-                body: JSON.stringify(obj) 
-            });
+            const res = await fetch(`${FIREBASE_URL}.json?auth=${tokenAuth}`);
+            const data = await res.json();
             
-            document.getElementById('formManual').reset();
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
             
-            document.getElementById('mFecha').value = obtenerFechaHoy();
-            const ahora = new Date();
-            document.getElementById('mHora').value = `${String(ahora.getHours()).padStart(2,'0')}:${String(ahora.getMinutes()).padStart(2,'0')}`;
+            const a = document.createElement('a');
+            a.href = url;
+            const fecha = new Date().toISOString().split('T')[0];
+            a.download = `Respaldo_Victorstyles_${fecha}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
             
-            cargarDatosDesdeServidor();
         } catch (error) {
-            console.error("Error al registrar cliente manual:", error);
-            alert("Hubo un error al registrar el cliente.");
-        } finally {
-            btn.textContent = textoOriginal;
-            btn.disabled = false;
+            alert("Hubo un problema descargando el respaldo.");
         }
     }
 
-    window.guardarEdicion = async function(e) {
-        e.preventDefault();
-        const idCita = document.getElementById('editId').value;
-        const btn = e.target.querySelector('button[type="submit"]');
-        btn.textContent = 'Actualizando...';
-        btn.disabled = true;
+    function renderizarTablaAgenda(fecha) {
+        const tbody = document.getElementById('tabla-citas-cuerpo');
+        if(todasLasCitas.length === 0) return;
         
-        const obj = {
-            cliente_nombre: document.getElementById('editNombre').value,
-            cliente_telefono: document.getElementById('editTelefono').value,
-            servicio: document.getElementById('editServicio').value,
-            estado: document.getElementById('editEstado').value
-        };
-
-        try {
-            await fetch(`${FIREBASE_URL}citas/${idCita}.json?auth=${tokenAuth}`, { 
-                method: 'PATCH', 
-                body: JSON.stringify(obj) 
-            });
-            cerrarModal('modalEditar');
-            cargarDatosDesdeServidor();
-        } catch (error) {
-            alert("Error al actualizar datos.");
-        } finally {
-            btn.textContent = 'Actualizar Cambios';
-            btn.disabled = false;
-        }
+        let html = '';
+        todasLasCitas.forEach(c => {
+            html += `<tr>
+                <td><strong>${c.cliente_nombre}</strong><br><span style="color:var(--naranja-alerta); font-size:0.75rem;">${c.estado}</span></td>
+                <td>${c.servicio}</td>
+                <td>${c.cita_fecha}<br><span style="color:var(--dorado-brillante)">${c.cita_hora}</span></td>
+                <td><button class="btn-accion">Ver</button></td>
+            </tr>`;
+        });
+        tbody.innerHTML = html;
     }
 </script>
 </body>
