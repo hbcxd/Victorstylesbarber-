@@ -403,7 +403,7 @@
 
             // Leemos la apertura y cierre configurada desde el panel (con soporte multitipo)
             const inicioMinutos = configDia && configDia.apertura ? parseTimeToMinutes(configDia.apertura) : 9 * 60; // 9:00 AM default
-            const finMinutos = configDia && configDia.cierre ? parseTimeToMinutes(configDia.cierre) : 18 * 60; // 6:00 PM default
+            const finMinutos = configDia && configDia.cierre ? parseTimeToMinutes(configDia.cierre) : 21 * 60; // 9:00 PM default
 
             generarOpcionesHora(citasOcupadasMinutos, inicioMinutos, finMinutos, fechaSeleccionada);
         } catch (error) {
