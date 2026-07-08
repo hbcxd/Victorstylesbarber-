@@ -293,13 +293,27 @@
 <script>
     // --- Lógica del Menú ---
     document.addEventListener('DOMContentLoaded', () => {
-        const btn = document.getElementById('btnHamburguesa'), menu = document.getElementById('menuLateral'), overlay = document.getElementById('menuOverlay');
-        const toggle = () => { btn.classList.toggle('open'); menu.classList.toggle('open'); overlay.classList.toggle('show'); };
-        btn.addEventListener('click', toggle); overlay.addEventListener('click', toggle);
-        document.querySelectorAll('.menu-link').forEach(l => l.addEventListener('click', toggle));
-        window.addEventListener("scroll", () => { document.querySelectorAll(".reveal").forEach(el => { if(el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add("active"); }); });
+        const btn = document.getElementById('btnHamburguesa'), 
+              menu = document.getElementById('menuLateral'), 
+              overlay = document.getElementById('menuOverlay');
+              
+        const toggle = () => { 
+            btn.classList.toggle('open'); 
+            menu.classList.toggle('open'); 
+            overlay.classList.toggle('show'); 
+        };
         
-        // Configurar min date para el input fecha
+        btn.addEventListener('click', toggle); 
+        overlay.addEventListener('click', toggle);
+        document.querySelectorAll('.menu-link').forEach(l => l.addEventListener('click', toggle));
+        
+        window.addEventListener("scroll", () => { 
+            document.querySelectorAll(".reveal").forEach(el => { 
+                if(el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add("active"); 
+            }); 
+        });
+        
+        // Configurar la fecha mínima permitida en el calendario (Hoy)
         const hoy = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Caracas"}));
         document.getElementById('fecha').min = `${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,'0')}-${String(hoy.getDate()).padStart(2,'0')}`;
     });
@@ -309,12 +323,12 @@
     const horaSelect = document.getElementById('hora');
     const formCita = document.getElementById('formulario-cita');
 
-    // NUEVA LÓGICA DE DÍAS Y HORAS
+    // LÓGICA CONECTADA AL PANEL ADMIN PARA DÍAS Y HORARIOS
     fechaInput.addEventListener('change', async (e) => {
         const fechaSeleccionada = e.target.value;
         if(!fechaSeleccionada) return;
 
-        horaSelect.innerHTML = '<option value="" disabled selected>Consultando servidor...</option>';
+        horaSelect.innerHTML = '<option value="" disabled selected>Consultando disponibilidad...</option>';
         horaSelect.disabled = true;
 
         try {
@@ -326,11 +340,12 @@
             const dataCitas = await resCitas.json();
             const dataConfig = await resConfig.json();
             
-            // Saber qué día de la semana eligió (0 = Domingo, 1 = Lunes...)
-            const fechaObj = new Date(fechaSeleccionada + 'T12:00:00');
+            // Parseo estricto para evitar saltos de zona horaria y determinar el día (0 = Domingo, 1 = Lunes...)
+            const [year, month, day] = fechaSeleccionada.split('-');
+            const fechaObj = new Date(year, month - 1, day);
             const diaSemana = fechaObj.getDay();
 
-            // Revisar configuración de ese día específico
+            // Revisar configuración de ese día específico guardada desde el admin
             let configDia = dataConfig ? dataConfig[diaSemana] : null;
             
             if (configDia && configDia.activo === false) {
@@ -347,34 +362,51 @@
                 });
             }
 
-            // Defaults si el administrador no ha configurado la semana aún
+            // Aplicar las horas dictadas por el panel o usar valores por defecto (9am a 6pm)
             const horaInicio = configDia ? parseInt(configDia.apertura) : 9;
             const horaFin = configDia ? parseInt(configDia.cierre) : 18;
 
-            generarOpcionesHora(horasOcupadas, horaInicio, horaFin);
+            generarOpcionesHora(horasOcupadas, horaInicio, horaFin, fechaSeleccionada);
         } catch (error) {
             horaSelect.innerHTML = '<option value="" disabled selected>Error de conexión</option>';
         }
     });
 
-    function generarOpcionesHora(horasOcupadas, inicio, fin) {
+    function generarOpcionesHora(horasOcupadas, inicio, fin, fechaSeleccionada) {
         horaSelect.innerHTML = '<option value="" disabled selected>-- Elige una hora disponible --</option>';
         let hayDisponibles = false;
 
+        // Comprobación de hora local para ocultar horarios vencidos en citas para el mismo día
+        const hoy = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Caracas"}));
+        const hoyStr = `${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,'0')}-${String(hoy.getDate()).padStart(2,'0')}`;
+        const esHoy = (fechaSeleccionada === hoyStr);
+        const horaActual = hoy.getHours();
+
         for (let i = inicio; i <= fin; i++) {
+            // Si la cita es para hoy, no permitir agendar horas que ya pasaron
+            if (esHoy && i <= horaActual) {
+                continue;
+            }
+
             const ampm = i >= 12 ? 'PM' : 'AM';
-            let hora12 = i % 12; hora12 = hora12 ? hora12 : 12;
+            let hora12 = i % 12; 
+            hora12 = hora12 ? hora12 : 12;
             const horaStr = `${hora12}:00 ${ampm}`;
 
             if (!horasOcupadas.includes(horaStr)) {
                 const option = document.createElement('option');
-                option.value = horaStr; option.textContent = horaStr;
+                option.value = horaStr; 
+                option.textContent = horaStr;
                 horaSelect.appendChild(option);
                 hayDisponibles = true;
             }
         }
-        if (!hayDisponibles) horaSelect.innerHTML = '<option value="" disabled selected>Agenda llena para esta fecha</option>';
-        else horaSelect.disabled = false;
+
+        if (!hayDisponibles) {
+            horaSelect.innerHTML = '<option value="" disabled selected>Agenda llena o sin horas disponibles</option>';
+        } else {
+            horaSelect.disabled = false;
+        }
     }
 
     formCita.addEventListener('submit', async (e) => {
@@ -394,7 +426,10 @@
         };
 
         try {
-            await fetch(`${FIREBASE_URL}citas.json`, { method: 'POST', body: JSON.stringify(nuevaCita) });
+            await fetch(`${FIREBASE_URL}citas.json`, { 
+                method: 'POST', 
+                body: JSON.stringify(nuevaCita) 
+            });
             mostrarTicket(nuevaCita);
         } catch (error) {
             alert('Ocurrió un error al agendar. Verifica tu internet.');
@@ -407,17 +442,16 @@
         formCita.style.display = 'none';
         document.getElementById('subtitulo-agenda').style.display = 'none';
         
-        // Formatear Fecha
         const f = datos.cita_fecha.split('-');
         const fechaFormat = `${f[2]}/${f[1]}/${f[0]}`;
 
         document.getElementById('tk-nombre').textContent = datos.cliente_nombre;
-        document.getElementById('tk-servicio').textContent = datos.servicio.split(' (')[0]; // Quitar el precio visualmente
+        document.getElementById('tk-servicio').textContent = datos.servicio.split(' (')[0]; 
         document.getElementById('tk-fecha').textContent = fechaFormat;
         document.getElementById('tk-hora').textContent = datos.cita_hora;
 
-        // Configurar WhatsApp (Cambia el número de teléfono aquí al tuyo)
-        const numeroBarberia = "584140000000"; // PON TU NÚMERO AQUÍ
+        // IMPORTANTE: Asegúrate de poner aquí tu número real con formato internacional
+        const numeroBarberia = "584244416044"; 
         const mensaje = encodeURIComponent(`💈 ¡Hola Victorstyles! Acabo de agendar.\n\n*Cliente:* ${datos.cliente_nombre}\n*Servicio:* ${datos.servicio}\n*Día:* ${fechaFormat}\n*Hora:* ${datos.cita_hora}\n\n¡Nos vemos allá!`);
         document.getElementById('btn-wa-ticket').href = `https://wa.me/${numeroBarberia}?text=${mensaje}`;
 
